@@ -136,7 +136,7 @@ const PostDetailsScreen = () => {
 
   useEffect(() => {
     if (userInfo.jobType === "Employer") {
-      console.log("dispatching employer");
+      // console.log("dispatching employer");
       // dispatch(
       //   getEmployerProfileByEmployerIdAction({
       //     id: userInfo._id,
@@ -326,15 +326,17 @@ const PostDetailsScreen = () => {
                     post.employerId.userEmployerId === userInfo._id ? (
                       <Khalti postId={post._id} />
                     ) : (
-                      <p
-                        style={{
-                          fontSize: "11px",
-                          color: "grey",
-                          margin: "10px 0px",
-                        }}
-                      >
-                        Job has been paid to admin.You can accept talent.
-                      </p>
+                      userInfo.jobType === "Employer" && (
+                        <p
+                          style={{
+                            fontSize: "11px",
+                            color: "grey",
+                            margin: "10px 0px",
+                          }}
+                        >
+                          Job has been paid to admin.You can accept talent.
+                        </p>
+                      )
                     )}
                   </Grid>
                 ) : (
@@ -657,12 +659,10 @@ const PostDetailsScreen = () => {
                     Rs.{proposal.biddingAmt}
                   </Typography>
                   <Typography variant="body2">
-                    Accepted:{" "}
-                    {proposal.isAccepted.toString() === true ? "Yes" : "No"}
+                    Accepted: {proposal.isAccepted === true ? "Yes" : "No"}
                   </Typography>
                   <Typography variant="body2">
-                    Finished:{" "}
-                    {proposal.isFinished.toString() === true ? "Yes" : "No"}
+                    Finished: {proposal.isFinished === true ? "Yes" : "No"}
                   </Typography>
                 </CardContent>
                 <CardActions>

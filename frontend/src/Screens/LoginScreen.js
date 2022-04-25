@@ -16,7 +16,11 @@ import { Link, useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useDispatch, useSelector } from "react-redux";
-import { userLoginAction } from "../actions/userActions";
+import {
+  userLoginAction,
+  userOTPVerifyAction,
+  userResetPWAction,
+} from "../actions/userActions";
 import AlertMessage from "../components/Alert";
 
 const useStyles = makeStyles((theme) => ({
@@ -74,22 +78,41 @@ const LoginScreen = () => {
   const [data, setData] = useState({
     email: "",
     password: "",
+    otp: "",
   });
+  const [forgetPW, setForgetPW] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState(null);
+  const [sendOTP, setSendOTP] = useState(false);
+  const [newPW, setNewPW] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userLogin = useSelector((state) => state.userLogin);
   const { employerProfile } = useSelector((state) => state.employerInfo);
   const { talentProfile } = useSelector((state) => state.talentInfo);
-  const { userInfo, loading, error } = userLogin;
+  const { userInfo, userId, loading, error } = userLogin;
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // console.log(data);
-    if (data.email !== "" && data.password !== "") {
-      dispatch(userLoginAction(data.email, data.password));
+    console.log(data);
+    // console.log(userId, verified);
+    if (data.otp !== "" && sendOTP) {
+      dispatch(userOTPVerifyAction(data.otp, userId));
+      console.log("hahahaaaaaaaaaa");
+      setSendOTP(false);
+      setForgetPW(false);
+      setNewPW(true);
+    } else if (data.email !== "" && data.otp === "" && forgetPW) {
+      dispatch(userResetPWAction(data.email));
+      setSendOTP(true);
+    } else if (data.email !== "" && data.password !== "") {
+      if (newPW) {
+        dispatch(userLoginAction(data.email, data.password, true, navigate));
+      } else {
+        console.log("hahahah");
+        dispatch(userLoginAction(data.email, data.password, false, navigate));
+      }
     } else {
       setMessage("All field must be filled!!!");
       console.log(message);
@@ -103,12 +126,14 @@ const LoginScreen = () => {
   // console.log(message);
 
   useEffect(() => {
+    // console.log("login");
+
     if (
       userInfo &&
       userInfo.jobType === "Employer" &&
       userInfo.isComplete === true
     ) {
-      // localStorage.setItem("isEmployerProfileComplete", true);
+      console.log("login");
       navigate(`/employerDashboard/${userInfo._id}`);
     }
     if (
@@ -116,7 +141,6 @@ const LoginScreen = () => {
       userInfo.jobType === "Employer" &&
       userInfo.isComplete === false
     ) {
-      // localStorage.setItem("isEmployerProfileComplete", false);
       navigate("/employerReg");
     }
     if (
@@ -124,7 +148,6 @@ const LoginScreen = () => {
       userInfo.jobType === "Talent" &&
       userInfo.isComplete === true
     ) {
-      // localStorage.setItem("isTalentProfileComplete", true);
       navigate(`/talentDashboard/${userInfo._id}`);
     }
     if (
@@ -132,7 +155,6 @@ const LoginScreen = () => {
       userInfo.jobType === "Talent" &&
       userInfo.isComplete === false
     ) {
-      // localStorage.setItem("isTalentProfileComplete", false);
       navigate("/talentReg");
     }
   }, [navigate, employerProfile, talentProfile, userInfo]);
@@ -149,50 +171,70 @@ const LoginScreen = () => {
             {error && <AlertMessage severity={"error"} message={error} />}
             <form className={classes.label} onSubmit={handleSubmit}>
               <Grid container item>
-                <Grid item xs={12} className={classes.textField}>
-                  <TextField
-                    required
-                    className={classes.textField}
-                    type="email"
-                    name="email"
-                    label="E-mail"
-                    variant="standard"
-                    value={data.email}
-                    onChange={(e) =>
-                      setData({ ...data, email: e.target.value })
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12} className={classes.textField}>
-                  <TextField
-                    required
-                    className={classes.textField}
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    label="Password"
-                    value={data.password}
-                    onChange={(e) =>
-                      setData({ ...data, password: e.target.value })
-                    }
-                    variant="standard"
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            type="button"
-                            onClick={handleShowPassword}
-                          >
-                            {showPassword ? (
-                              <VisibilityIcon />
-                            ) : (
-                              <VisibilityOffIcon />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
+                {!sendOTP && (
+                  <Grid item xs={12} className={classes.textField}>
+                    <TextField
+                      required
+                      className={classes.textField}
+                      type="email"
+                      name="email"
+                      label="E-mail"
+                      variant="standard"
+                      value={data.email}
+                      onChange={(e) =>
+                        setData({ ...data, email: e.target.value })
+                      }
+                    />
+                  </Grid>
+                )}
+                {sendOTP && (
+                  <Grid item xs={12} className={classes.textField}>
+                    <TextField
+                      required
+                      className={classes.textField}
+                      type="text"
+                      name="otp code"
+                      label="Otp Code"
+                      variant="standard"
+                      value={data.otp}
+                      onChange={(e) =>
+                        setData({ ...data, otp: e.target.value })
+                      }
+                    />
+                  </Grid>
+                )}
+                {!forgetPW && (
+                  <Grid item xs={12} className={classes.textField}>
+                    <TextField
+                      required
+                      className={classes.textField}
+                      type={showPassword ? "text" : "password"}
+                      name={newPW ? "new password" : "password"}
+                      label={newPW ? "New Password" : "Password"}
+                      value={data.password}
+                      onChange={(e) =>
+                        setData({ ...data, password: e.target.value })
+                      }
+                      variant="standard"
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              type="button"
+                              onClick={handleShowPassword}
+                            >
+                              {showPassword ? (
+                                <VisibilityIcon />
+                              ) : (
+                                <VisibilityOffIcon />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                )}
               </Grid>
               <Grid item xs={12} className={classes.button}>
                 <Button
@@ -213,6 +255,8 @@ const LoginScreen = () => {
                     >
                       <CircularProgress size={30} />
                     </Box>
+                  ) : forgetPW ? (
+                    "Reset"
                   ) : (
                     "Login"
                   )}
@@ -226,6 +270,23 @@ const LoginScreen = () => {
               >
                 Create a New Account
               </Link>
+            </Grid>
+            <Grid item>
+              {/* <Link
+                to="/signup"
+                style={{ textDecoration: "none", color: "rgba(117,81,159,1)" }}
+              > */}
+              <Button
+                variant="text"
+                style={{ textDecoration: "none", color: "rgba(117,81,159,1)" }}
+                onClick={() => {
+                  setForgetPW(!forgetPW);
+                }}
+              >
+                Forgot a password?
+              </Button>
+
+              {/* </Link> */}
             </Grid>
           </Grid>
         </Paper>

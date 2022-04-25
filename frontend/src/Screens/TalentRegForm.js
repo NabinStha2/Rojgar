@@ -34,7 +34,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { registerTalentAction } from "../actions/talentActions";
 import { useNavigate } from "react-router-dom";
 import { categoriesAvailable, skillsAvailable } from "../App";
-import LZString from "lz-string";
 // import FileBase64 from "react-file-base64";
 
 // const useStyles = makeStyles((theme) => ({
@@ -70,7 +69,7 @@ const BasicForm = () => {
                 height="220"
                 image={
                   image
-                    ? image
+                    ? URL.createObjectURL(image)
                     : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
                 }
               />
@@ -89,24 +88,15 @@ const BasicForm = () => {
               name="image"
               render={({ field }) => (
                 <TextField
-                  id="image"
+                  id="image1"
+                  name="image1"
                   variant="outlined"
                   type="file"
                   fullWidth
                   margin="auto"
                   onChange={(e) => {
-                    var reader = new FileReader();
-                    reader.readAsDataURL(e.target.files[0]);
-                    reader.onload = function () {
-                      // console.log(reader.result);
-                      setImage(reader.result);
-                      // var compressed = LZString.compress(reader.result);
-                      // var str = LZString.decompress(compressed);
-                      field.onChange(reader.result);
-                    };
-                    reader.onerror = function (error) {
-                      console.log("Error: ", error);
-                    };
+                    setImage(e.target.files[0]);
+                    field.onChange(e.target.files[0]);
                   }}
                 />
               )}
@@ -457,7 +447,7 @@ const ContactForm = () => {
                 height="220"
                 image={
                   citizenshipImage
-                    ? citizenshipImage
+                    ? URL.createObjectURL(citizenshipImage)
                     : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
                 }
               />
@@ -467,23 +457,15 @@ const ContactForm = () => {
               name="citizenshipFile"
               render={({ field }) => (
                 <TextField
-                  id="citizenshipFile"
+                  id="image2"
+                  name="image2"
                   variant="outlined"
                   type="file"
                   fullWidth
                   margin="normal"
                   onChange={(e) => {
-                    var reader = new FileReader();
-                    reader.readAsDataURL(e.target.files[0]);
-                    reader.onload = function () {
-                      // console.log(reader.result);
-                      setCitizenshipImage(reader.result);
-                      // var compressed = LZString.compress(reader.result);
-                      field.onChange(reader.result);
-                    };
-                    reader.onerror = function (error) {
-                      console.log("Error: ", error);
-                    };
+                    setCitizenshipImage(e.target.files[0]);
+                    field.onChange(e.target.files[0]);
                   }}
                   // {...field}
                 />
@@ -504,7 +486,7 @@ const ContactForm = () => {
                 height="220"
                 image={
                   resumeImage
-                    ? resumeImage
+                    ? URL.createObjectURL(resumeImage)
                     : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
                 }
               />
@@ -520,17 +502,8 @@ const ContactForm = () => {
                   fullWidth
                   margin="normal"
                   onChange={(e) => {
-                    var reader = new FileReader();
-                    reader.readAsDataURL(e.target.files[0]);
-                    reader.onload = function () {
-                      setResumeImage(reader.result);
-                      // console.log(reader.result);
-                      // var compressed = LZString.compress(reader.result);
-                      field.onChange(reader.result);
-                    };
-                    reader.onerror = function (error) {
-                      console.log("Error: ", error);
-                    };
+                    setResumeImage(e.target.files[0]);
+                    field.onChange(e.target.files[0]);
                   }}
                   // {...field}
                 />
@@ -768,11 +741,33 @@ const LinaerStepper = () => {
     defaultValues: {
       firstName: "",
       lastName: "",
-
+      city: "",
       email: "",
       phoneNumber: "",
-
       country: "",
+      provience: "",
+      description: "",
+      rating: "",
+      ratingper: "",
+      skills: [],
+      experiencedLevel: "",
+      category: "",
+      profileRate: "",
+      title: "",
+      college: "",
+      degree: "",
+      facebookId: "",
+      twitterId: "",
+      portfolioLink: "",
+      githubId: "",
+      linkedinId: "",
+      khaltiId: "",
+      khaltiName: "",
+      gender: "",
+      dateOfBirth: "",
+      image: "",
+      citizenshipFile: "",
+      resumeFile: "",
     },
   });
   const [activeStep, setActiveStep] = useState(0);
@@ -791,13 +786,46 @@ const LinaerStepper = () => {
     console.log(inputData);
     if (activeStep === steps.length - 1) {
       console.log("Completed");
+
+      const formData = new FormData();
+      formData.append("image1", inputData.image);
+      formData.append("firstName", inputData.firstName);
+      formData.append("lastName", inputData.lastName);
+      formData.append("email", inputData.email);
+      formData.append("city", inputData.city);
+      formData.append("dateOfBirth", inputData.dateOfBirth);
+      formData.append("gender", inputData.gender);
+      formData.append("phoneNumber", inputData.phoneNumber);
+      formData.append("khaltiId", inputData.khaltiId);
+      formData.append("khaltiName", inputData.khaltiName);
+      formData.append("linkedinId", inputData.linkedinId);
+      formData.append("githubId", inputData.githubId);
+      formData.append("rating", inputData.rating);
+      formData.append("ratingper", inputData.ratingper);
+      formData.append("country", inputData.country);
+      formData.append("provience", inputData.provience);
+      formData.append("description", inputData.description);
+      formData.append("vatId", inputData.vatId);
+      formData.append("facebookId", inputData.facebookId);
+      formData.append("twitterId", inputData.twitterId);
+      formData.append("portfolioLink", inputData.portfolioLink);
+      formData.append("image2", inputData.citizenshipFile);
+      formData.append("image3", inputData.resumeFile);
+      formData.append("skills", inputData.skills);
+      formData.append("title", inputData.title);
+      formData.append("experiencedLevel", inputData.experiencedLevel);
+      formData.append("college", inputData.college);
+      formData.append("degree", inputData.degree);
+      formData.append("profileRate", inputData.profileRate);
+      formData.append("category", inputData.category);
+
       if (userInfo) {
         dispatch(
           registerTalentAction(
             {
-              inputData,
               id: userInfo._id,
             },
+            formData,
             navigate
           )
         );

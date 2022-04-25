@@ -9,20 +9,26 @@ import {
   EDIT_EMPLOYER_FAILED,
   EDIT_EMPLOYER_REQUEST,
   EDIT_EMPLOYER_SUCCESS,
+  EDIT_EMPLOYER_RATING_REQUEST,
+  EDIT_EMPLOYER_RATING_SUCCESS,
+  EDIT_EMPLOYER_RATING_FAILED,
+  GET_ALL_EMPLOYER_REQUEST,
+  GET_ALL_EMPLOYER_FAILED,
+  GET_ALL_EMPLOYER_SUCCESS,
 } from "../constants/employerConstant";
 import axios from "../api/axios";
 
 export const registerEmployerAction =
-  ({ inputData, id }, navigate) =>
+  ({ id }, formData, navigate) =>
   async (dispatch, getState) => {
     try {
       dispatch({
         type: EMPLOYER_REGISTRATION_REQUEST,
       });
 
-      const { data } = await axios.post(`/employer/register/${id}`, inputData, {
+      const { data } = await axios.post(`/employer/register/${id}`, formData, {
         headers: {
-          "content-type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
 
@@ -39,6 +45,40 @@ export const registerEmployerAction =
       // console.log(err.response.data.errMessage);
       dispatch({
         type: EMPLOYER_REGISTRATION_FAILED,
+        payload:
+          err.response && err.response.data.errMessage
+            ? err.response.data.errMessage
+            : err.message,
+      });
+    }
+  };
+
+export const getAllEmployerAction =
+  ({ inputData }) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: GET_ALL_EMPLOYER_REQUEST,
+      });
+
+      const { data } = await axios.get("/employer", {
+        params: {
+          keyword: inputData.keyword,
+          email: inputData.email,
+        },
+      });
+
+      console.log(data);
+
+      dispatch({
+        type: GET_ALL_EMPLOYER_SUCCESS,
+        payload: data.employerProfile,
+      });
+    } catch (err) {
+      console.log(err.message);
+      // console.log(err.response.data.errMessage);
+      dispatch({
+        type: GET_ALL_EMPLOYER_FAILED,
         payload:
           err.response && err.response.data.errMessage
             ? err.response.data.errMessage
@@ -77,15 +117,82 @@ export const getEmployerProfileByEmployerIdAction =
   };
 
 export const editEmployerAction =
-  ({ userEmployerId, inputData, id }, navigate) =>
+  ({ userEmployerId, id }, formData, navigate) =>
   async (dispatch, getState) => {
     try {
       dispatch({
         type: EDIT_EMPLOYER_REQUEST,
       });
 
-      const { data } = await axios.put(
+      const { data } = await axios.post(
         `/employer/editemployer/${id}`,
+        formData
+      );
+
+      console.log(data);
+
+      dispatch({
+        type: EDIT_EMPLOYER_SUCCESS,
+        payload: data.employerProfile,
+      });
+      toast("Employer edited successfully.Go back");
+      // console.log(userEmployerId);
+
+      // navigate(`/employerDashboard/${userEmployerId}`);
+    } catch (err) {
+      console.log(err.message);
+      // console.log(err.response.data.errMessage);
+      dispatch({
+        type: EDIT_EMPLOYER_FAILED,
+        payload:
+          err.response && err.response.data.errMessage
+            ? err.response.data.errMessage
+            : err.message,
+      });
+    }
+  };
+
+export const uploadImageAction = (formData) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: EDIT_EMPLOYER_REQUEST,
+    });
+
+    const { data } = await axios.post("/api/upload", formData, {
+      headers: {
+        "content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log(data);
+
+    // dispatch({
+    //   type: EDIT_EMPLOYER_SUCCESS,
+    //   payload: data.employerProfile,
+    // });
+    toast("Image Uploaded successfully");
+  } catch (err) {
+    console.log(err.message);
+    // console.log(err.response.data.errMessage);
+    dispatch({
+      type: EDIT_EMPLOYER_FAILED,
+      payload:
+        err.response && err.response.data.errMessage
+          ? err.response.data.errMessage
+          : err.message,
+    });
+  }
+};
+export const editEmployerRatingAction =
+  ({ userEmployerId, inputData, id, visit = false }, navigate) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: EDIT_EMPLOYER_RATING_REQUEST,
+      });
+
+      const { data } = await axios.patch(
+        `/employer/editemployerrating/${id}`,
         inputData,
         {
           headers: {
@@ -97,18 +204,20 @@ export const editEmployerAction =
       // console.log(data);
 
       dispatch({
-        type: EDIT_EMPLOYER_SUCCESS,
+        type: EDIT_EMPLOYER_RATING_SUCCESS,
         payload: data.employerProfile,
       });
       toast("Employer edited successfully");
       // console.log(userEmployerId);
 
-      navigate(`/employerDashboard/${userEmployerId}`);
+      visit
+        ? navigate(`/employerProfile/${userEmployerId}`)
+        : navigate(`/employerDashboard/${userEmployerId}`);
     } catch (err) {
       console.log(err.message);
       // console.log(err.response.data.errMessage);
       dispatch({
-        type: EDIT_EMPLOYER_FAILED,
+        type: EDIT_EMPLOYER_RATING_FAILED,
         payload:
           err.response && err.response.data.errMessage
             ? err.response.data.errMessage

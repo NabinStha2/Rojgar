@@ -45,16 +45,48 @@ const EmployeeRegistrationScreen = () => {
     if (selectedFile) {
       inputData.citizenshipFile = selectedFile;
     }
+    const formData = new FormData();
+    formData.append("image1", inputData.image);
+    formData.append("name", inputData.name);
+    formData.append("email", inputData.email);
+    formData.append("city", inputData.city);
+    formData.append("phoneNumber", inputData.phoneNumber);
+    formData.append("khaltiId", inputData.khaltiId);
+    formData.append("khaltiName", inputData.khaltiName);
+    formData.append("linkedinId", inputData.linkedinId);
+    formData.append("githubId", inputData.githubId);
+    formData.append("rating", inputData.rating);
+    formData.append("ratingper", inputData.ratingper);
+    formData.append("country", inputData.country);
+    formData.append("provience", inputData.provience);
+    formData.append("description", inputData.description);
+    formData.append("vatId", inputData.vatId);
+    formData.append("facebookId", inputData.facebookId);
+    formData.append("twitterId", inputData.twitterId);
+    formData.append("portfolioLink", inputData.portfolioLink);
+    formData.append("image2", inputData.citizenshipFile);
+
     console.log(inputData);
     dispatch(
       registerEmployerAction(
         {
-          inputData: inputData,
           id: userInfo._id,
         },
+        formData,
         navigate
       )
     );
+  };
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    console.log(image);
+  };
+
+  const uploadCitizenshipFileHandler = async (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
   };
 
   return (
@@ -79,11 +111,11 @@ const EmployeeRegistrationScreen = () => {
               <Card>
                 <CardMedia
                   component="img"
-                  alt="talent-img"
+                  alt="employer-img"
                   height="200"
                   image={
                     image
-                      ? image
+                      ? URL.createObjectURL(image)
                       : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
                   }
                 />
@@ -98,7 +130,14 @@ const EmployeeRegistrationScreen = () => {
                   textOverflow: "ellipsis",
                 }}
               >
-                <FileBase64
+                <TextField
+                  variant="standard"
+                  type="file"
+                  name="image1"
+                  onChange={uploadFileHandler}
+                  fullWidth
+                />
+                {/* <FileBase64
                   type="file"
                   multiple={false}
                   margin="normal"
@@ -106,7 +145,7 @@ const EmployeeRegistrationScreen = () => {
                     // console.log(file);
                     setImage(file.base64);
                   }}
-                />
+                /> */}
               </div>
             </Grid>
             <Grid item xs={12} md={8} ml={3}>
@@ -321,16 +360,21 @@ const EmployeeRegistrationScreen = () => {
                   component="img"
                   alt="talent-img"
                   height="200"
-                  sx={{ width: "200px" }}
                   image={
                     selectedFile
-                      ? selectedFile
+                      ? URL.createObjectURL(selectedFile)
                       : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
                   }
                 />
               </Card>
-
-              <FileBase64
+              <TextField
+                variant="standard"
+                type="file"
+                name="image2"
+                onChange={uploadCitizenshipFileHandler}
+                fullWidth
+              />
+              {/* <FileBase64
                 type="file"
                 multiple={false}
                 margin="normal"
@@ -338,7 +382,7 @@ const EmployeeRegistrationScreen = () => {
                   // console.log(file);
                   setSelectedFile(file.base64);
                 }}
-              />
+              /> */}
             </Grid>
           </Grid>
           <Divider />

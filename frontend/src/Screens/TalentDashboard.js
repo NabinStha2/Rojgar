@@ -22,14 +22,20 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
-import { getTalentProfileByUserTalentIdAction } from "../actions/talentActions";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  getTalentProfileByUserTalentIdAction,
+  editTalentRatingAction,
+} from "../actions/talentActions";
 import moment from "moment";
 
-const TalentDashboard = () => {
+const TalentDashboard = ({ visit = false }) => {
   const { talentProfile, loading } = useSelector((state) => state.talentInfo);
   const dispatch = useDispatch();
   const params = useParams();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (params.userTalentId) {
@@ -43,6 +49,16 @@ const TalentDashboard = () => {
   }, [dispatch, params]);
 
   // console.log(talentProfile);
+
+  // console.log(visit);
+
+  // const tryRequire = (path) => {
+  //   try {
+  //     return require(`${path}`).default;
+  //   } catch (err) {
+  //     return null;
+  //   }
+  // };
 
   return (
     <Grow in>
@@ -59,7 +75,7 @@ const TalentDashboard = () => {
           >
             <CircularProgress variant="indeterminate" />
           </Grid>
-        ) : talentProfile ? (
+        ) : talentProfile && talentProfile !== null ? (
           <Box
             xs={12}
             sx={{
@@ -82,9 +98,9 @@ const TalentDashboard = () => {
                       alt="talent-img"
                       height="200"
                       image={
-                        talentProfile.profile.image
-                          ? talentProfile.profile.image
-                          : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
+                        talentProfile.profile.image &&
+                        require(`../uploads/${talentProfile.profile.image}`)
+                          .default
                       }
                     />
                   </Card>
@@ -113,7 +129,35 @@ const TalentDashboard = () => {
                         talentProfile.profile.ratingper
                       }
                       precision={0.5}
-                      readOnly
+                      readOnly={
+                        userInfo._id === talentProfile.userTalentId
+                          ? true
+                          : false
+                      }
+                      onChange={(event, newValue) => {
+                        visit
+                          ? dispatch(
+                              editTalentRatingAction(
+                                {
+                                  userTalentId: talentProfile.userTalentId,
+                                  inputData: { rating: newValue },
+                                  id: talentProfile._id,
+                                  visit: true,
+                                },
+                                navigate
+                              )
+                            )
+                          : dispatch(
+                              editTalentRatingAction(
+                                {
+                                  userTalentId: talentProfile.userTalentId,
+                                  inputData: { rating: newValue },
+                                  id: talentProfile._id,
+                                },
+                                navigate
+                              )
+                            );
+                      }}
                     />
                   </Grid>
                   <div className="rating-info">
@@ -172,21 +216,23 @@ const TalentDashboard = () => {
                   <Typography variant="body1" mt={2} mb={3} gutterBottom>
                     {talentProfile.profile.experiencedLevel} Level
                   </Typography>
-                  <Grid item mt={2}>
-                    <Link
-                      to={`/talentEdit`}
-                      state={talentProfile}
-                      style={{
-                        textDecoration: "none",
-                        flex: 1,
-                        color: "black",
-                      }}
-                    >
-                      <Button variant="outlined" color="secondary">
-                        Edit
-                      </Button>
-                    </Link>
-                  </Grid>
+                  {talentProfile.userTalentId === userInfo._id && !visit && (
+                    <Grid item mt={2}>
+                      <Link
+                        to={`/talentEdit`}
+                        state={talentProfile}
+                        style={{
+                          textDecoration: "none",
+                          flex: 1,
+                          color: "black",
+                        }}
+                      >
+                        <Button variant="outlined" color="secondary">
+                          Edit
+                        </Button>
+                      </Link>
+                    </Grid>
+                  )}
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="h6" mt={1} gutterBottom>

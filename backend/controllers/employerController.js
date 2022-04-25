@@ -5,7 +5,6 @@ module.exports.employerRegister = async (req, res) => {
   const {
     name,
     email,
-    image,
     phoneNumber,
     country,
     city,
@@ -14,7 +13,6 @@ module.exports.employerRegister = async (req, res) => {
     khaltiId,
     description,
     khaltiName,
-    citizenshipFile,
     facebookId,
     twitterId,
     linkedinId,
@@ -28,7 +26,10 @@ module.exports.employerRegister = async (req, res) => {
       profile: {
         name,
         email,
-        image,
+        image:
+          req.files["image1"] !== undefined
+            ? req.files["image1"][0].filename
+            : "",
         phoneNumber,
         vatId,
         description,
@@ -39,7 +40,12 @@ module.exports.employerRegister = async (req, res) => {
         khaltiName,
       },
       address: { country, city, provience },
-      document: { citizenshipFile },
+      document: {
+        citizenshipFile:
+          req.files["image2"] !== undefined
+            ? req.files["image2"][0].filename
+            : "",
+      },
       socialProfile: {
         facebookId,
         twitterId,
@@ -64,25 +70,50 @@ module.exports.employerRegister = async (req, res) => {
 };
 
 module.exports.getAllEmployerProfile = async (req, res) => {
+  const perPage = 20;
+  const page = req.query.pageNumber || 1;
+  const keyword = req.query.keyword || "";
+  const email = req.query.email;
+
+  console.log(keyword, email);
+
   try {
-    const employerInfo = await Employer.find().populate(
-      "userEmployerId",
-      "name email"
+    const count = await Employer.where({
+      "profile.name": RegExp(keyword, "i"),
+    }).countDocuments();
+
+    console.log(count);
+
+    const employerInfo = await Employer.find()
+      .or([
+        keyword ? { "profile.name": RegExp(keyword, "i") } : {},
+        keyword ? { "profile.email": RegExp(keyword, "i") } : {},
+      ])
+      .limit(perPage)
+      .skip(perPage * (page - 1))
+      .populate("userEmployerId", "name email")
+      .lean(); //mongoose style
+
+    employerInfo.map((employer, i) =>
+      console.log(employer.profile.name, employer.profile.email)
     );
 
-    res.status(200).json({ employerProfile: employerInfo });
+    res.json({
+      employerProfile: employerInfo,
+      pageNumber: page,
+      pages: Math.ceil(count / perPage),
+    });
   } catch (err) {
-    res.status(500).json({ errMessage: err.message });
+    res.status(409).json({ errMessage: err.message });
   }
 };
 
 module.exports.getEmployerProfile = async (req, res) => {
   const id = req.params.id;
   try {
-    const employerInfo = await Employer.findById({ _id: id }).populate(
-      "userEmployerId",
-      "name email"
-    );
+    const employerInfo = await Employer.findById({ _id: id })
+      .populate("userEmployerId", "name email")
+      .lean();
 
     res.status(200).json({ employerProfile: employerInfo });
   } catch (err) {
@@ -95,7 +126,9 @@ module.exports.getEmployerProfileByUserEmployerId = async (req, res) => {
   try {
     const employerInfo = await Employer.findOne({
       userEmployerId: userEmployerId,
-    }).populate("posts");
+    })
+      .populate("posts")
+      .lean();
 
     // console.log(employerInfo);
 
@@ -108,8 +141,9 @@ module.exports.getEmployerProfileByUserEmployerId = async (req, res) => {
 module.exports.updateEmployer = async (req, res) => {
   const {
     name,
-    image,
     phoneNumber,
+    rating,
+    ratingper,
     country,
     city,
     email,
@@ -118,33 +152,46 @@ module.exports.updateEmployer = async (req, res) => {
     khaltiId,
     description,
     khaltiName,
-    citizenshipFile,
     facebookId,
     twitterId,
     linkedinId,
     githubId,
     portfolioLink,
   } = req.body;
+  // console.log(req.body);
+  // console.log(req.file.originalname, req.file.path);
   const id = req.params.id;
 
+  // console.log(req.files["image1"][0].originalname);
   try {
+    const employer = await Employer.findById({ _id: id });
     const updatedEmployer = await Employer.findByIdAndUpdate(
       { _id: id },
       {
         profile: {
           name,
-          image,
+          image:
+            req.files["image1"] !== undefined
+              ? req.files["image1"][0].filename
+              : employer.profile.image,
           phoneNumber,
           vatId,
           description,
           email,
+          rating,
+          ratingper,
         },
         bankAcc: {
           khaltiId,
           khaltiName,
         },
         address: { country, city, provience },
-        document: { citizenshipFile },
+        document: {
+          citizenshipFile:
+            req.files["image2"] !== undefined
+              ? req.files["image2"][0].filename
+              : employer.document.citizenshipFile,
+        },
         socialProfile: {
           facebookId,
           twitterId,
@@ -153,6 +200,33 @@ module.exports.updateEmployer = async (req, res) => {
           portfolioLink,
         },
       },
+      {
+        new: true,
+        timestamps: true,
+      }
+    );
+    res.status(200).json({ employerProfile: updatedEmployer });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ errMessage: err.message });
+  }
+};
+
+module.exports.updateEmployerRating = async (req, res) => {
+  const { rating } = req.body;
+  const id = req.params.id;
+
+  // console.log(rating, id);
+
+  try {
+    const employer = await Employer.findById(id).lean();
+
+    employer.profile.rating = employer.profile.rating + rating;
+    employer.profile.ratingper = employer.profile.ratingper + 1;
+
+    const updatedEmployer = await Employer.findByIdAndUpdate(
+      { _id: id },
+      employer,
       {
         new: true,
         timestamps: true,

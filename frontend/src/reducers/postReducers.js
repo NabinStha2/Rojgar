@@ -36,15 +36,16 @@ export const getPostReducer = (state = { posts: [] }, action) => {
     case GET_ALL_POST_REQUEST:
       return {
         ...state,
+        error: null,
         loading: true,
       };
     case GET_ALL_POST_SUCCESS:
       return { ...state, loading: false, posts: action.payload };
     case GET_ALL_POST_FAILED:
-      return { ...state, loading: false, error: action.payload };
+      return { loading: false, error: action.payload };
 
     case GET_ADVANCED_POST_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, error: null, loading: true };
     case GET_ADVANCED_POST_SUCCESS:
       return { ...state, loading: false, posts: action.payload };
     case GET_ADVANCED_POST_FAILED:
@@ -53,6 +54,7 @@ export const getPostReducer = (state = { posts: [] }, action) => {
     case GET_CATEGORY_POST_REQUEST:
       return {
         ...state,
+        error: null,
         loading: true,
       };
     case GET_CATEGORY_POST_SUCCESS:
@@ -63,6 +65,7 @@ export const getPostReducer = (state = { posts: [] }, action) => {
     case GET_POST_DETAILS_REQUEST:
       return {
         ...state,
+        error: null,
         loading: true,
       };
     case GET_POST_DETAILS_SUCCESS:
@@ -73,6 +76,7 @@ export const getPostReducer = (state = { posts: [] }, action) => {
     case POST_CREATE_REQUEST:
       return {
         ...state,
+        error: null,
         loading: true,
       };
     case POST_CREATE_SUCCESS:
@@ -83,6 +87,7 @@ export const getPostReducer = (state = { posts: [] }, action) => {
     case POST_EDIT_REQUEST:
       return {
         ...state,
+        error: null,
         loading: true,
       };
     case POST_EDIT_SUCCESS:
@@ -93,6 +98,7 @@ export const getPostReducer = (state = { posts: [] }, action) => {
     case POST_DELETE_REQUEST:
       return {
         ...state,
+        error: null,
         loading: true,
       };
     case POST_DELETE_SUCCESS:
@@ -108,6 +114,7 @@ export const getPostReducer = (state = { posts: [] }, action) => {
     case POST_PAID_PROPOSAL_REQUEST:
       return {
         ...state,
+        error: null,
         loading: true,
       };
     case POST_PAID_PROPOSAL_SUCCESS:
@@ -121,7 +128,9 @@ export const getPostReducer = (state = { posts: [] }, action) => {
 
     case POST_ACCEPT_PROPOSAL_REQUEST:
       return {
+        ...state,
         loading: true,
+        error: null,
       };
     case POST_ACCEPT_PROPOSAL_SUCCESS:
       return {
@@ -133,9 +142,7 @@ export const getPostReducer = (state = { posts: [] }, action) => {
       return { loading: false, error: action.payload };
 
     case POST_FINISH_PROPOSAL_REQUEST:
-      return {
-        loading: true,
-      };
+      return { ...state, error: null, loading: true };
     case POST_FINISH_PROPOSAL_SUCCESS:
       return {
         ...state,

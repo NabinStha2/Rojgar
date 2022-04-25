@@ -11,6 +11,8 @@ const postRoutes = require("./routes/postRoutes");
 const talentRoutes = require("./routes/talentRoutes");
 const employerRoutes = require("./routes/employerRoutes");
 const Post = require("./models/postModel");
+const uploadRoutes = require("./routes/uploadRoutes");
+const path = require("path");
 
 var compression = require("compression");
 
@@ -19,8 +21,8 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use(cors());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+app.use(express.json({ limit: "5000mb" }));
+app.use(express.urlencoded({ extended: true, limit: "5000mb" }));
 app.use(
   compression({
     level: 1,
@@ -34,6 +36,9 @@ app.use("/user", userRoutes);
 app.use("/post", postRoutes);
 app.use("/talent", talentRoutes);
 app.use("/employer", employerRoutes);
+// app.use("/api/upload", uploadRoutes);
+
+// app.use(express.static("/uploads"));
 
 app.get("/payment/:token/:amt/:key", async (req, res) => {
   console.log(`${req.params.token} ${req.params.amt} ${req.params.key}`);

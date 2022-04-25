@@ -12,8 +12,9 @@ import {
   Snackbar,
   Alert,
   Grow,
+  Input,
 } from "@mui/material";
-import FileBase64 from "react-file-base64";
+// import FileBase64 from "react-file-base64";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +28,9 @@ const EmployerEdit = () => {
   // console.log(location.state);
   const [image, setImage] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [goBack, setGoBack] = useState(false);
   const { loading, error } = useSelector((state) => state.employerInfo);
+  // const [uploading, setUploading] = useState(false);
 
   const {
     register,
@@ -38,6 +41,8 @@ const EmployerEdit = () => {
       email: location.state.profile.email,
       name: location.state.profile.name,
       city: location.state.address.city,
+      rating: location.state.profile.rating,
+      ratingper: location.state.profile.ratingper,
       country: location.state.address.country,
       provience: location.state.address.provience,
       description: location.state.profile.description,
@@ -65,21 +70,57 @@ const EmployerEdit = () => {
     if (selectedFile) {
       inputData.citizenshipFile = selectedFile;
     } else {
+      console.log("hey");
       inputData.citizenshipFile = location.state.document.citizenshipFile;
     }
 
-    // console.log(inputData);
+    const formData = new FormData();
+    formData.append("image1", inputData.image);
+    formData.append("name", inputData.name);
+    formData.append("email", inputData.email);
+    formData.append("city", inputData.city);
+    formData.append("phoneNumber", inputData.phoneNumber);
+    formData.append("khaltiId", inputData.khaltiId);
+    formData.append("khaltiName", inputData.khaltiName);
+    formData.append("linkedinId", inputData.linkedinId);
+    formData.append("githubId", inputData.githubId);
+    formData.append("rating", inputData.rating);
+    formData.append("ratingper", inputData.ratingper);
+    formData.append("country", inputData.country);
+    formData.append("provience", inputData.provience);
+    formData.append("description", inputData.description);
+    formData.append("vatId", inputData.vatId);
+    formData.append("facebookId", inputData.facebookId);
+    formData.append("twitterId", inputData.twitterId);
+    formData.append("portfolioLink", inputData.portfolioLink);
+    formData.append("image2", inputData.citizenshipFile);
+
+    console.log(inputData);
     dispatch(
       editEmployerAction(
         {
           userEmployerId: location.state.userEmployerId,
-          inputData: inputData,
           id: location.state._id,
         },
+        formData,
         navigate
       )
     );
+
+    setGoBack(true);
   };
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    console.log(image);
+  };
+
+  const uploadCitizenshipFileHandler = async (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
+  };
+
   return (
     <Grow in>
       <Box
@@ -93,7 +134,7 @@ const EmployerEdit = () => {
           width: "80vw",
         }}
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} enctype="multipart/form-data">
           <Snackbar open={error} autoHideDuration={1000}>
             <Alert severity="error" sx={{ width: "100%" }}>
               {error}
@@ -121,13 +162,14 @@ const EmployerEdit = () => {
                 <Card>
                   <CardMedia
                     component="img"
-                    alt="talent-img"
+                    alt="employer-img"
                     height="200"
                     image={
                       image
-                        ? image
+                        ? URL.createObjectURL(image)
                         : location.state.profile.image
-                        ? location.state.profile.image
+                        ? require(`../uploads/${location.state.profile.image}`)
+                            .default
                         : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
                     }
                   />
@@ -142,14 +184,12 @@ const EmployerEdit = () => {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  <FileBase64
+                  <TextField
+                    variant="standard"
                     type="file"
-                    multiple={false}
-                    margin="normal"
-                    onDone={(file) => {
-                      // console.log(file);
-                      setImage(file.base64);
-                    }}
+                    name="image1"
+                    onChange={uploadFileHandler}
+                    fullWidth
                   />
                 </div>
 
@@ -444,12 +484,12 @@ const EmployerEdit = () => {
                     component="img"
                     alt="talent-img"
                     height="200"
-                    sx={{ width: "200px" }}
                     image={
                       selectedFile
-                        ? selectedFile
+                        ? URL.createObjectURL(selectedFile)
                         : location.state.document.citizenshipFile
-                        ? location.state.document.citizenshipFile
+                        ? require(`../uploads/${location.state.document.citizenshipFile}`)
+                            .default
                         : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
                     }
                   />
@@ -461,7 +501,15 @@ const EmployerEdit = () => {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  <FileBase64
+                  <TextField
+                    variant="standard"
+                    type="file"
+                    name="image2"
+                    onChange={uploadCitizenshipFileHandler}
+                    fullWidth
+                  />
+
+                  {/* <FileBase64
                     type="file"
                     multiple={false}
                     margin="normal"
@@ -469,7 +517,7 @@ const EmployerEdit = () => {
                       // console.log(file);
                       setSelectedFile(file.base64);
                     }}
-                  />
+                  /> */}
                 </div>
               </Grid>
             </Grid>
@@ -497,6 +545,7 @@ const EmployerEdit = () => {
               </Grid>
             </Grid>
           </Paper>
+
           {loading ? (
             <Grid
               item
@@ -518,6 +567,16 @@ const EmployerEdit = () => {
               Submit
             </Button>
           )}
+
+          <Button
+            variant="contained"
+            onClick={() =>
+              navigate(`/employerDashboard/${location.state.userEmployerId}`)
+            }
+            sx={{ width: "100%", marginLeft: 1, marginTop: 2 }}
+          >
+            Go Back
+          </Button>
         </form>
       </Box>
     </Grow>

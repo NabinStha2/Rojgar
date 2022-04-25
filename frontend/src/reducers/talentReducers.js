@@ -9,8 +9,14 @@ import {
   EDIT_TALENT_BIDS_REQUEST,
   EDIT_TALENT_BIDS_SUCCESS,
   EDIT_TALENT_FAILED,
+  EDIT_TALENT_RATING_FAILED,
+  EDIT_TALENT_RATING_REQUEST,
+  EDIT_TALENT_RATING_SUCCESS,
   EDIT_TALENT_REQUEST,
   EDIT_TALENT_SUCCESS,
+  GET_ALL_TALENT_FAILED,
+  GET_ALL_TALENT_REQUEST,
+  GET_ALL_TALENT_SUCCESS,
   GET_TALENT_PROFILE_FAILED,
   GET_TALENT_PROFILE_REQUEST,
   GET_TALENT_PROFILE_SUCCESS,
@@ -20,7 +26,10 @@ import {
   TALENT_REGISTRATION_SUCCESS,
 } from "../constants/talentConstant";
 
-export const talentReducer = (state = {}, action) => {
+export const talentReducer = (
+  state = { talentProfile: null, allTalentProfile: [] },
+  action
+) => {
   switch (action.type) {
     case TALENT_REGISTRATION_REQUEST:
       return { loading: true };
@@ -34,7 +43,7 @@ export const talentReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
 
     case GET_TALENT_PROFILE_REQUEST:
-      return { loading: true };
+      return { ...state, error: null, loading: true };
     case GET_TALENT_PROFILE_SUCCESS:
       return {
         ...state,
@@ -44,14 +53,35 @@ export const talentReducer = (state = {}, action) => {
     case GET_TALENT_PROFILE_FAILED:
       return { loading: false, error: action.payload };
 
+    case GET_ALL_TALENT_REQUEST:
+      return { ...state, error: null, loading: true };
+    case GET_ALL_TALENT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        allTalentProfile: action.payload,
+      };
+    case GET_ALL_TALENT_FAILED:
+      return { loading: false, error: action.payload };
+
     case EDIT_TALENT_REQUEST:
-      return { loading: true };
+      return { ...state, error: null, loading: true };
     case EDIT_TALENT_SUCCESS:
       return {
         ...state,
         loading: false,
       };
     case EDIT_TALENT_FAILED:
+      return { loading: false, error: action.payload };
+
+    case EDIT_TALENT_RATING_REQUEST:
+      return { ...state, error: null, loading: true };
+    case EDIT_TALENT_RATING_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+    case EDIT_TALENT_RATING_FAILED:
       return { loading: false, error: action.payload };
 
     case CREATE_TALENT_BIDS_REQUEST:

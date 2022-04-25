@@ -1,23 +1,36 @@
+import React from "react";
 import Header from "./components/Header";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./Screens/HomeScreen";
-import About from "./Screens/AboutScreen";
-import Footer from "./components/Footer";
-import Login from "./Screens/LoginScreen";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Register from "./Screens/RegisterScreen";
-import PostScreen from "./Screens/PostScreen";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import PostDetailsScreen from "./Screens/PostDetailsScreen";
-import TalentDashboard from "./Screens/TalentDashboard";
-import EmployerDashboard from "./Screens/EmployerDashboard";
-import TalentEditScreen from "./Screens/TalentEditScreen";
-import PostJob from "./Screens/PostJob";
-import EmployeeRegistrationScreen from "./Screens/EmployeeReg";
-import EmployerEdit from "./Screens/EmployerEdit";
-import TalentRegForm from "./Screens/TalentRegForm";
 import { useSelector } from "react-redux";
+
+const Home = React.lazy(() => import("./Screens/HomeScreen"));
+const About = React.lazy(() => import("./Screens/AboutScreen"));
+const Footer = React.lazy(() => import("./components/Footer"));
+const Login = React.lazy(() => import("./Screens/LoginScreen"));
+const Register = React.lazy(() => import("./Screens/RegisterScreen"));
+const TabsScreen = React.lazy(() => import("./Screens/TabsScreen"));
+const TalentDashboard = React.lazy(() => import("./Screens/TalentDashboard"));
+const EmployerDashboard = React.lazy(() =>
+  import("./Screens/EmployerDashboard")
+);
+const TalentEditScreen = React.lazy(() => import("./Screens/TalentEditScreen"));
+const EmployeeRegistrationScreen = React.lazy(() =>
+  import("./Screens/EmployeeReg")
+);
+const EmployerEdit = React.lazy(() => import("./Screens/EmployerEdit"));
+const TalentRegForm = React.lazy(() => import("./Screens/TalentRegForm"));
+const PostJob = React.lazy(() => import("./Screens/PostJob"));
+const PostDetailsScreen = React.lazy(() =>
+  import("./Screens/PostDetailsScreen")
+);
 
 const theme = createTheme({
   breakpoints: {
@@ -69,80 +82,122 @@ export const categoriesAvailable = [
 export const App = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <Header />
-        <ToastContainer autoClose={1000} hideProgressBar={true} />
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <Header />
+          <ToastContainer autoClose={1000} hideProgressBar={true} />
 
-        <Routes>
-          <Route
-            path="/talentDashboard/:userTalentId"
-            element={<TalentDashboard />}
-          />
-          <Route path="/talentReg" element={<TalentRegForm />} />
-          <Route path="/talentEdit" element={<TalentEditScreen />} />
+          <Routes>
+            <Route
+              path="/talentProfile/:userTalentId"
+              element={<TalentDashboard visit={true} />}
+            />
 
-          <Route path="/employerEdit" element={<EmployerEdit />} />
-          <Route
-            path="/employerDashboard/:userEmployerId"
-            element={<EmployerDashboard />}
-          />
-          <Route path="/postJob" element={<PostJob />} />
-          <Route path="/postJob/edit" element={<PostJob />} />
-          <Route path="/employerReg" element={<EmployeeRegistrationScreen />} />
+            <Route
+              path="/employerProfile/:userEmployerId"
+              element={<EmployerDashboard visit={true} />}
+            />
+            {userInfo && userInfo.jobType === "Talent" && (
+              <>
+                {!userInfo.isComplete && (
+                  <Route path="/talentReg" element={<TalentRegForm />} />
+                )}
+                <Route path="/talentEdit" element={<TalentEditScreen />} />
 
-          {userInfo ? (
-            userInfo.jobType === "Employer" ? (
-              <Route
-                path="/employerDashboard/:userEmployerId"
-                element={<EmployerDashboard />}
-              />
-            ) : (
-              <Route
-                path="/talentDashboard/:userTalentId"
-                element={<TalentDashboard />}
-              />
-            )
-          ) : (
+                <Route
+                  path="/project/:postId"
+                  element={<PostDetailsScreen />}
+                />
+              </>
+            )}
+
+            {userInfo && userInfo.jobType === "Employer" && (
+              <>
+                {!userInfo.isComplete && (
+                  <Route
+                    path="/employerReg"
+                    element={<EmployeeRegistrationScreen />}
+                  />
+                )}
+                <Route path="/employerEdit" element={<EmployerEdit />} />
+                <Route path="/postJob" element={<PostJob />} />
+                <Route path="/postJob/edit" element={<PostJob />} />
+                <Route
+                  path="/project/:postId"
+                  element={<PostDetailsScreen />}
+                />
+                <Route
+                  path="/project/edit/:postId"
+                  element={<PostDetailsScreen />}
+                />
+              </>
+            )}
+
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Register />} />
+
             <Route path="/" element={<Home />} />
-          )}
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Register />} />
-          <Route path="/projects/:category" element={<PostScreen />} />
-          <Route path="/project/:postId" element={<PostDetailsScreen />} />
-          <Route path="/project/edit/:postId" element={<PostDetailsScreen />} />
-          <Route
-            path="/projects/:category/search/:keyword"
-            element={<PostScreen />}
-          />
-          <Route
-            path="/projects/:category/price/:price"
-            element={<PostScreen />}
-          />
-          <Route
-            path="/projects/:category/experience/:experiencedLevel"
-            element={<PostScreen />}
-          />
-          <Route
-            path="/projects/:category/search/:keyword/price/:price"
-            element={<PostScreen />}
-          />
-          <Route
-            path="/projects/:category/price/:price/experience/:experiencedLevel"
-            element={<PostScreen />}
-          />
-          <Route
-            path="/projects/:category/search/:keyword/experience/:experiencedLevel"
-            element={<PostScreen />}
-          />
-          <Route
-            path="/projects/:category/search/:keyword/price/:price/experience/:experiencedLevel"
-            element={<PostScreen />}
-          />
-        </Routes>
-        <Footer />
+
+            {userInfo ? (
+              userInfo.jobType === "Employer" ? (
+                <Route
+                  path="/employerDashboard/:userEmployerId"
+                  element={<EmployerDashboard />}
+                />
+              ) : (
+                <Route
+                  path="/talentDashboard/:userTalentId"
+                  element={<TalentDashboard />}
+                />
+              )
+            ) : (
+              <Route path="/" element={<Home />} />
+            )}
+
+            <Route path="/about" element={<About />} />
+
+            <Route
+              path="/projects/:category"
+              element={<TabsScreen index={0} />}
+            />
+
+            <Route path="/freelancer" element={<TabsScreen index={1} />} />
+            <Route path="/employerList" element={<TabsScreen index={2} />} />
+            <Route
+              path="/projects/:category/search/:keyword"
+              element={<TabsScreen index={0} />}
+            />
+            <Route
+              path="/projects/:category/price/:price"
+              element={<TabsScreen index={0} />}
+            />
+            <Route
+              path="/projects/:category/experience/:experiencedLevel"
+              element={<TabsScreen index={0} />}
+            />
+            <Route
+              path="/projects/:category/search/:keyword/price/:price"
+              element={<TabsScreen index={0} />}
+            />
+            <Route
+              path="/projects/:category/price/:price/experience/:experiencedLevel"
+              element={<TabsScreen index={0} />}
+            />
+            <Route
+              path="/projects/:category/search/:keyword/experience/:experiencedLevel"
+              element={<TabsScreen index={0} />}
+            />
+            <Route
+              path="/projects/:category/search/:keyword/price/:price/experience/:experiencedLevel"
+              element={<TabsScreen index={0} />}
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+          <Footer />
+        </React.Suspense>
       </Router>
     </ThemeProvider>
   );

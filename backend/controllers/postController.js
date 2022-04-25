@@ -47,7 +47,7 @@ module.exports.createPost = asyncHandler(async (req, res) => {
 });
 
 module.exports.getAllPosts = asyncHandler(async (req, res) => {
-  const perPage = 10;
+  const perPage = 20;
   var skillsArray;
   const page = req.query.pageNumber || 1;
   const keyword = req.query.keyword || "";
@@ -73,11 +73,12 @@ module.exports.getAllPosts = asyncHandler(async (req, res) => {
         experiencedLevel ? { experiencedLevel: experiencedLevel } : {},
       ])
       .limit(perPage)
-      .skip(perPage * (page - 1)); //mongoose style
+      .skip(perPage * (page - 1))
+      .lean(); //mongoose style
 
     // const post = await Post.find({ title: { $regex: keyword, $options: "i" } }); //mongo style
 
-    // console.log(post);
+    console.log(post);
 
     res.json({
       posts: post,
@@ -85,6 +86,7 @@ module.exports.getAllPosts = asyncHandler(async (req, res) => {
       pages: Math.ceil(count / perPage),
     });
   } catch (err) {
+    console.log(err.message, err.stack);
     res.status(409).json({ errMessage: err.message });
   }
 });
@@ -94,7 +96,7 @@ module.exports.categorySearchProjects = asyncHandler(async (req, res) => {
   //   console.log(`${category}`);
   try {
     // const post = await Post.where({ category });
-    const post = await Post.find({ category: category });
+    const post = await Post.find({ category: category }).lean();
 
     // console.log(post);
     res.json({
@@ -116,17 +118,19 @@ module.exports.advanceSearchProjects = asyncHandler(async (req, res) => {
     skillsArray = querySkill.split(",");
   }
 
-  // console.log(`${category} ${querySkill} ${price} ${experiencedLevel}`);
+  console.log(`${category} ${querySkill} ${price} ${experiencedLevel}`);
   // console.log(skillsArray);
 
   try {
-    const post = await Post.find().and([
-      keyword ? { title: RegExp(keyword, "i") } : {},
-      { category: category },
-      skillsArray ? { skillsRequirement: { $in: skillsArray } } : {},
-      price ? { price: { $lte: price } } : {},
-      experiencedLevel ? { experiencedLevel: experiencedLevel } : {},
-    ]);
+    const post = await Post.find()
+      .and([
+        keyword ? { title: RegExp(keyword, "i") } : {},
+        { category: category },
+        skillsArray ? { skillsRequirement: { $in: skillsArray } } : {},
+        price ? { price: { $lte: price } } : {},
+        experiencedLevel ? { experiencedLevel: experiencedLevel } : {},
+      ])
+      .lean();
     //   .or([
     //     { skillsRequirement: { $in: skills } },
     //     { price: { $lte: price } },
@@ -153,9 +157,9 @@ module.exports.advanceSearchProjects = asyncHandler(async (req, res) => {
 module.exports.getPost = asyncHandler(async (req, res) => {
   const id = req.params.id;
   try {
-    const post = await Post.findById({ _id: id }).populate(
-      "employerId proposalSubmitted.talentId"
-    );
+    const post = await Post.findById({ _id: id })
+      .populate("employerId proposalSubmitted.talentId")
+      .lean();
 
     res.status(200).json({ projectPost: post });
   } catch (err) {
@@ -166,10 +170,12 @@ module.exports.getPost = asyncHandler(async (req, res) => {
 module.exports.getEmployerPosts = asyncHandler(async (req, res) => {
   const employerId = req.params.id;
   try {
-    const post = await Post.find({ employerId }).populate({
-      path: "employerId",
-      select: "name email",
-    });
+    const post = await Post.find({ employerId })
+      .populate({
+        path: "employerId",
+        select: "name email",
+      })
+      .lean();
 
     res.status(200).json({ posts: post });
   } catch (err) {
@@ -242,7 +248,7 @@ module.exports.updatePostAcceptProposal = asyncHandler(async (req, res) => {
   console.log(req.body);
 
   try {
-    const talent = await Talent.findById({ _id: req.body.talentId });
+    const talent = await Talent.findById({ _id: req.body.talentId }).lean();
     talent.bids.map((bid) => {
       if (bid.postId.toString() === postId) {
         bid.isAccepted = true;
@@ -256,7 +262,7 @@ module.exports.updatePostAcceptProposal = asyncHandler(async (req, res) => {
       { new: true, timestamps: true }
     );
 
-    const post = await Post.findById({ _id: postId });
+    const post = await Post.findById({ _id: postId }).lean();
     post.proposalSubmitted.map((proposal) => {
       if (proposal.talentId.toString() === req.body.talentId) {
         proposal.isAccepted = true;
@@ -285,7 +291,7 @@ module.exports.updatePostFinishProposal = asyncHandler(async (req, res) => {
   // console.log(req.body);
 
   try {
-    const talent = await Talent.findById({ _id: req.body.talentId });
+    const talent = await Talent.findById({ _id: req.body.talentId }).lean();
     talent.bids.map((bid) => {
       if (bid.postId.toString() === postId) {
         bid.isFinished = true;
@@ -299,7 +305,7 @@ module.exports.updatePostFinishProposal = asyncHandler(async (req, res) => {
       { new: true, timestamps: true }
     );
 
-    const post = await Post.findById({ _id: postId });
+    const post = await Post.findById({ _id: postId }).lean();
     post.proposalSubmitted.map((proposal) => {
       if (proposal.talentId.toString() === req.body.talentId) {
         proposal.isFinished = true;

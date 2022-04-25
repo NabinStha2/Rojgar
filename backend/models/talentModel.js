@@ -7,7 +7,7 @@ const talentSchema = mongoose.Schema(
       title: { type: String },
       description: { type: String },
       image: { type: String },
-      gender: { type: "string", enum: ["male", "female", "other"] },
+      gender: { type: "string", enum: ["male", "female", "other", ""] },
       dateOfBirth: { type: String },
       phoneNumber: { type: Number },
       email: { type: String },
@@ -15,8 +15,8 @@ const talentSchema = mongoose.Schema(
       category: { type: String },
       profileRate: { type: Number },
       skills: [{ type: String, default: [] }],
-      rating: { type: Number, default: 8 },
-      ratingper: { type: Number, default: 4 },
+      rating: { type: Number, default: 0 },
+      ratingper: { type: Number, default: 0 },
     },
     education: {
       college: { type: String, default: "" },
@@ -27,6 +27,7 @@ const talentSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
+      index: true,
     },
     bankAcc: {
       khaltiId: { type: Number },
@@ -64,6 +65,8 @@ const talentSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
+
+talentSchema.index({ userTalentId: 1 });
 
 const Talent = mongoose.model("Talent", talentSchema);
 

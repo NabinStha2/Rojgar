@@ -5,11 +5,41 @@ const {
   getAllEmployerProfile,
   updateEmployer,
   getEmployerProfileByUserEmployerId,
+  updateEmployerRating,
 } = require("../controllers/employerController");
+const upload = require("./uploadRoutes");
 
-router.post("/register/:id", employerRegister);
+router.post(
+  "/register/:id",
+  upload.fields([
+    {
+      name: "image1",
+      maxCount: 1,
+    },
+    {
+      name: "image2",
+      maxCount: 1,
+    },
+  ]),
+  employerRegister
+);
 
-router.put("/editemployer/:id", updateEmployer);
+router.post(
+  "/editemployer/:id",
+  upload.fields([
+    {
+      name: "image1",
+      maxCount: 1,
+    },
+    {
+      name: "image2",
+      maxCount: 1,
+    },
+  ]),
+  updateEmployer
+);
+
+router.patch("/editemployerrating/:id", updateEmployerRating);
 
 router.get("/", getAllEmployerProfile);
 

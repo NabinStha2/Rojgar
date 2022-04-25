@@ -19,20 +19,26 @@ import {
   TALENT_REGISTRATION_FAILED,
   TALENT_REGISTRATION_REQUEST,
   TALENT_REGISTRATION_SUCCESS,
+  EDIT_TALENT_RATING_REQUEST,
+  EDIT_TALENT_RATING_SUCCESS,
+  EDIT_TALENT_RATING_FAILED,
+  GET_ALL_TALENT_REQUEST,
+  GET_ALL_TALENT_SUCCESS,
+  GET_ALL_TALENT_FAILED,
 } from "../constants/talentConstant";
 import { getPostDetailsAction } from "./postActions";
 
 export const registerTalentAction =
-  ({ inputData, id }, navigate) =>
+  ({ id }, formData, navigate) =>
   async (dispatch, getState) => {
     try {
       dispatch({
         type: TALENT_REGISTRATION_REQUEST,
       });
 
-      const { data } = await axios.post(`/talent/register/${id}`, inputData, {
+      const { data } = await axios.post(`/talent/register/${id}`, formData, {
         headers: {
-          "content-type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
 
@@ -49,6 +55,42 @@ export const registerTalentAction =
       console.log(err.response.data.errMessage);
       dispatch({
         type: TALENT_REGISTRATION_FAILED,
+        payload:
+          err.response && err.response.data.errMessage
+            ? err.response.data.errMessage
+            : err.message,
+      });
+    }
+  };
+
+export const getAllTalentAction =
+  ({ inputData }) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: GET_ALL_TALENT_REQUEST,
+      });
+
+      const { data } = await axios.get("/talent", {
+        params: {
+          keyword: inputData.keyword,
+          experiencedLevel: inputData.experiencedLevel,
+          category: inputData.category,
+          skills: inputData.skills.join(","),
+        },
+      });
+
+      console.log(data);
+
+      dispatch({
+        type: GET_ALL_TALENT_SUCCESS,
+        payload: data.talentProfile,
+      });
+    } catch (err) {
+      // console.log(err.message);
+      // console.log(err.response.data.errMessage);
+      dispatch({
+        type: GET_ALL_TALENT_FAILED,
         payload:
           err.response && err.response.data.errMessage
             ? err.response.data.errMessage
@@ -87,15 +129,52 @@ export const getTalentProfileByUserTalentIdAction =
   };
 
 export const editTalentAction =
-  ({ userTalentId, inputData, id }, navigate) =>
+  ({ userTalentId, id }, formData, navigate) =>
   async (dispatch, getState) => {
     try {
       dispatch({
         type: EDIT_TALENT_REQUEST,
       });
 
+      const { data } = await axios.patch(`/talent/editTalent/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      // console.log(data);
+
+      dispatch({
+        type: EDIT_TALENT_SUCCESS,
+        payload: data.talentProfile,
+      });
+      toast("Talent edited successfully.Go back");
+      // console.log(userTalentId);
+
+      // navigate(`/talentDashboard/${userTalentId}`);
+    } catch (err) {
+      console.log(err.message);
+      // console.log(err.response.data.errMessage);
+      dispatch({
+        type: EDIT_TALENT_FAILED,
+        payload:
+          err.response && err.response.data.errMessage
+            ? err.response.data.errMessage
+            : err.message,
+      });
+    }
+  };
+
+export const editTalentRatingAction =
+  ({ userTalentId, inputData, id, visit = false }, navigate) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: EDIT_TALENT_RATING_REQUEST,
+      });
+
       const { data } = await axios.patch(
-        `/talent/editTalent/${id}`,
+        `/talent/editTalentRating/${id}`,
         inputData,
         {
           headers: {
@@ -107,18 +186,22 @@ export const editTalentAction =
       // console.log(data);
 
       dispatch({
-        type: EDIT_TALENT_SUCCESS,
+        type: EDIT_TALENT_RATING_SUCCESS,
         payload: data.talentProfile,
       });
-      toast("talent edited successfully");
+      toast("talent rating edited successfully");
       // console.log(userTalentId);
 
-      navigate(`/talentDashboard/${userTalentId}`);
+      console.log(visit);
+
+      visit
+        ? navigate(`/talentProfile/${userTalentId}`)
+        : navigate(`/talentDashboard/${userTalentId}`);
     } catch (err) {
       console.log(err.message);
       // console.log(err.response.data.errMessage);
       dispatch({
-        type: EDIT_TALENT_FAILED,
+        type: EDIT_TALENT_RATING_FAILED,
         payload:
           err.response && err.response.data.errMessage
             ? err.response.data.errMessage

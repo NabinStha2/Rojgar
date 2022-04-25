@@ -9,13 +9,14 @@ const employerSchema = mongoose.Schema(
       email: { type: String, required: true },
       description: { type: String, required: true },
       vatId: { type: String, required: true },
-      rating: { type: Number, default: 8 },
-      ratingper: { type: Number, default: 4 },
+      rating: { type: Number, default: 0 },
+      ratingper: { type: Number, default: 0 },
     },
     userEmployerId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
+      index: true,
     },
     address: {
       country: { type: String },
@@ -41,7 +42,7 @@ const employerSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
-
+employerSchema.index({ userEmployerId: 1 });
 const Employer = mongoose.model("Employer", employerSchema);
 
 module.exports = Employer;

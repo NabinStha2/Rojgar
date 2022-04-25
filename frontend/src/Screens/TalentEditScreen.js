@@ -53,7 +53,7 @@ const TalentEditScreen = () => {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.talentInfo);
 
-  console.log(location.state);
+  // console.log(location.state);
 
   const handleChange = (event) => {
     const {
@@ -71,30 +71,42 @@ const TalentEditScreen = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: location.state.profile.email,
-      name: location.state.profile.name,
-      city: location.state.address.city,
-      country: location.state.address.country,
-      provience: location.state.address.provience,
-      description: location.state.profile.description,
+      email: location.state !== null && location.state.profile.email,
+      name: location.state !== null && location.state.profile.name,
+      city: location.state !== null && location.state.address.city,
+      country: location.state !== null && location.state.address.country,
+      provience: location.state !== null && location.state.address.provience,
+      description:
+        location.state !== null && location.state.profile.description,
+      rating: location.state !== null && location.state.profile.rating,
+      ratingper: location.state !== null && location.state.profile.ratingper,
       skills: [],
-      experiencedLevel: location.state.profile.experiencedLevel,
-      category: location.state.profile.category,
-      profileRate: location.state.profile.profileRate,
-      title: location.state.profile.title,
-      college: location.state.education.college,
-      degree: location.state.education.degree,
-      facebookId: location.state.socialProfile.facebookId,
-      twitterId: location.state.socialProfile.twitterId,
-      portfolioLink: location.state.socialProfile.portfolioLink,
-      githubId: location.state.socialProfile.githubId,
-      linkedinId: location.state.socialProfile.linkedinId,
-      khaltiId: location.state.bankAcc.khaltiId,
-      khaltiName: location.state.bankAcc.khaltiName,
-      phoneNumber: location.state.profile.phoneNumber,
-      image: location.state.profile.image,
-      citizenshipFile: location.state.document.citizenshipFile,
-      resumeFile: location.state.document.resumeFile,
+      experiencedLevel:
+        location.state !== null && location.state.profile.experiencedLevel,
+      category: location.state !== null && location.state.profile.category,
+      profileRate:
+        location.state !== null && location.state.profile.profileRate,
+      title: location.state !== null && location.state.profile.title,
+      college: location.state !== null && location.state.education.college,
+      degree: location.state !== null && location.state.education.degree,
+      facebookId:
+        location.state !== null && location.state.socialProfile.facebookId,
+      twitterId:
+        location.state !== null && location.state.socialProfile.twitterId,
+      portfolioLink:
+        location.state !== null && location.state.socialProfile.portfolioLink,
+      githubId:
+        location.state !== null && location.state.socialProfile.githubId,
+      linkedinId:
+        location.state !== null && location.state.socialProfile.linkedinId,
+      khaltiId: location.state !== null && location.state.bankAcc.khaltiId,
+      khaltiName: location.state !== null && location.state.bankAcc.khaltiName,
+      phoneNumber:
+        location.state !== null && location.state.profile.phoneNumber,
+      image: location.state !== null && location.state.profile.image,
+      citizenshipFile:
+        location.state !== null && location.state.document.citizenshipFile,
+      resumeFile: location.state !== null && location.state.document.resumeFile,
     },
   });
 
@@ -116,22 +128,56 @@ const TalentEditScreen = () => {
     } else {
       inputData.resumeFile = location.state.document.resumeFile;
     }
+    const formData = new FormData();
+    formData.append("image1", inputData.image);
+    formData.append("name", inputData.name);
+    formData.append("email", inputData.email);
+    formData.append("city", inputData.city);
+    formData.append("phoneNumber", inputData.phoneNumber);
+    formData.append("khaltiId", inputData.khaltiId);
+    formData.append("khaltiName", inputData.khaltiName);
+    formData.append("linkedinId", inputData.linkedinId);
+    formData.append("githubId", inputData.githubId);
+    formData.append("rating", inputData.rating);
+    formData.append("ratingper", inputData.ratingper);
+    formData.append("country", inputData.country);
+    formData.append("provience", inputData.provience);
+    formData.append("description", inputData.description);
+    formData.append("vatId", inputData.vatId);
+    formData.append("facebookId", inputData.facebookId);
+    formData.append("twitterId", inputData.twitterId);
+    formData.append("portfolioLink", inputData.portfolioLink);
+    formData.append("image2", inputData.citizenshipFile);
+    formData.append("image3", inputData.resumeFile);
+    formData.append("skills", inputData.skills);
+    formData.append("title", inputData.title);
+    formData.append("experiencedLevel", inputData.experiencedLevel);
+    formData.append("college", inputData.college);
+    formData.append("degree", inputData.degree);
+    formData.append("profileRate", inputData.profileRate);
+    formData.append("category", inputData.category);
 
-    console.log(inputData);
+    // console.log(inputData);
     dispatch(
       editTalentAction(
         {
           userTalentId: location.state.userTalentId,
-          inputData: inputData,
           id: location.state._id,
         },
+        formData,
         navigate
       )
     );
   };
 
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+  };
+
   useEffect(() => {
-    setSkillName(location.state.profile.skills);
+    location.state.profile.skills &&
+      setSkillName(location.state.profile.skills);
   }, [location]);
 
   return (
@@ -165,13 +211,14 @@ const TalentEditScreen = () => {
                     height="200"
                     image={
                       image
-                        ? image
+                        ? URL.createObjectURL(image)
                         : location.state.profile.image
-                        ? location.state.profile.image
+                        ? require(`../uploads/${location.state.profile.image}`)
+                            .default
                         : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
                     }
                   />
-                </Card>{" "}
+                </Card>
                 <Typography variant="body1" textAlign="left" gutterBottom>
                   Choose Image
                 </Typography>
@@ -183,7 +230,14 @@ const TalentEditScreen = () => {
                     margin: "10px 0px",
                   }}
                 >
-                  <FileBase64
+                  <TextField
+                    variant="standard"
+                    type="file"
+                    name="image1"
+                    onChange={uploadFileHandler}
+                    fullWidth
+                  />
+                  {/* <FileBase64
                     type="file"
                     multiple={false}
                     margin="normal"
@@ -191,7 +245,7 @@ const TalentEditScreen = () => {
                       // console.log(file);
                       setImage(file.base64);
                     }}
-                  />
+                  /> */}
                 </div>
                 <Divider />
                 <Typography variant="h6" mt={1} gutterBottom>
@@ -549,7 +603,7 @@ const TalentEditScreen = () => {
                   <TextField
                     label="College/University"
                     variant="outlined"
-                    {...register("college", { required: true })}
+                    {...register("college")}
                     fullWidth
                   />
                 </Grid>
@@ -560,7 +614,7 @@ const TalentEditScreen = () => {
                   <TextField
                     label="College/University"
                     variant="outlined"
-                    {...register("degree", { required: true })}
+                    {...register("degree")}
                     fullWidth
                   />
                 </Grid>
@@ -600,9 +654,10 @@ const TalentEditScreen = () => {
                     sx={{ width: "200px" }}
                     image={
                       selectedCitizenshipFile
-                        ? selectedCitizenshipFile
+                        ? URL.createObjectURL(selectedCitizenshipFile)
                         : location.state.document.citizenshipFile
-                        ? location.state.document.citizenshipFile
+                        ? require(`../uploads/${location.state.document.citizenshipFile}`)
+                            .default
                         : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
                     }
                   />
@@ -616,7 +671,16 @@ const TalentEditScreen = () => {
                     color: "blueviolet",
                   }}
                 >
-                  <FileBase64
+                  <TextField
+                    variant="standard"
+                    type="file"
+                    name="image2"
+                    onChange={(e) =>
+                      setSelectedCitizenshipFile(e.target.files[0])
+                    }
+                    fullWidth
+                  />
+                  {/* <FileBase64
                     type="file"
                     multiple={false}
                     margin="normal"
@@ -624,7 +688,7 @@ const TalentEditScreen = () => {
                       // console.log(file);
                       setSelectedCitizenshipFile(file.base64);
                     }}
-                  />
+                  /> */}
                 </div>
               </Grid>
               <Grid
@@ -646,9 +710,10 @@ const TalentEditScreen = () => {
                     sx={{ width: "200px" }}
                     image={
                       selectedResumeFile
-                        ? selectedResumeFile
+                        ? URL.createObjectURL(selectedResumeFile)
                         : location.state.document.resumeFile
-                        ? location.state.document.resumeFile
+                        ? require(`../uploads/${location.state.document.resumeFile}`)
+                            .default
                         : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
                     }
                   />
@@ -662,7 +727,14 @@ const TalentEditScreen = () => {
                     color: "blueviolet",
                   }}
                 >
-                  <FileBase64
+                  <TextField
+                    variant="standard"
+                    type="file"
+                    name="image3"
+                    onChange={(e) => setSelectedResumeFile(e.target.files[0])}
+                    fullWidth
+                  />
+                  {/* <FileBase64
                     type="file"
                     multiple={false}
                     margin="normal"
@@ -670,7 +742,7 @@ const TalentEditScreen = () => {
                       // console.log(file);
                       setSelectedResumeFile(file.base64);
                     }}
-                  />
+                  /> */}
                 </div>
               </Grid>
             </Grid>
@@ -702,7 +774,7 @@ const TalentEditScreen = () => {
                     variant="outlined"
                     label="Email"
                     disabled
-                    {...register("email", { required: true })}
+                    {...register("email")}
                     sx={{ marginLeft: 2 }}
                   />
                 </Grid>
@@ -719,7 +791,7 @@ const TalentEditScreen = () => {
                   <TextField
                     variant="outlined"
                     label="Facebook"
-                    {...register("facebookId", { required: true })}
+                    {...register("facebookId")}
                     sx={{ marginLeft: 2 }}
                   />
                 </Grid>
@@ -738,7 +810,7 @@ const TalentEditScreen = () => {
                   <TextField
                     variant="outlined"
                     label="GitHub"
-                    {...register("githubId", { required: true })}
+                    {...register("githubId")}
                     sx={{ marginLeft: 2 }}
                   />
                 </Grid>
@@ -755,7 +827,7 @@ const TalentEditScreen = () => {
                   <TextField
                     variant="outlined"
                     label="Twitter"
-                    {...register("twitterId", { required: true })}
+                    {...register("twitterId")}
                     sx={{ marginLeft: 2 }}
                   />
                 </Grid>
@@ -771,6 +843,7 @@ const TalentEditScreen = () => {
             <Button variant="text" sx={{ color: "purple" }}>
               Cancel
             </Button>
+
             {loading ? (
               <Grid
                 item
@@ -796,6 +869,15 @@ const TalentEditScreen = () => {
               </Button>
             )}
           </Stack>
+          <Button
+            variant="contained"
+            onClick={() =>
+              navigate(`/talentDashboard/${location.state.userTalentId}`)
+            }
+            sx={{ width: "100%", marginLeft: 1, marginTop: 3 }}
+          >
+            Go Back
+          </Button>
         </form>
       </Box>
     </Grow>

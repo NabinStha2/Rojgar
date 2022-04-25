@@ -27,16 +27,22 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import BeenhereIcon from "@mui/icons-material/Beenhere";
 import CallIcon from "@mui/icons-material/Call";
 import { useDispatch, useSelector } from "react-redux";
-import { getEmployerProfileByEmployerIdAction } from "../actions/employerActions";
+import {
+  editEmployerRatingAction,
+  getEmployerProfileByEmployerIdAction,
+} from "../actions/employerActions";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 
-const EmployerDashboard = () => {
+const EmployerDashboard = ({ visit = false }) => {
   const { employerProfile, loading } = useSelector(
     (state) => state.employerInfo
   );
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const params = useParams();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   // if (employerProfile) {
   //   console.log(
@@ -45,6 +51,8 @@ const EmployerDashboard = () => {
   // }
 
   useEffect(() => {
+    // console.log(params);
+
     if (params.userEmployerId) {
       console.log(params.userEmployerId);
       dispatch(
@@ -55,7 +63,9 @@ const EmployerDashboard = () => {
     }
   }, [dispatch, params]);
 
-  // console.log(employerProfile);
+  // if (employerProfile !== null) {
+  //   console.log(employerProfile);
+  // }
 
   return (
     <Container maxWidth="lg">
@@ -71,7 +81,7 @@ const EmployerDashboard = () => {
         >
           <CircularProgress variant="indeterminate" />
         </Grid>
-      ) : employerProfile ? (
+      ) : employerProfile && employerProfile !== null ? (
         <Box
           xs={12}
           sx={{
@@ -94,9 +104,9 @@ const EmployerDashboard = () => {
                     alt="talent-img"
                     height="200"
                     image={
-                      employerProfile.profile.image
-                        ? employerProfile.profile.image
-                        : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
+                      employerProfile.profile.image &&
+                      require(`../uploads/${employerProfile.profile.image}`)
+                        .default
                     }
                   />
                 </Card>
@@ -125,7 +135,31 @@ const EmployerDashboard = () => {
                       employerProfile.profile.ratingper
                     }
                     precision={0.5}
-                    readOnly
+                    readOnly={userInfo.jobType === "Employer" ? true : false}
+                    onChange={(event, newValue) => {
+                      visit
+                        ? dispatch(
+                            editEmployerRatingAction(
+                              {
+                                userEmployerId: employerProfile.userEmployerId,
+                                inputData: { rating: newValue },
+                                id: employerProfile._id,
+                                visit: true,
+                              },
+                              navigate
+                            )
+                          )
+                        : dispatch(
+                            editEmployerRatingAction(
+                              {
+                                userEmployerId: employerProfile.userEmployerId,
+                                inputData: { rating: newValue },
+                                id: employerProfile._id,
+                              },
+                              navigate
+                            )
+                          );
+                    }}
                   />
                 </Grid>
                 <div className="rating-info">
@@ -193,8 +227,9 @@ const EmployerDashboard = () => {
                     }
                   </Typography>
                 </Stack>
-                <Grid item mt={2}>
-                  <Link
+                {employerProfile.userEmployerId === userInfo._id && !visit && (
+                  <Grid item mt={2}>
+                    {/* <Link
                     to={`/employerEdit`}
                     state={employerProfile}
                     style={{
@@ -202,19 +237,21 @@ const EmployerDashboard = () => {
                       flex: 1,
                       color: "black",
                     }}
-                  >
+                  > */}
                     <Button
-                      // onClick={() =>
-                      //   navigate(`/employerEdit`, {
-                      //     state: employerProfile,
-                      //   })
-                      // }
+                      onClick={() =>
+                        navigate(`/employerEdit`, {
+                          replace: true,
+                          state: employerProfile,
+                        })
+                      }
                       variant="outlined"
                     >
                       Edit
                     </Button>
-                  </Link>
-                </Grid>
+                    {/* </Link> */}
+                  </Grid>
+                )}
               </Grid>
               <Grid item xs={12} md={7} ml={2}>
                 <Typography variant="h6" gutterBottom>
@@ -328,22 +365,24 @@ const EmployerDashboard = () => {
                 <Typography variant="h5" mt={1} gutterBottom>
                   Projects
                 </Typography>
-                <Link
-                  to={"/postJob"}
-                  state={employerProfile}
-                  style={{
-                    textDecoration: "none",
-                    color: "black",
-                  }}
-                >
-                  <Button
-                    // onClick={() => navigate("/postJob")}
-                    variant="outlined"
-                    sx={{ margin: "5px" }}
+                {!visit && (
+                  <Link
+                    to={"/postJob"}
+                    state={employerProfile}
+                    style={{
+                      textDecoration: "none",
+                      color: "black",
+                    }}
                   >
-                    Post a Job
-                  </Button>
-                </Link>
+                    <Button
+                      // onClick={() => navigate("/postJob")}
+                      variant="outlined"
+                      sx={{ margin: "5px" }}
+                    >
+                      Post a Job
+                    </Button>
+                  </Link>
+                )}
               </Stack>
               <Divider />
               <Grid item xs={12} container>

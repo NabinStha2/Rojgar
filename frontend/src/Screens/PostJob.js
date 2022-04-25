@@ -37,6 +37,7 @@ const MenuProps = {
 };
 
 const PostJob = () => {
+  const location = useLocation();
   const [skillName, setSkillName] = useState([]);
   const [edit, setEdit] = useState(false);
   const {
@@ -45,10 +46,13 @@ const PostJob = () => {
     formState: { errors },
     handleSubmit,
   } = useForm({
-    defaultValues: { skillsRequirement: [] },
+    defaultValues: {
+      skillsRequirement: [],
+      experiencedLevel: location.state.experiencedLevel,
+      category: location.state.category,
+    },
   });
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.getPosts);
 

@@ -5,25 +5,63 @@ const Post = require("../models/postModel");
 
 // for ADMIN
 module.exports.getAllTalentProfile = async (req, res) => {
+  const perPage = 20;
+  var skillsArray;
+  const page = req.query.pageNumber || 1;
+  const keyword = req.query.keyword || "";
+  const querySkill = req.query.skills;
+  const experiencedLevel = req.query.experiencedLevel;
+  const category = req.query.category;
+  if (querySkill) {
+    skillsArray = querySkill.split(",");
+  }
+
+  console.log(keyword, experiencedLevel, category, skillsArray);
+
   try {
-    const talentInfo = await Talent.find().populate(
-      "userTalentId",
-      "name email"
+    const count = await Talent.where({
+      "profile.name": RegExp(keyword, "i"),
+    }).countDocuments();
+
+    console.log(count);
+
+    const talentInfo = await Talent.find()
+      .and([
+        skillsArray ? { "profile.skills": { $in: skillsArray } } : {},
+        category ? { "profile.category": category } : {},
+        experiencedLevel
+          ? { "profile.experiencedLevel": experiencedLevel }
+          : {},
+      ])
+      .or([
+        keyword ? { "profile.name": RegExp(keyword, "i") } : {},
+        keyword ? { "profile.email": RegExp(keyword, "i") } : {},
+      ])
+      .limit(perPage)
+      .skip(perPage * (page - 1))
+      .populate("userTalentId", "name email")
+      .lean(); //mongoose style
+
+    talentInfo.map((talent, i) =>
+      console.log(talent.profile.name, talent.profile.email)
     );
 
-    res.status(200).json({ talentProfile: talentInfo });
+    res.json({
+      talentProfile: talentInfo,
+      pageNumber: page,
+      pages: Math.ceil(count / perPage),
+    });
   } catch (err) {
-    res.status(500).json({ errMessage: err.message });
+    res.status(409).json({ errMessage: err.message });
   }
 };
 
 module.exports.getTalentProfile = async (req, res) => {
   const id = req.params.id;
   try {
-    const talentInfo = await Talent.findById({ _id: id }).populate(
-      "talentId",
-      "name email"
-    );
+    const talentInfo = await Talent.findById({ _id: id })
+      .populate("talentId", "name email")
+      .lean();
 
     res.status(200).json({ talentProfile: talentInfo });
   } catch (err) {
@@ -36,7 +74,7 @@ module.exports.getTalentProfileByUserTalentId = async (req, res) => {
   try {
     const talentInfo = await Talent.findOne({
       userTalentId,
-    });
+    }).lean();
 
     // console.log(talentInfo);
 
@@ -51,7 +89,7 @@ module.exports.createTalentBids = async (req, res) => {
   const { biddingAmt, proposalDescription, postId } = req.body;
   try {
     const newPostBidsData = { talentId: id, proposalDescription, biddingAmt };
-    const post = await Post.findById({ _id: postId });
+    const post = await Post.findById({ _id: postId }).lean();
     post.proposalSubmitted.push(newPostBidsData);
     const posts = await Post.findByIdAndUpdate(
       {
@@ -62,7 +100,7 @@ module.exports.createTalentBids = async (req, res) => {
     );
     // console.log(posts.proposalSubmitted);
 
-    const talent = await Talent.findById({ _id: id });
+    const talent = await Talent.findById({ _id: id }).lean();
     const newTalentBidsData = { postId, biddingAmt, proposalDescription };
     talent.bids.push(newTalentBidsData);
     const talentInfo = await Talent.findByIdAndUpdate(
@@ -87,7 +125,7 @@ module.exports.editTalentBids = async (req, res) => {
   // console.log(req.body);
 
   try {
-    const post = await Post.findById({ _id: postId });
+    const post = await Post.findById({ _id: postId }).lean();
     post.proposalSubmitted.map((proposal) => {
       if (proposal.talentId.toString() === id) {
         proposal.biddingAmt = biddingAmt;
@@ -103,7 +141,7 @@ module.exports.editTalentBids = async (req, res) => {
     );
     // console.log(posts.proposalSubmitted);
 
-    const talent = await Talent.findById({ _id: id });
+    const talent = await Talent.findById({ _id: id }).lean();
 
     talent.bids.map((bid) => {
       if (bid.postId.toString() === postId) {
@@ -135,7 +173,7 @@ module.exports.deleteTalentBids = async (req, res) => {
   console.log(id, postId);
 
   try {
-    const post = await Post.findById({ _id: postId });
+    const post = await Post.findById({ _id: postId }).lean();
     const p = post.proposalSubmitted.filter(
       (proposal) => proposal.talentId.toString() !== id
     );
@@ -150,7 +188,7 @@ module.exports.deleteTalentBids = async (req, res) => {
     );
     // console.log(posts.proposalSubmitted);
 
-    const talent = await Talent.findById({ _id: id });
+    const talent = await Talent.findById({ _id: id }).lean();
     const t = talent.bids.filter((bid) => bid.postId.toString() !== postId);
     // console.log(t);
 
@@ -176,9 +214,9 @@ module.exports.createTalent = async (req, res) => {
     lastName,
     email,
     title,
-    image,
     description,
     gender,
+    dateOfBirth,
     phoneNumber,
     college,
     degree,
@@ -189,8 +227,6 @@ module.exports.createTalent = async (req, res) => {
     country,
     city,
     provience,
-    resumeFile,
-    citizenshipFile,
     facebookId,
     twitterId,
     linkedinId,
@@ -201,7 +237,11 @@ module.exports.createTalent = async (req, res) => {
   } = req.body;
   const userTalentId = req.params.id;
 
-  // console.log(req.body);
+  console.log(req.body);
+  var skillsArray;
+  if (skills) {
+    skillsArray = skills.split(",");
+  }
 
   try {
     const newTalent = await Talent.create({
@@ -209,13 +249,17 @@ module.exports.createTalent = async (req, res) => {
         name: firstName + " " + lastName,
         email,
         title,
+        dateOfBirth,
         description,
         gender,
-        image,
+        image:
+          req.files["image1"] !== undefined
+            ? req.files["image1"][0].filename
+            : "",
         phoneNumber,
         experiencedLevel,
         profileRate,
-        skills,
+        skills: skillsArray,
         category,
       },
       education: { college, degree },
@@ -225,7 +269,16 @@ module.exports.createTalent = async (req, res) => {
         khaltiName,
       },
       address: { country, city, provience },
-      document: { resumeFile, citizenshipFile },
+      document: {
+        resumeFile:
+          req.files["image3"] !== undefined
+            ? req.files["image3"][0].filename
+            : "",
+        citizenshipFile:
+          req.files["image2"] !== undefined
+            ? req.files["image2"][0].filename
+            : "",
+      },
       socialProfile: {
         facebookId,
         twitterId,
@@ -255,11 +308,12 @@ module.exports.updateTalent = async (req, res) => {
     name,
     email,
     title,
-    image,
     description,
     gender,
     phoneNumber,
     college,
+    rating,
+    ratingper,
     degree,
     experiencedLevel,
     profileRate,
@@ -268,8 +322,6 @@ module.exports.updateTalent = async (req, res) => {
     country,
     city,
     provience,
-    resumeFile,
-    citizenshipFile,
     facebookId,
     twitterId,
     linkedinId,
@@ -278,9 +330,25 @@ module.exports.updateTalent = async (req, res) => {
     category,
     skills,
   } = req.body;
+  console.log(req.body.skills);
+
+  var skillsArray;
+  if (skills) {
+    skillsArray = skills.split(",");
+  }
   const id = req.params.id;
 
+  // console.log(req.files["image1"] !== undefined);
+  // if (req.files["image1"].length !== 0) {
+  //   console.log(
+  //     req.files["image1"][0].originalname,
+  //     req.files["image2"][0].originalname,
+  //     req.files["image3"][0].originalname
+  //   );
+  // }
+
   try {
+    const talent = await Talent.findById({ _id: id });
     const updatedTalent = await Talent.findByIdAndUpdate(
       { _id: id },
       {
@@ -290,12 +358,17 @@ module.exports.updateTalent = async (req, res) => {
           title,
           description,
           gender,
-          image,
+          image:
+            req.files["image1"] !== undefined
+              ? req.files["image1"][0].filename
+              : talent.profile.image,
           phoneNumber,
           experiencedLevel,
           profileRate,
+          rating,
+          ratingper,
           category,
-          skills,
+          skills: skillsArray,
         },
         education: { college, degree },
         bankAcc: {
@@ -303,7 +376,16 @@ module.exports.updateTalent = async (req, res) => {
           khaltiName,
         },
         address: { country, city, provience },
-        document: { resumeFile, citizenshipFile },
+        document: {
+          resumeFile:
+            req.files["image3"] !== undefined
+              ? req.files["image3"][0].filename
+              : talent.document.resumeFile,
+          citizenshipFile:
+            req.files["image2"] !== undefined
+              ? req.files["image2"][0].filename
+              : talent.document.citizenshipFile,
+        },
         socialProfile: {
           facebookId,
           twitterId,
@@ -317,6 +399,28 @@ module.exports.updateTalent = async (req, res) => {
         timestamps: true,
       }
     );
+
+    res.status(200).json({ talentProfile: updatedTalent });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ errMessage: err.message });
+  }
+};
+
+module.exports.updateTalentRating = async (req, res) => {
+  const { rating } = req.body;
+  const id = req.params.id;
+
+  try {
+    const talent = await Talent.findById(id).lean();
+
+    talent.profile.rating = talent.profile.rating + rating;
+    talent.profile.ratingper = talent.profile.ratingper + 1;
+
+    const updatedTalent = await Talent.findByIdAndUpdate({ _id: id }, talent, {
+      new: true,
+      timestamps: true,
+    });
 
     res.status(200).json({ talentProfile: updatedTalent });
   } catch (err) {

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Navbar, Container, Nav, Image, NavDropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { userLogoutAction } from "../actions/userActions";
 import { categoriesAvailable } from "../App";
+import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import RojgarLogo from "../assets/images/rojgarlogo.png";
+import { Button } from "react-bootstrap";
 // import {
 //   AppBar,
 //   Box,
@@ -36,16 +38,39 @@ const Header = () => {
     dispatch(userLogoutAction());
     navigate("/login");
   };
-
+  // return (
+  //   <Box sx={{ flexGrow: 1 }}>
+  //     <AppBar position="static">
+  //       <Toolbar>
+  //         <IconButton
+  //           size="large"
+  //           edge="start"
+  //           color="inherit"
+  //           aria-label="menu"
+  //           sx={{ mr: 2 }}
+  //         >
+  //           {/* <MenuIcon /> */}
+  //         </IconButton>
+  //         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+  //           News
+  //         </Typography>
+  //         <Button color="inherit">Login</Button>
+  //       </Toolbar>
+  //     </AppBar>
+  //   </Box>
+  // );
   return (
     <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
       <Container>
-        <Navbar.Brand
-          href="/"
+        {/* <Navbar.Brand
+        > */}
+        <Link
+          to="/"
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "flex-end",
+            textDecoration: "none",
           }}
         >
           <Image
@@ -53,35 +78,50 @@ const Header = () => {
             src={RojgarLogo}
           />
           <h2 style={{ color: "white" }}>ojgar</h2>
-        </Navbar.Brand>
+        </Link>
+        {/* </Navbar.Brand> */}
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav activeKey={location.pathname}>
             {!userInfo && (
               <Nav.Item>
-                <Nav.Link href="/">Home</Nav.Link>
+                <Link
+                  style={{
+                    textDecoration: "none",
+                    color: "white",
+                  }}
+                  to="/"
+                >
+                  Home
+                </Link>
               </Nav.Item>
             )}
             {userInfo && userInfo.jobType === "Employer" && (
               <Nav.Item>
-                <Nav.Link
-                  href={
+                <Link
+                  to={
                     userInfo.isComplete && `/employerDashboard/${userInfo._id}`
                   }
+                  style={{
+                    color: "white",
+                    textDecoration: "none",
+                  }}
                 >
                   Dashboard
-                </Nav.Link>
+                </Link>
               </Nav.Item>
             )}
             {userInfo && userInfo.jobType === "Talent" && (
               <Nav.Item>
-                <Nav.Link
-                  href={
-                    userInfo.isComplete && `/talentDashboard/${userInfo._id}`
-                  }
+                <Link
+                  style={{
+                    textDecoration: "none",
+                    color: "white",
+                  }}
+                  to={userInfo.isComplete && `/talentDashboard/${userInfo._id}`}
                 >
                   Dashboard
-                </Nav.Link>
+                </Link>
               </Nav.Item>
             )}
 
@@ -93,12 +133,19 @@ const Header = () => {
               {categoriesAvailable.map((category, i) => {
                 return (
                   <>
-                    <NavDropdown.Item
-                      key={i}
-                      href={`/projects/${category.value}`}
-                    >
-                      {category.name}
+                    <NavDropdown.Item key={i}>
+                      <Link
+                        to={`/projects/${category.value}`}
+                        state={{ callOnSubmit: false }}
+                        style={{
+                          textDecoration: "none",
+                          color: "white",
+                        }}
+                      >
+                        {category.name}
+                      </Link>
                     </NavDropdown.Item>
+
                     <NavDropdown.Divider />
                   </>
                 );
@@ -106,19 +153,50 @@ const Header = () => {
             </NavDropdown>
 
             <Nav.Item>
-              <Nav.Link href="/about">About</Nav.Link>
+              <Link
+                style={{
+                  textDecoration: "none",
+                  color: "white",
+                }}
+                to="/about"
+              >
+                About
+              </Link>
             </Nav.Item>
+
             {userInfo ? (
               <Nav.Item>
-                <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+                <Button
+                  variant="text"
+                  style={{ color: "white", width: "100%", fontWeight: "500" }}
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
               </Nav.Item>
             ) : (
               <>
                 <Nav.Item>
-                  <Nav.Link href="/login">Login</Nav.Link>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                      color: "white",
+                    }}
+                    to="/login"
+                  >
+                    Login
+                  </Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link href="/signup">Sign Up</Nav.Link>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                      color: "white",
+                    }}
+                    to="/signup"
+                  >
+                    Sign Up
+                  </Link>
                 </Nav.Item>
               </>
             )}

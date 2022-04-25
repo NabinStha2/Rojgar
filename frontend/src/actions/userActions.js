@@ -6,15 +6,22 @@ import {
   USER_REGISTER_FAILED,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
+  USER_RESETPW_FAILED,
+  USER_RESETPW_REQUEST,
+  USER_RESETPW_SUCCESS,
+  USER_VERIFY_OTP_FAILED,
+  USER_VERIFY_OTP_REQUEST,
+  USER_VERIFY_OTP_SUCCESS,
 } from "../constants/userConstant";
 import axios from "axios";
 // import { getEmployerProfileByEmployerIdAction } from "./employerActions";
 import { EMPLOYER_DETAILS_RESET } from "../constants/employerConstant";
 import { TALENT_DETAILS_RESET } from "../constants/talentConstant";
+import { toast } from "react-toastify";
 // import { getTalentProfileByUserTalentIdAction } from "./talentActions";
 
 export const userLoginAction =
-  (email, password) => async (dispatch, getState) => {
+  (email, password, updatePW, navigate) => async (dispatch, getState) => {
     try {
       dispatch({
         type: USER_LOGIN_REQUEST,
@@ -22,26 +29,13 @@ export const userLoginAction =
 
       const { data } = await axios.post(
         "http://localhost:5000/user/login",
-        { email, password },
+        { email, password, updatePW },
         {
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
-      // if (data.userProfile.jobType === "Employer") {
-      //   dispatch(
-      //     getEmployerProfileByEmployerIdAction({
-      //       id: data.userProfile._id,
-      //     })
-      //   );
-      // } else {
-      //   dispatch(
-      //     getTalentProfileByUserTalentIdAction({
-      //       id: data.userProfile._id,
-      //     })
-      //   );
-      // }
 
       // console.log(data);
 
@@ -59,6 +53,77 @@ export const userLoginAction =
         payload:
           err.response && err.response.data.errMessage
             ? err.response.data.errMessage
+            : err.message,
+      });
+    }
+  };
+
+export const userResetPWAction = (email) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_RESETPW_REQUEST,
+    });
+
+    const { data } = await axios.post(
+      "http://localhost:5000/user/sendOTP",
+      { email },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log(data);
+
+    dispatch({
+      type: USER_RESETPW_SUCCESS,
+      payload: data.userId,
+    });
+    toast(data.OTPMessage);
+  } catch (err) {
+    // console.log(err.message);
+    // console.log(err.response.data.OTPMessage);
+    dispatch({
+      type: USER_RESETPW_FAILED,
+      payload:
+        err.response && err.response.data.OTPMessage
+          ? err.response.data.OTPMessage
+          : err.message,
+    });
+  }
+};
+export const userOTPVerifyAction =
+  (otp, userId, navigate) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_VERIFY_OTP_REQUEST,
+      });
+
+      const { data } = await axios.post(
+        "http://localhost:5000/user/verify-OTP",
+        { otp, userId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log(data);
+
+      dispatch({
+        type: USER_VERIFY_OTP_SUCCESS,
+        payload: true,
+      });
+      toast(data.OTPMessage);
+    } catch (err) {
+      // console.log(err.message);
+      // console.log(err.response.data.OTPMessage);
+      dispatch({
+        type: USER_VERIFY_OTP_FAILED,
+        payload:
+          err.response && err.response.data.OTPMessage
+            ? err.response.data.OTPMessage
             : err.message,
       });
     }
@@ -111,7 +176,9 @@ export const userLogoutAction = () => async (dispatch) => {
   dispatch({
     type: TALENT_DETAILS_RESET,
   });
+  console.log("logout");
   localStorage.removeItem("userInfo");
-  localStorage.removeItem("isEmployerProfileComplete");
-  localStorage.removeItem("isTalentProfileComplete");
+
+  // localStorage.removeItem("isEmployerProfileComplete");
+  // localStorage.removeItem("isTalentProfileComplete");
 };

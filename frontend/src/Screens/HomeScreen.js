@@ -10,6 +10,7 @@ import i1 from "../assets/images/img1.jpg";
 import i2 from "../assets/images/img2.jpg";
 import i3 from "../assets/images/img3.jpg";
 import i4 from "../assets/images/img4.jpg";
+import { Link } from "react-router-dom";
 
 const HomeScreen = () => {
   return (
@@ -28,8 +29,13 @@ const HomeScreen = () => {
             </p>
           </div>
           <div className="top-btn">
-            <Button>Hire a Talent </Button>
-            <Button href="/projects/all">Find a Job</Button>
+            <Link to={"/freelancer"}>
+              <Button>Hire a Talent </Button>
+            </Link>
+
+            <Link to={"/projects/all"}>
+              <Button> Find a Job</Button>
+            </Link>
           </div>
         </Col>
         <Col md={6} className="video-container">
@@ -112,7 +118,9 @@ const HomeScreen = () => {
               your client. You can telecommute from the comfort of your ideal
               location.
             </p>
-            <Button> Join us</Button>
+            <Link to={"/signup"}>
+              <Button> Join us</Button>
+            </Link>
           </Stack>
         </Col>
         <Col md={6}>

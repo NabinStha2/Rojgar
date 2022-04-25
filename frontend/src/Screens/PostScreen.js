@@ -21,7 +21,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { Box } from "@mui/system";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
@@ -95,12 +95,15 @@ const MenuProps = {
 };
 
 const PostScreen = () => {
+  const [callOnSubmit, setCallOnSubmit] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
   const {
     register,
     handleSubmit,
+    setValue,
     // watch,
     // formState: { errors },
   } = useForm({
@@ -126,6 +129,8 @@ const PostScreen = () => {
   const onSubmit = async (inputData) => {
     inputData.skillsRequirement = skills;
     console.log(inputData);
+
+    setCallOnSubmit(true);
 
     if (inputData.category === "all") {
       console.log("if");
@@ -171,14 +176,39 @@ const PostScreen = () => {
       navigate(
         `/projects/${inputData.category}/experience/${inputData.experiencedLevel}`
       );
+    } else if (inputData.category !== "") {
+      navigate(`/projects/${inputData.category}`);
     }
   };
 
   // console.log(posts);
 
   useEffect(() => {
-    if (posts.length === 0) {
-      if (params.category) {
+    // console.log(location.state);
+    // console.log(callOnSubmit);
+    // console.log(params.category);
+    if (location.state !== null) {
+      setCallOnSubmit(location.state.callOnSubmit);
+      setValue("category", params.category);
+      location.state = null;
+    }
+    // if (posts.length === 0) {
+    if (!callOnSubmit) {
+      if (params.category === "all") {
+        let data = {
+          category: "all",
+          keyword: "",
+          experiencedLevel: "",
+          price: "",
+          skillsRequirement: [],
+        };
+        dispatch(
+          getAllPostAction({
+            inputData: data,
+          })
+        );
+      } else if (params.category) {
+        // console.log("effect");
         dispatch(
           getCategoryPostAction({
             category: params.category,
@@ -186,7 +216,8 @@ const PostScreen = () => {
         );
       }
     }
-  }, []);
+    // }
+  }, [params, dispatch, location, callOnSubmit]);
 
   return (
     <Grow in>
