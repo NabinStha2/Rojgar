@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { Navbar, Container, Nav, Image, NavDropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { userLogoutAction } from "../actions/userActions";
 import { categoriesAvailable } from "../App";
-import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import RojgarLogo from "../assets/images/rojgarlogo.png";
 import { Button } from "react-bootstrap";
 // import {
@@ -38,27 +36,7 @@ const Header = () => {
     dispatch(userLogoutAction());
     navigate("/login");
   };
-  // return (
-  //   <Box sx={{ flexGrow: 1 }}>
-  //     <AppBar position="static">
-  //       <Toolbar>
-  //         <IconButton
-  //           size="large"
-  //           edge="start"
-  //           color="inherit"
-  //           aria-label="menu"
-  //           sx={{ mr: 2 }}
-  //         >
-  //           {/* <MenuIcon /> */}
-  //         </IconButton>
-  //         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-  //           News
-  //         </Typography>
-  //         <Button color="inherit">Login</Button>
-  //       </Toolbar>
-  //     </AppBar>
-  //   </Box>
-  // );
+
   return (
     <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
       <Container>

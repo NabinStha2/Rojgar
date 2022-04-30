@@ -134,7 +134,7 @@ const EmployerEdit = () => {
           width: "80vw",
         }}
       >
-        <form onSubmit={handleSubmit(onSubmit)} enctype="multipart/form-data">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Snackbar open={error} autoHideDuration={1000}>
             <Alert severity="error" sx={{ width: "100%" }}>
               {error}

@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import axios from "../api/axios";
+import rojgarAxios from "../api/axios";
 import {
   CREATE_TALENT_BIDS_FAILED,
   CREATE_TALENT_BIDS_REQUEST,
@@ -36,11 +36,15 @@ export const registerTalentAction =
         type: TALENT_REGISTRATION_REQUEST,
       });
 
-      const { data } = await axios.post(`/talent/register/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const { data } = await rojgarAxios.post(
+        `/talent/register/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       //   console.log(data.talentProfile);
 
@@ -71,7 +75,7 @@ export const getAllTalentAction =
         type: GET_ALL_TALENT_REQUEST,
       });
 
-      const { data } = await axios.get("/talent", {
+      const { data } = await rojgarAxios.get("/talent", {
         params: {
           keyword: inputData.keyword,
           experiencedLevel: inputData.experiencedLevel,
@@ -107,7 +111,7 @@ export const getTalentProfileByUserTalentIdAction =
         type: GET_TALENT_PROFILE_REQUEST,
       });
 
-      const { data } = await axios.get(`/talent/userTalentId/${id}`);
+      const { data } = await rojgarAxios.get(`/talent/userTalentId/${id}`);
 
       //   console.log(data);
 
@@ -136,11 +140,15 @@ export const editTalentAction =
         type: EDIT_TALENT_REQUEST,
       });
 
-      const { data } = await axios.patch(`/talent/editTalent/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const { data } = await rojgarAxios.patch(
+        `/talent/editTalent/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       // console.log(data);
 
@@ -173,7 +181,7 @@ export const editTalentRatingAction =
         type: EDIT_TALENT_RATING_REQUEST,
       });
 
-      const { data } = await axios.patch(
+      const { data } = await rojgarAxios.patch(
         `/talent/editTalentRating/${id}`,
         inputData,
         {
@@ -218,7 +226,7 @@ export const createTalentBidsAction =
         type: CREATE_TALENT_BIDS_REQUEST,
       });
 
-      const { data } = await axios.patch(
+      const { data } = await rojgarAxios.patch(
         `/talent/bidsCreate/${id}`,
         inputData,
         {
@@ -257,11 +265,15 @@ export const editTalentBidsAction =
         type: EDIT_TALENT_BIDS_REQUEST,
       });
 
-      const { data } = await axios.patch(`/talent/bidsEdit/${id}`, inputData, {
-        headers: {
-          "content-type": "application/json",
-        },
-      });
+      const { data } = await rojgarAxios.patch(
+        `/talent/bidsEdit/${id}`,
+        inputData,
+        {
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
 
       // console.log(data);
 
@@ -292,7 +304,7 @@ export const deleteTalentBidsAction =
         type: DELETE_TALENT_BIDS_REQUEST,
       });
 
-      const { data } = await axios.patch(
+      const { data } = await rojgarAxios.patch(
         `/talent/bidsDelete/${id}`,
         { postId },
         {

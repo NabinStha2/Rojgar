@@ -135,7 +135,13 @@ const EmployerDashboard = ({ visit = false }) => {
                       employerProfile.profile.ratingper
                     }
                     precision={0.5}
-                    readOnly={userInfo.jobType === "Employer" ? true : false}
+                    readOnly={
+                      userInfo
+                        ? userInfo.jobType === "Employer"
+                          ? true
+                          : false
+                        : true
+                    }
                     onChange={(event, newValue) => {
                       visit
                         ? dispatch(
@@ -227,9 +233,11 @@ const EmployerDashboard = ({ visit = false }) => {
                     }
                   </Typography>
                 </Stack>
-                {employerProfile.userEmployerId === userInfo._id && !visit && (
-                  <Grid item mt={2}>
-                    {/* <Link
+                {userInfo &&
+                  employerProfile.userEmployerId === userInfo._id &&
+                  !visit && (
+                    <Grid item mt={2}>
+                      {/* <Link
                     to={`/employerEdit`}
                     state={employerProfile}
                     style={{
@@ -238,20 +246,20 @@ const EmployerDashboard = ({ visit = false }) => {
                       color: "black",
                     }}
                   > */}
-                    <Button
-                      onClick={() =>
-                        navigate(`/employerEdit`, {
-                          replace: true,
-                          state: employerProfile,
-                        })
-                      }
-                      variant="outlined"
-                    >
-                      Edit
-                    </Button>
-                    {/* </Link> */}
-                  </Grid>
-                )}
+                      <Button
+                        onClick={() =>
+                          navigate(`/employerEdit`, {
+                            replace: true,
+                            state: employerProfile,
+                          })
+                        }
+                        variant="outlined"
+                      >
+                        Edit
+                      </Button>
+                      {/* </Link> */}
+                    </Grid>
+                  )}
               </Grid>
               <Grid item xs={12} md={7} ml={2}>
                 <Typography variant="h6" gutterBottom>
@@ -270,7 +278,7 @@ const EmployerDashboard = ({ visit = false }) => {
           >
             <Grid
               container
-              xs={6}
+              // xs={6}
               sx={{ display: "flex", flexDirection: "column" }}
             >
               <Stack>
@@ -311,7 +319,7 @@ const EmployerDashboard = ({ visit = false }) => {
               </Grid>
             </Grid>
             <Grid
-              xs={6}
+              // xs={6}
               container
               sx={{ display: "flex", flexDirection: "column" }}
             >
@@ -399,7 +407,11 @@ const EmployerDashboard = ({ visit = false }) => {
                       disablePadding
                     >
                       <Link
-                        to={`/project/edit/${item._id}`}
+                        to={
+                          !visit
+                            ? `/project/edit/${item._id}`
+                            : `/project/${item._id}`
+                        }
                         style={{
                           textDecoration: "none",
                           flex: 1,

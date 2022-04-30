@@ -16,6 +16,7 @@
     "colors": "^1.4.0",
     "compression": "^1.7.4",
     "concurrently": "^7.0.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",

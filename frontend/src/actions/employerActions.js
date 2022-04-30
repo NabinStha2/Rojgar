@@ -16,7 +16,7 @@ import {
   GET_ALL_EMPLOYER_FAILED,
   GET_ALL_EMPLOYER_SUCCESS,
 } from "../constants/employerConstant";
-import axios from "../api/axios";
+import rojgarAxios from "../api/axios";
 
 export const registerEmployerAction =
   ({ id }, formData, navigate) =>
@@ -26,11 +26,15 @@ export const registerEmployerAction =
         type: EMPLOYER_REGISTRATION_REQUEST,
       });
 
-      const { data } = await axios.post(`/employer/register/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const { data } = await rojgarAxios.post(
+        `/employer/register/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       //   console.log(data.employerProfile);
 
@@ -61,7 +65,7 @@ export const getAllEmployerAction =
         type: GET_ALL_EMPLOYER_REQUEST,
       });
 
-      const { data } = await axios.get("/employer", {
+      const { data } = await rojgarAxios.get("/employer", {
         params: {
           keyword: inputData.keyword,
           email: inputData.email,
@@ -95,7 +99,7 @@ export const getEmployerProfileByEmployerIdAction =
         type: GET_EMPLOYER_PROFILE_REQUEST,
       });
 
-      const { data } = await axios.get(`/employer/userEmployerId/${id}`);
+      const { data } = await rojgarAxios.get(`/employer/userEmployerId/${id}`);
 
       // console.log(data);
 
@@ -124,9 +128,15 @@ export const editEmployerAction =
         type: EDIT_EMPLOYER_REQUEST,
       });
 
-      const { data } = await axios.post(
+      const { data } = await rojgarAxios.post(
         `/employer/editemployer/${id}`,
-        formData
+
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
 
       console.log(data);
@@ -158,7 +168,7 @@ export const uploadImageAction = (formData) => async (dispatch, getState) => {
       type: EDIT_EMPLOYER_REQUEST,
     });
 
-    const { data } = await axios.post("/api/upload", formData, {
+    const { data } = await rojgarAxios.post("/api/upload", formData, {
       headers: {
         "content-Type": "multipart/form-data",
       },
@@ -191,7 +201,7 @@ export const editEmployerRatingAction =
         type: EDIT_EMPLOYER_RATING_REQUEST,
       });
 
-      const { data } = await axios.patch(
+      const { data } = await rojgarAxios.patch(
         `/employer/editemployerrating/${id}`,
         inputData,
         {

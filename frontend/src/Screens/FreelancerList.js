@@ -184,11 +184,15 @@ function Freelancer() {
                               id="demo-simple-select"
                               {...register("experiencedLevel")}
                             >
-                              <MenuItem value={"Beginner"}>Beginner</MenuItem>
-                              <MenuItem value={"Intermediate"}>
+                              <MenuItem key={"B"} value={"Beginner"}>
+                                Beginner
+                              </MenuItem>
+                              <MenuItem key={"I"} value={"Intermediate"}>
                                 Intermediate
                               </MenuItem>
-                              <MenuItem value={"Expert"}>Expert</MenuItem>
+                              <MenuItem key={"E"} value={"Expert"}>
+                                Expert
+                              </MenuItem>
                             </Select>
                           </FormControl>
                         </Box>
@@ -207,8 +211,8 @@ function Freelancer() {
                               {...register("category")}
                             >
                               <MenuItem value={"all"}>All</MenuItem>
-                              {categoriesAvailable.map((category) => (
-                                <MenuItem value={category.value}>
+                              {categoriesAvailable.map((category, i) => (
+                                <MenuItem key={i} value={category.value}>
                                   {category.name}
                                 </MenuItem>
                               ))}

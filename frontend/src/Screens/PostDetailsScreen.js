@@ -35,6 +35,7 @@ import {
 import { useForm } from "react-hook-form";
 import { getEmployerProfileByEmployerIdAction } from "../actions/employerActions";
 import Khalti from "../services/khalti";
+import AlertMessage from "../components/Alert";
 
 const PostDetailsScreen = () => {
   const params = useParams();
@@ -135,7 +136,7 @@ const PostDetailsScreen = () => {
   };
 
   useEffect(() => {
-    if (userInfo.jobType === "Employer") {
+    if (userInfo && userInfo.jobType === "Employer") {
       // console.log("dispatching employer");
       // dispatch(
       //   getEmployerProfileByEmployerIdAction({
@@ -144,7 +145,8 @@ const PostDetailsScreen = () => {
       // );
     } else {
       console.log("dispatching talent");
-      dispatch(getTalentProfileByUserTalentIdAction({ id: userInfo._id }));
+      userInfo &&
+        dispatch(getTalentProfileByUserTalentIdAction({ id: userInfo._id }));
     }
 
     setEdit(location.pathname.split("/").includes("edit"));
@@ -294,38 +296,42 @@ const PostDetailsScreen = () => {
                           Project ID: {post._id}
                         </p>
                       </Grid>
-                      {edit && post.employerId.userEmployerId === userInfo._id && (
-                        <Grid item>
-                          <Link
-                            to={"/postJob/edit"}
-                            state={post}
-                            style={{
-                              textDecoration: "none",
-                              color: "black",
-                            }}
-                          >
+                      {edit &&
+                        userInfo &&
+                        post.employerId.userEmployerId === userInfo._id && (
+                          <Grid item>
+                            <Link
+                              to={"/postJob/edit"}
+                              state={post}
+                              style={{
+                                textDecoration: "none",
+                                color: "black",
+                              }}
+                            >
+                              <Button
+                                variant="outlined"
+                                sx={{ marginRight: "5px" }}
+                              >
+                                Edit
+                              </Button>
+                            </Link>
                             <Button
                               variant="outlined"
+                              color="warning"
                               sx={{ marginRight: "5px" }}
+                              onClick={handleDeletePost}
                             >
-                              Edit
+                              Delete
                             </Button>
-                          </Link>
-                          <Button
-                            variant="outlined"
-                            color="warning"
-                            sx={{ marginRight: "5px" }}
-                            onClick={handleDeletePost}
-                          >
-                            Delete
-                          </Button>
-                        </Grid>
-                      )}
+                          </Grid>
+                        )}
                     </Grid>
                     {post.isPaid === false &&
+                    userInfo &&
                     post.employerId.userEmployerId === userInfo._id ? (
                       <Khalti postId={post._id} />
                     ) : (
+                      userInfo &&
                       userInfo.jobType === "Employer" && (
                         <p
                           style={{
@@ -345,17 +351,64 @@ const PostDetailsScreen = () => {
               </Paper>
             </Box>
           </Grid>
-          <Grid
-            item
-            container
-            xs={12}
-            sm={4}
-            sx={{ flexDirection: "column", flex: "1" }}
-          >
-            <Paper sx={{ margin: "10px 0px", padding: "10px" }} elevation={4}>
-              <Typography variant="h4">Client Details</Typography>
-            </Paper>
-          </Grid>
+
+          {loading ? (
+            <Grid
+              item
+              sx={{
+                padding: "10px",
+                display: "flex",
+                flex: "1",
+                justifyContent: "center",
+              }}
+            >
+              <CircularProgress variant="indeterminate" />
+            </Grid>
+          ) : (
+            post && (
+              <Grid
+                item
+                container
+                xs={12}
+                sm={4}
+                sx={{ flexDirection: "column", flex: "1" }}
+              >
+                <Card
+                  sx={{ minWidth: 275, margin: "10px 0px", padding: "10px" }}
+                  elevation={4}
+                >
+                  <CardContent>
+                    <Typography
+                      sx={{ fontSize: 20 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      Client Details
+                    </Typography>
+                    <Typography variant="h5" component="div">
+                      {post.employerId.profile.name}
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      {post.employerId.profile.email}
+                    </Typography>
+                    <Typography variant="body2">
+                      {post.employerId.profile.description}
+                      <br />
+                      {post.employerId.address.country}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Link
+                      to={`/employerProfile/${post.employerId.userEmployerId}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Button size="small">More Info</Button>
+                    </Link>
+                  </CardActions>
+                </Card>
+              </Grid>
+            )
+          )}
         </Grid>
 
         {loadingTalentProfile ? (
@@ -382,7 +435,10 @@ const PostDetailsScreen = () => {
           >
             <CircularProgress variant="indeterminate" />
           </Grid>
-        ) : userInfo.jobType === "Talent" && talentProfile && post ? (
+        ) : userInfo &&
+          userInfo.jobType === "Talent" &&
+          talentProfile &&
+          post ? (
           <>
             <Box sx={{ width: "100%", margin: "auto" }}>
               <Paper elevation={3} sx={{ padding: 3 }}>
@@ -633,63 +689,70 @@ const PostDetailsScreen = () => {
               <Typography></Typography>
             )}
           </>
-        ) : post &&
+        ) : userInfo ? (
+          post &&
           post.employerId.userEmployerId === userInfo._id &&
           userInfo.jobType === "Employer" ? (
-          post.proposalSubmitted.map((proposal) => (
-            <Paper key={proposal._id} elevation={3} sx={{ padding: 3 }}>
-              <Typography variant="h5">Proposal submitted</Typography>
-              <Divider />
-              <Card variant="outlined" sx={{ marginTop: 3 }}>
-                <CardContent>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    {proposal.talentId.profile.name}
-                  </Typography>
-                  <Typography variant="body" component="div">
-                    {proposal.talentId.profile.email}
-                  </Typography>
-                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {proposal.proposalDescription}
-                  </Typography>
-                  <Typography variant="body2">
-                    Rs.{proposal.biddingAmt}
-                  </Typography>
-                  <Typography variant="body2">
-                    Accepted: {proposal.isAccepted === true ? "Yes" : "No"}
-                  </Typography>
-                  <Typography variant="body2">
-                    Finished: {proposal.isFinished === true ? "Yes" : "No"}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    onClick={() => handleAcceptProposal(proposal.talentId)}
-                    disabled={post.isPaid === false || post.isAccept === true}
-                    size="small"
-                  >
-                    {proposal.isAccepted ? "Accepted" : "Accept"}
-                  </Button>
-                  {proposal.isAccepted && (
+            post.proposalSubmitted.map((proposal) => (
+              <Paper key={proposal._id} elevation={3} sx={{ padding: 3 }}>
+                <Typography variant="h5">Proposal submitted</Typography>
+                <Divider />
+                <Card variant="outlined" sx={{ marginTop: 3 }}>
+                  <CardContent>
+                    <Typography
+                      sx={{ fontSize: 14 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {proposal.talentId.profile.name}
+                    </Typography>
+                    <Typography variant="body" component="div">
+                      {proposal.talentId.profile.email}
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      {proposal.proposalDescription}
+                    </Typography>
+                    <Typography variant="body2">
+                      Rs.{proposal.biddingAmt}
+                    </Typography>
+                    <Typography variant="body2">
+                      Accepted: {proposal.isAccepted === true ? "Yes" : "No"}
+                    </Typography>
+                    <Typography variant="body2">
+                      Finished: {proposal.isFinished === true ? "Yes" : "No"}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
                     <Button
-                      onClick={() => handleFinishProposal(proposal.talentId)}
-                      disabled={
-                        post.isPaid === false || proposal.isFinished === true
-                      }
+                      onClick={() => handleAcceptProposal(proposal.talentId)}
+                      disabled={post.isPaid === false || post.isAccept === true}
                       size="small"
                     >
-                      {proposal.isFinished ? "Finished" : "Finish"}
+                      {proposal.isAccepted ? "Accepted" : "Accept"}
                     </Button>
-                  )}
-                </CardActions>
-              </Card>
-            </Paper>
-          ))
+                    {proposal.isAccepted && (
+                      <Button
+                        onClick={() => handleFinishProposal(proposal.talentId)}
+                        disabled={
+                          post.isPaid === false || proposal.isFinished === true
+                        }
+                        size="small"
+                      >
+                        {proposal.isFinished ? "Finished" : "Finish"}
+                      </Button>
+                    )}
+                  </CardActions>
+                </Card>
+              </Paper>
+            ))
+          ) : (
+            <Typography>No Proposal!!!</Typography>
+          )
         ) : (
-          <Typography>No Proposal!!!</Typography>
+          <AlertMessage
+            severity={"error"}
+            message={"First, Login to place and see the bids."}
+          />
         )}
       </Container>
     </Grow>

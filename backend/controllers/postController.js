@@ -47,6 +47,8 @@ module.exports.createPost = asyncHandler(async (req, res) => {
 });
 
 module.exports.getAllPosts = asyncHandler(async (req, res) => {
+  // console.log("Cookies: ", req.cookies);
+  // console.log("Cookies: ", req.session);
   const perPage = 20;
   var skillsArray;
   const page = req.query.pageNumber || 1;
@@ -78,7 +80,7 @@ module.exports.getAllPosts = asyncHandler(async (req, res) => {
 
     // const post = await Post.find({ title: { $regex: keyword, $options: "i" } }); //mongo style
 
-    console.log(post);
+    // console.log(post);
 
     res.json({
       posts: post,

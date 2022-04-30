@@ -7,9 +7,13 @@ import {
   Navigate,
 } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import rojgarAxios from "./api/axios";
+import jwt_decode from "jwt-decode";
+import RefreshApi from "./api/refreshApi";
+import { userLogoutAction } from "./actions/userActions";
 
 const Home = React.lazy(() => import("./Screens/HomeScreen"));
 const About = React.lazy(() => import("./Screens/AboutScreen"));
@@ -82,6 +86,69 @@ export const categoriesAvailable = [
 export const App = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  const dispatch = useDispatch();
+
+  if (userInfo) {
+    rojgarAxios.interceptors.request.use(
+      async (config) => {
+        // console.log("axios interceptors");
+
+        const now = Math.ceil(Date.now() / 1000);
+
+        const decodedAccessToken = jwt_decode(
+          JSON.parse(localStorage.getItem("userInfo")).accessToken
+        );
+        const decodedRefreshToken = jwt_decode(
+          JSON.parse(localStorage.getItem("userInfo")).refreshToken
+        );
+        console.log(
+          "decoded Access token: " + decodedAccessToken.exp,
+          "decoded Refresh token: " + decodedRefreshToken.exp,
+          "now: " + now
+        );
+
+        if (decodedRefreshToken.exp < now) {
+          console.log("Refresh token is expired", decodedRefreshToken.exp, now);
+
+          dispatch(userLogoutAction());
+          window.location.href = "/login/";
+          toast("Refresh token is expired");
+        }
+
+        if (decodedAccessToken.exp < now) {
+          console.log(
+            "decoded token: " + decodedAccessToken.exp,
+            "now: " + now
+          );
+          console.log("Before: ", userInfo.accessToken);
+          const data = await RefreshApi({
+            refreshToken: userInfo.refreshToken,
+          });
+
+          // console.log(data);
+
+          console.log("newAccessToken: ", data.userProfile.accessToken);
+          // console.log(
+          //   "local: ",
+          //   JSON.parse(localStorage.getItem("userInfo")).accessToken
+          // );
+        }
+        config.headers["Authorization"] =
+          "Bearer " + JSON.parse(localStorage.getItem("userInfo")).accessToken;
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+  }
+
+  // useEffect(() => {
+  //   if (userInfo) {
+  //     rojgarAxios.defaults.headers.common["Authorization"] =
+  //       "Bearer " + userInfo.accessToken;
+  //   }
+  // }, [userInfo]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -100,6 +167,9 @@ export const App = () => {
               path="/employerProfile/:userEmployerId"
               element={<EmployerDashboard visit={true} />}
             />
+
+            <Route path="/project/:postId" element={<PostDetailsScreen />} />
+
             {userInfo && userInfo.jobType === "Talent" && (
               <>
                 {!userInfo.isComplete && (

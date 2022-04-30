@@ -95,7 +95,7 @@ const LoginScreen = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(data);
+    // console.log(data);
     // console.log(userId, verified);
     if (data.otp !== "" && sendOTP) {
       dispatch(userOTPVerifyAction(data.otp, userId));

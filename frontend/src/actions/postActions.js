@@ -1,4 +1,4 @@
-import axios from "axios";
+import rojgarAxios from "../api/axios";
 import { toast } from "react-toastify";
 import {
   GET_ADVANCED_POST_FAILED,
@@ -37,7 +37,7 @@ export const getAllPostAction =
       dispatch({
         type: GET_ALL_POST_REQUEST,
       });
-      const { data } = await axios.get(`http://localhost:5000/post/projects`, {
+      const { data } = await rojgarAxios.get(`/post/projects`, {
         params: {
           keyword: inputData.keyword,
           experiencedLevel: inputData.experiencedLevel,
@@ -70,8 +70,8 @@ export const getAdvancedPostAction =
       dispatch({
         type: GET_ADVANCED_POST_REQUEST,
       });
-      const { data } = await axios.get(
-        `http://localhost:5000/post/advanceSearch/projects/${inputData.category}`,
+      const { data } = await rojgarAxios.get(
+        `/post/advanceSearch/projects/${inputData.category}`,
         {
           params: {
             keyword: inputData.keyword,
@@ -107,8 +107,8 @@ export const getCategoryPostAction =
       dispatch({
         type: GET_CATEGORY_POST_REQUEST,
       });
-      const { data } = await axios.get(
-        `http://localhost:5000/post/categorySearch/projects/${category}`
+      const { data } = await rojgarAxios.get(
+        `/post/categorySearch/projects/${category}`
       );
       //   console.log(data);
       dispatch({
@@ -136,9 +136,7 @@ export const getPostDetailsAction =
       dispatch({
         type: GET_POST_DETAILS_REQUEST,
       });
-      const { data } = await axios.get(
-        `http://localhost:5000/post/project/${id}`
-      );
+      const { data } = await rojgarAxios.get(`/post/project/${id}`);
       // console.log(data);
       dispatch({
         type: GET_POST_DETAILS_SUCCESS,
@@ -166,8 +164,8 @@ export const postCreateAction =
       dispatch({
         type: POST_CREATE_REQUEST,
       });
-      const { data } = await axios.post(
-        `http://localhost:5000/post/addProject/${id}`,
+      const { data } = await rojgarAxios.post(
+        `/post/addProject/${id}`,
         inputData,
         {
           headers: {
@@ -207,8 +205,8 @@ export const postEditAction =
       dispatch({
         type: POST_EDIT_REQUEST,
       });
-      const { data } = await axios.patch(
-        `http://localhost:5000/post/project/${postId}`,
+      const { data } = await rojgarAxios.patch(
+        `/post/project/${postId}`,
         inputData,
         {
           headers: {
@@ -222,9 +220,10 @@ export const postEditAction =
         payload: data.projectPost,
       });
 
-      navigate(
-        `/employerDashboard/${data.projectPost.employerId.userEmployerId}`
-      );
+      // navigate(
+      //   `/employerDashboard/${data.projectPost.employerId.userEmployerId}`
+      // );
+      navigate(`/project/edit/${data.projectPost._id}`);
     } catch (err) {
       dispatch({
         type: POST_EDIT_FAILED,
@@ -244,9 +243,7 @@ export const postDeleteAction =
       dispatch({
         type: POST_DELETE_REQUEST,
       });
-      const { data } = await axios.delete(
-        `http://localhost:5000/post/project/${id}`
-      );
+      const { data } = await rojgarAxios.delete(`/post/project/${id}`);
       // console.log(data);
       dispatch({
         type: POST_DELETE_SUCCESS,
@@ -274,8 +271,8 @@ export const postPaidProposalAction =
       dispatch({
         type: POST_PAID_PROPOSAL_REQUEST,
       });
-      const { data } = await axios.patch(
-        `http://localhost:5000/post/projectPaidProposal/${postId}`
+      const { data } = await rojgarAxios.patch(
+        `/post/projectPaidProposal/${postId}`
       );
       console.log(data);
       dispatch({
@@ -303,8 +300,8 @@ export const postAcceptProposalAction =
       dispatch({
         type: POST_ACCEPT_PROPOSAL_REQUEST,
       });
-      const { data } = await axios.patch(
-        `http://localhost:5000/post/projectAcceptProposal/${postId}`,
+      const { data } = await rojgarAxios.patch(
+        `/post/projectAcceptProposal/${postId}`,
         { talentId: talentId }
       );
       console.log(data);
@@ -333,8 +330,8 @@ export const postFinishProposalAction =
       dispatch({
         type: POST_ACCEPT_PROPOSAL_REQUEST,
       });
-      const { data } = await axios.patch(
-        `http://localhost:5000/post/projectFinishProposal/${postId}`,
+      const { data } = await rojgarAxios.patch(
+        `/post/projectFinishProposal/${postId}`,
         { talentId: talentId }
       );
       console.log(data);

@@ -12,12 +12,13 @@ const {
   updatePostPaidProposal,
   updatePostFinishProposal,
 } = require("../controllers/postController");
+const { protect } = require("../middlewares/authMiddleware");
 
-router.post("/addProject/:id", createPost);
+router.post("/addProject/:id", protect, createPost);
 
 router.get("/projects", getAllPosts);
 
-router.get("/projects/:id", getEmployerPosts);
+router.get("/employerProjects/:id", protect, getEmployerPosts);
 
 router.get("/categorySearch/projects/:category", categorySearchProjects);
 
@@ -25,14 +26,14 @@ router.get("/advanceSearch/projects/:category", advanceSearchProjects);
 
 router.get("/project/:id", getPost);
 
-router.patch("/project/:id", updatePost);
+router.patch("/project/:id", protect, updatePost);
 
-router.patch("/projectPaidProposal/:id", updatePostPaidProposal);
+router.patch("/projectPaidProposal/:id", protect, updatePostPaidProposal);
 
-router.patch("/projectAcceptProposal/:id", updatePostAcceptProposal);
+router.patch("/projectAcceptProposal/:id", protect, updatePostAcceptProposal);
 
-router.patch("/projectFinishProposal/:id", updatePostFinishProposal);
+router.patch("/projectFinishProposal/:id", protect, updatePostFinishProposal);
 
-router.delete("/project/:id", deletePost);
+router.delete("/project/:id", protect, deletePost);
 
 module.exports = router;

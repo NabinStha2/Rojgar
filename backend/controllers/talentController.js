@@ -16,14 +16,14 @@ module.exports.getAllTalentProfile = async (req, res) => {
     skillsArray = querySkill.split(",");
   }
 
-  console.log(keyword, experiencedLevel, category, skillsArray);
+  // console.log(keyword, experiencedLevel, category, skillsArray);
 
   try {
     const count = await Talent.where({
       "profile.name": RegExp(keyword, "i"),
     }).countDocuments();
 
-    console.log(count);
+    // console.log(count);
 
     const talentInfo = await Talent.find()
       .and([

@@ -48,18 +48,6 @@ const TalentDashboard = ({ visit = false }) => {
     }
   }, [dispatch, params]);
 
-  // console.log(talentProfile);
-
-  // console.log(visit);
-
-  // const tryRequire = (path) => {
-  //   try {
-  //     return require(`${path}`).default;
-  //   } catch (err) {
-  //     return null;
-  //   }
-  // };
-
   return (
     <Grow in>
       <Container maxWidth="lg">
@@ -130,9 +118,11 @@ const TalentDashboard = ({ visit = false }) => {
                       }
                       precision={0.5}
                       readOnly={
-                        userInfo._id === talentProfile.userTalentId
-                          ? true
-                          : false
+                        userInfo
+                          ? userInfo._id === talentProfile.userTalentId
+                            ? true
+                            : false
+                          : true
                       }
                       onChange={(event, newValue) => {
                         visit
@@ -216,23 +206,25 @@ const TalentDashboard = ({ visit = false }) => {
                   <Typography variant="body1" mt={2} mb={3} gutterBottom>
                     {talentProfile.profile.experiencedLevel} Level
                   </Typography>
-                  {talentProfile.userTalentId === userInfo._id && !visit && (
-                    <Grid item mt={2}>
-                      <Link
-                        to={`/talentEdit`}
-                        state={talentProfile}
-                        style={{
-                          textDecoration: "none",
-                          flex: 1,
-                          color: "black",
-                        }}
-                      >
-                        <Button variant="outlined" color="secondary">
-                          Edit
-                        </Button>
-                      </Link>
-                    </Grid>
-                  )}
+                  {userInfo &&
+                    talentProfile.userTalentId === userInfo._id &&
+                    !visit && (
+                      <Grid item mt={2}>
+                        <Link
+                          to={`/talentEdit`}
+                          state={talentProfile}
+                          style={{
+                            textDecoration: "none",
+                            flex: 1,
+                            color: "black",
+                          }}
+                        >
+                          <Button variant="outlined" color="secondary">
+                            Edit
+                          </Button>
+                        </Link>
+                      </Grid>
+                    )}
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="h6" mt={1} gutterBottom>

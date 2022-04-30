@@ -89,7 +89,12 @@ function EmployerList() {
   return (
     <Grow in>
       <Container maxWidth="lg">
-        <Grid container className={classes.root} spacing={2}>
+        <Grid
+          container
+          className={classes.root}
+          sx={{ flexDirection: "column" }}
+          spacing={2}
+        >
           <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
             <input
               id="search"

@@ -13,12 +13,12 @@ import {
   USER_VERIFY_OTP_REQUEST,
   USER_VERIFY_OTP_SUCCESS,
 } from "../constants/userConstant";
-import axios from "axios";
 // import { getEmployerProfileByEmployerIdAction } from "./employerActions";
 import { EMPLOYER_DETAILS_RESET } from "../constants/employerConstant";
 import { TALENT_DETAILS_RESET } from "../constants/talentConstant";
 import { toast } from "react-toastify";
-// import { getTalentProfileByUserTalentIdAction } from "./talentActions";
+import axios from "axios";
+
 
 export const userLoginAction =
   (email, password, updatePW, navigate) => async (dispatch, getState) => {

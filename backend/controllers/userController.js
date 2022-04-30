@@ -3,8 +3,10 @@ const asyncHandler = require("express-async-handler");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
-const generateToken = require("../utils/generateToken");
+const generateAccessToken = require("../utils/generateAccessToken");
 const Otp = require("../models/otpModel");
+const generateRefreshToken = require("../utils/generateRefreshToken");
+const jwt = require("jsonwebtoken");
 
 var transporter = nodemailer.createTransport({
   service: "gmail",
@@ -16,6 +18,41 @@ var transporter = nodemailer.createTransport({
     rejectUnauthorized: false,
   },
 });
+
+module.exports.refreshToken = (req, res) => {
+  const refreshToken = req.body.token;
+  console.log("refreshToken: ", refreshToken);
+
+  if (!refreshToken) return res.status(401).json("You are not authenticated!");
+
+  jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET_KEY,
+    async (err, user) => {
+      err && console.log(err);
+
+      // console.log(user);
+      const newAccessToken = generateAccessToken({ id: user.id });
+      const newRefreshToken = generateRefreshToken({ id: user.id });
+
+      // refreshTokens.push(newRefreshToken);
+
+      const userExists = await User.findById({ _id: user.id });
+
+      res.status(200).json({
+        userProfile: {
+          _id: userExists._id,
+          name: userExists.name,
+          email: userExists.email,
+          isComplete: userExists.isComplete,
+          jobType: userExists.jobType,
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+        },
+      });
+    }
+  );
+};
 
 // User Login /user/login
 module.exports.userLogin = asyncHandler(async (req, res) => {
@@ -42,7 +79,8 @@ module.exports.userLogin = asyncHandler(async (req, res) => {
     );
     // console.log("after", updatedUser.password);
     if (await bcrypt.compare(password, updatedUser.password)) {
-      const token = generateToken({ id: updatedUser._id });
+      const accessToken = generateAccessToken({ id: updatedUser._id });
+      const refreshToken = generateRefreshToken({ id: updatedUser._id });
 
       // console.log(updatedUser);
 
@@ -53,7 +91,8 @@ module.exports.userLogin = asyncHandler(async (req, res) => {
           email: updatedUser.email,
           isComplete: updatedUser.isComplete,
           jobType: updatedUser.jobType,
-          token: token,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
         },
       });
     } else {
@@ -63,8 +102,9 @@ module.exports.userLogin = asyncHandler(async (req, res) => {
 
   // console.log(userExists);
   else if (await bcrypt.compare(password, userExists.password)) {
-    const token = generateToken({ id: userExists._id });
-
+    const accessToken = generateAccessToken({ id: userExists._id });
+    const refreshToken = generateRefreshToken({ id: userExists._id });
+    console.log("accessToken: ", accessToken);
     // console.log(userExists);
 
     res.status(200).json({
@@ -74,7 +114,8 @@ module.exports.userLogin = asyncHandler(async (req, res) => {
         email: userExists.email,
         isComplete: userExists.isComplete,
         jobType: userExists.jobType,
-        token: token,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
       },
     });
   } else {

@@ -215,9 +215,9 @@ const PostJob = () => {
                     label="Experience Level"
                     {...register("experiencedLevel", { required: true })}
                   >
-                    <MenuItem value="Beginner">Beginner</MenuItem>
-                    <MenuItem value="Intermediate">Intermediate</MenuItem>
-                    <MenuItem value="Expert">Expert</MenuItem>
+                    <MenuItem key={"B"} value="Beginner">Beginner</MenuItem>
+                    <MenuItem key={"I"} value="Intermediate">Intermediate</MenuItem>
+                    <MenuItem key={"E"} value="Expert">Expert</MenuItem>
                   </Select>
                 </FormControl>
                 {errors.experiencedLevel?.type === "required" && (
@@ -241,8 +241,8 @@ const PostJob = () => {
                     label="Category"
                     {...register("category", { required: true })}
                   >
-                    {categoriesAvailable.map((category) => (
-                      <MenuItem value={category.value}>
+                    {categoriesAvailable.map((category, i) => (
+                      <MenuItem key={i} value={category.value}>
                         {category.name}
                       </MenuItem>
                     ))}

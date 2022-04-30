@@ -10,16 +10,18 @@ const {
   deleteTalentBids,
   updateTalentRating,
 } = require("../controllers/talentController");
+const { protect } = require("../middlewares/authMiddleware");
 const upload = require("./uploadRoutes");
 
 router.get("/", getAllTalentProfile);
 
-router.get("/:id", getTalentProfile);
+router.get("/:id", protect, getTalentProfile);
 
 router.get("/usertalentId/:id", getTalentProfileByUserTalentId);
 
 router.post(
   "/register/:id",
+  protect,
   upload.fields([
     { name: "image1", maxCount: 1 },
     { name: "image2", maxCount: 1 },
@@ -30,6 +32,7 @@ router.post(
 
 router.patch(
   "/editTalent/:id",
+  protect,
   upload.fields([
     { name: "image1", maxCount: 1 },
     { name: "image2", maxCount: 1 },
@@ -38,12 +41,12 @@ router.patch(
   updateTalent
 );
 
-router.patch("/editTalentRating/:id", updateTalentRating);
+router.patch("/editTalentRating/:id", protect, updateTalentRating);
 
-router.patch("/bidsCreate/:id", createTalentBids);
+router.patch("/bidsCreate/:id", protect, createTalentBids);
 
-router.patch("/bidsEdit/:id", editTalentBids);
+router.patch("/bidsEdit/:id", protect, editTalentBids);
 
-router.patch("/bidsDelete/:id", deleteTalentBids);
+router.patch("/bidsDelete/:id", protect, deleteTalentBids);
 
 module.exports = router;

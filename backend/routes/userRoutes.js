@@ -5,9 +5,12 @@ const {
   verifyEmailRegister,
   userLogin,
   sendOtp,
-  verifyOTP
+  verifyOTP,
+  refreshToken,
 } = require("../controllers/userController");
 const verifyEmail = require("../middlewares/verifyEmail");
+
+router.post("/refreshToken", refreshToken);
 
 router.post("/login", verifyEmail, userLogin);
 
