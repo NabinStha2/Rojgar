@@ -58,7 +58,7 @@ export const registerEmployerAction =
   };
 
 export const getAllEmployerAction =
-  ({ inputData }) =>
+  ({ inputData, pageNumber }) =>
   async (dispatch, getState) => {
     try {
       dispatch({
@@ -69,6 +69,7 @@ export const getAllEmployerAction =
         params: {
           keyword: inputData.keyword,
           email: inputData.email,
+          pageNumber,
         },
       });
 
@@ -76,7 +77,7 @@ export const getAllEmployerAction =
 
       dispatch({
         type: GET_ALL_EMPLOYER_SUCCESS,
-        payload: data.employerProfile,
+        payload: data,
       });
     } catch (err) {
       console.log(err.message);

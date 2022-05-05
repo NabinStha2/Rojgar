@@ -5,7 +5,7 @@ const Post = require("../models/postModel");
 
 // for ADMIN
 module.exports.getAllTalentProfile = async (req, res) => {
-  const perPage = 20;
+  const perPage = 1;
   var skillsArray;
   const page = req.query.pageNumber || 1;
   const keyword = req.query.keyword || "";
@@ -19,9 +19,19 @@ module.exports.getAllTalentProfile = async (req, res) => {
   // console.log(keyword, experiencedLevel, category, skillsArray);
 
   try {
-    const count = await Talent.where({
-      "profile.name": RegExp(keyword, "i"),
-    }).countDocuments();
+    const count = await Talent.find()
+      .and([
+        skillsArray ? { "profile.skills": { $in: skillsArray } } : {},
+        category ? { "profile.category": category } : {},
+        experiencedLevel
+          ? { "profile.experiencedLevel": experiencedLevel }
+          : {},
+      ])
+      .or([
+        keyword ? { "profile.name": RegExp(keyword, "i") } : {},
+        keyword ? { "profile.email": RegExp(keyword, "i") } : {},
+      ])
+      .countDocuments();
 
     // console.log(count);
 
@@ -42,9 +52,9 @@ module.exports.getAllTalentProfile = async (req, res) => {
       .populate("userTalentId", "name email")
       .lean(); //mongoose style
 
-    talentInfo.map((talent, i) =>
-      console.log(talent.profile.name, talent.profile.email)
-    );
+    // talentInfo.map((talent, i) =>
+    //   console.log(talent.profile.name, talent.profile.email)
+    // );
 
     res.json({
       talentProfile: talentInfo,

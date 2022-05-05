@@ -40,14 +40,26 @@ export const getPostReducer = (state = { posts: [] }, action) => {
         loading: true,
       };
     case GET_ALL_POST_SUCCESS:
-      return { ...state, loading: false, posts: action.payload };
+      return {
+        ...state,
+        loading: false,
+        posts: action.payload.posts,
+        pages: action.payload.pages,
+        pageNumber: action.payload.pageNumber,
+      };
     case GET_ALL_POST_FAILED:
       return { loading: false, error: action.payload };
 
     case GET_ADVANCED_POST_REQUEST:
       return { ...state, error: null, loading: true };
     case GET_ADVANCED_POST_SUCCESS:
-      return { ...state, loading: false, posts: action.payload };
+      return {
+        ...state,
+        loading: false,
+        posts: action.payload.posts,
+        pages: action.payload.pages,
+        pageNumber: action.payload.pageNumber,
+      };
     case GET_ADVANCED_POST_FAILED:
       return { ...state, loading: false, error: action.payload };
 
@@ -58,7 +70,13 @@ export const getPostReducer = (state = { posts: [] }, action) => {
         loading: true,
       };
     case GET_CATEGORY_POST_SUCCESS:
-      return { ...state, loading: false, posts: action.payload };
+      return {
+        ...state,
+        loading: false,
+        posts: action.payload.posts,
+        pages: action.payload.pages,
+        pageNumber: action.payload.pageNumber,
+      };
     case GET_CATEGORY_POST_FAILED:
       return { ...state, loading: false, error: action.payload };
 

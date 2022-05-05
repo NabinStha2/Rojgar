@@ -59,7 +59,9 @@ export const talentReducer = (
       return {
         ...state,
         loading: false,
-        allTalentProfile: action.payload,
+        allTalentProfile: action.payload.talentProfile,
+        pages: action.payload.pages,
+        pageNumber: action.payload.pageNumber,
       };
     case GET_ALL_TALENT_FAILED:
       return { loading: false, error: action.payload };

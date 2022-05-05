@@ -21,8 +21,9 @@ import { makeStyles } from "@mui/styles";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllEmployerAction } from "../actions/employerActions";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Paginate from "../components/Paginate";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,6 +57,8 @@ function EmployerList() {
   const dispatch = useDispatch();
   const { handleSubmit, register } = useForm({});
   const navigate = useNavigate();
+  const params = useParams();
+  const pageNumber = params.pageNumber || 1;
 
   const {
     allEmployerProfile,
@@ -66,9 +69,9 @@ function EmployerList() {
   const onSubmit = async (inputData) => {
     console.log(inputData);
 
-    dispatch(getAllEmployerAction({ inputData }));
+    dispatch(getAllEmployerAction({ inputData, pageNumber }));
 
-    navigate("/employerList");
+    navigate("/employerList/page/1");
   };
 
   useEffect(() => {
@@ -79,8 +82,8 @@ function EmployerList() {
       email: "",
       skills: [],
     };
-    dispatch(getAllEmployerAction({ inputData: data }));
-  }, [dispatch]);
+    dispatch(getAllEmployerAction({ inputData: data, pageNumber }));
+  }, [dispatch, pageNumber]);
 
   if (employerError !== null) {
     toast(employerError);
@@ -142,6 +145,7 @@ function EmployerList() {
               >
                 Employer
               </Typography> */}
+              <Paginate pageNumber={pageNumber} employer={true} />
               {employerLoading ? (
                 <Grid
                   item

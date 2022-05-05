@@ -50,7 +50,9 @@ export const employerReducer = (
       return {
         ...state,
         loading: false,
-        allEmployerProfile: action.payload,
+        allEmployerProfile: action.payload.employerProfile,
+        pages: action.payload.pages,
+        pageNumber: action.payload.pageNumber,
       };
     case GET_ALL_EMPLOYER_FAILED:
       return { loading: false, error: action.payload };

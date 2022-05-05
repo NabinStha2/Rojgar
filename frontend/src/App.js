@@ -230,38 +230,44 @@ export const App = () => {
             <Route path="/about" element={<About />} />
 
             <Route
-              path="/projects/:category"
+              path="/projects/:category/page/:pageNumber"
               element={<TabsScreen index={0} />}
             />
 
-            <Route path="/freelancer" element={<TabsScreen index={1} />} />
-            <Route path="/employerList" element={<TabsScreen index={2} />} />
             <Route
-              path="/projects/:category/search/:keyword"
+              path="/freelancer/page/:pageNumber"
+              element={<TabsScreen index={1} />}
+            />
+            <Route
+              path="/employerList/page/:pageNumber"
+              element={<TabsScreen index={2} />}
+            />
+            <Route
+              path="/projects/:category/page/:pageNumber/search/:keyword"
               element={<TabsScreen index={0} />}
             />
             <Route
-              path="/projects/:category/price/:price"
+              path="/projects/:category/page/:pageNumber/price/:price"
               element={<TabsScreen index={0} />}
             />
             <Route
-              path="/projects/:category/experience/:experiencedLevel"
+              path="/projects/:category/page/:pageNumber/experience/:experiencedLevel"
               element={<TabsScreen index={0} />}
             />
             <Route
-              path="/projects/:category/search/:keyword/price/:price"
+              path="/projects/:category/page/:pageNumber/search/:keyword/price/:price"
               element={<TabsScreen index={0} />}
             />
             <Route
-              path="/projects/:category/price/:price/experience/:experiencedLevel"
+              path="/projects/:category/page/:pageNumber/price/:price/experience/:experiencedLevel"
               element={<TabsScreen index={0} />}
             />
             <Route
-              path="/projects/:category/search/:keyword/experience/:experiencedLevel"
+              path="/projects/:category/page/:pageNumber/search/:keyword/experience/:experiencedLevel"
               element={<TabsScreen index={0} />}
             />
             <Route
-              path="/projects/:category/search/:keyword/price/:price/experience/:experiencedLevel"
+              path="/projects/:category/page/:pageNumber/search/:keyword/price/:price/experience/:experiencedLevel"
               element={<TabsScreen index={0} />}
             />
             <Route path="*" element={<Navigate to="/" replace />} />

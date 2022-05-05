@@ -31,24 +31,26 @@ import {
 } from "../constants/postConstant";
 
 export const getAllPostAction =
-  ({ inputData }) =>
+  ({ inputData, pageNumber }) =>
   async (dispatch, getState) => {
+    console.log(inputData);
     try {
       dispatch({
         type: GET_ALL_POST_REQUEST,
       });
       const { data } = await rojgarAxios.get(`/post/projects`, {
         params: {
+          pageNumber,
           keyword: inputData.keyword,
           experiencedLevel: inputData.experiencedLevel,
           price: inputData.price,
-          skills: inputData.skillsRequirement.join(","),
+          skills: inputData.skillsRequirement.join(",") || "",
         },
       });
       // console.log(data);
       dispatch({
         type: GET_ALL_POST_SUCCESS,
-        payload: data.posts,
+        payload: data,
       });
     } catch (err) {
       // console.log(err.message);
@@ -64,7 +66,7 @@ export const getAllPostAction =
   };
 
 export const getAdvancedPostAction =
-  ({ inputData }) =>
+  ({ inputData, pageNumber }) =>
   async (dispatch, getState) => {
     try {
       dispatch({
@@ -74,6 +76,7 @@ export const getAdvancedPostAction =
         `/post/advanceSearch/projects/${inputData.category}`,
         {
           params: {
+            pageNumber,
             keyword: inputData.keyword,
             experiencedLevel: inputData.experiencedLevel,
             price: inputData.price,
@@ -84,7 +87,7 @@ export const getAdvancedPostAction =
       // console.log(data);
       dispatch({
         type: GET_ADVANCED_POST_SUCCESS,
-        payload: data.posts,
+        payload: data,
       });
     } catch (err) {
       // console.log(err.message);
@@ -100,7 +103,7 @@ export const getAdvancedPostAction =
   };
 
 export const getCategoryPostAction =
-  ({ category }) =>
+  ({ category, pageNumber }) =>
   async (dispatch, getState) => {
     try {
       //   console.log(category);
@@ -108,12 +111,12 @@ export const getCategoryPostAction =
         type: GET_CATEGORY_POST_REQUEST,
       });
       const { data } = await rojgarAxios.get(
-        `/post/categorySearch/projects/${category}`
+        `/post/categorySearch/projects/${category}?pageNumber=${pageNumber}`
       );
       //   console.log(data);
       dispatch({
         type: GET_CATEGORY_POST_SUCCESS,
-        payload: data.posts,
+        payload: data,
       });
     } catch (err) {
       // console.log(err.message);

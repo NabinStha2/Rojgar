@@ -68,7 +68,7 @@ export const registerTalentAction =
   };
 
 export const getAllTalentAction =
-  ({ inputData }) =>
+  ({ inputData, pageNumber }) =>
   async (dispatch, getState) => {
     try {
       dispatch({
@@ -77,6 +77,7 @@ export const getAllTalentAction =
 
       const { data } = await rojgarAxios.get("/talent", {
         params: {
+          pageNumber,
           keyword: inputData.keyword,
           experiencedLevel: inputData.experiencedLevel,
           category: inputData.category,
@@ -88,7 +89,7 @@ export const getAllTalentAction =
 
       dispatch({
         type: GET_ALL_TALENT_SUCCESS,
-        payload: data.talentProfile,
+        payload: data,
       });
     } catch (err) {
       // console.log(err.message);

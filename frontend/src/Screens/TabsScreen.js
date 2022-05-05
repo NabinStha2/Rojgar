@@ -41,10 +41,10 @@ const TabsScreen = (props) => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
     newValue === 1
-      ? navigate("/freelancer")
+      ? navigate("/freelancer/page/1")
       : newValue === 2
-      ? navigate("/employerList")
-      : navigate("/projects/all");
+      ? navigate("/employerList/page/1")
+      : navigate("/projects/all/page/1");
   };
 
   useEffect(() => {

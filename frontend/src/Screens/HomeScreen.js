@@ -29,11 +29,11 @@ const HomeScreen = () => {
             </p>
           </div>
           <div className="top-btn">
-            <Link to={"/freelancer"}>
+            <Link to={"/freelancer/page/1"}>
               <Button>Hire a Talent </Button>
             </Link>
 
-            <Link to={"/projects/all"}>
+            <Link to={"/projects/all/page/1"}>
               <Button> Find a Job</Button>
             </Link>
           </div>

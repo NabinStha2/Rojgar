@@ -28,9 +28,10 @@ import { makeStyles } from "@mui/styles";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllTalentAction } from "../actions/talentActions";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { categoriesAvailable, skillsAvailable } from "../App";
 import { toast } from "react-toastify";
+import Paginate from "../components/Paginate";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,6 +77,8 @@ function Freelancer() {
   const { handleSubmit, register } = useForm({});
   const [skills, setSkills] = useState([]);
   const navigate = useNavigate();
+  const params = useParams();
+  const pageNumber = params.pageNumber || 1;
 
   const handleChange = (event) => {
     const {
@@ -97,10 +100,11 @@ function Freelancer() {
     dispatch(
       getAllTalentAction({
         inputData: inputData,
+        pageNumber,
       })
     );
 
-    navigate("/freelancer");
+    navigate("/freelancer/page/1");
   };
 
   useEffect(() => {
@@ -111,9 +115,9 @@ function Freelancer() {
       experiencedLevel: "",
       skills: [],
     };
-    dispatch(getAllTalentAction({ inputData: data }));
+    dispatch(getAllTalentAction({ inputData: data, pageNumber }));
     // }
-  }, [dispatch]);
+  }, [dispatch, pageNumber]);
 
   if (talentError !== null) {
     toast(talentError);
@@ -305,6 +309,7 @@ function Freelancer() {
                 >
                   Talent
                 </Typography> */}
+                <Paginate pageNumber={pageNumber} freelancer={true} />
                 {talentLoading ? (
                   <Grid
                     item

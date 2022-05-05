@@ -18,6 +18,7 @@ import {
   Select,
   Typography,
 } from "@mui/material";
+import Paginate from "../components/Paginate";
 import { makeStyles } from "@mui/styles";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -100,6 +101,7 @@ const PostScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
+  const pageNumber = params.pageNumber || 1;
   const {
     register,
     handleSubmit,
@@ -115,7 +117,7 @@ const PostScreen = () => {
   const classes = useStyles();
 
   const getPosts = useSelector((state) => state.getPosts);
-  const { loading, posts } = getPosts;
+  const { loading, posts, pages } = getPosts;
 
   const [skills, setSkills] = useState([]);
 
@@ -129,6 +131,7 @@ const PostScreen = () => {
   const onSubmit = async (inputData) => {
     inputData.skillsRequirement = skills;
     console.log(inputData);
+    console.log(pageNumber);
 
     setCallOnSubmit(true);
 
@@ -137,6 +140,7 @@ const PostScreen = () => {
       dispatch(
         getAllPostAction({
           inputData: inputData,
+          pageNumber: pageNumber,
         })
       );
     } else {
@@ -144,6 +148,7 @@ const PostScreen = () => {
       dispatch(
         getAdvancedPostAction({
           inputData: inputData,
+          pageNumber: pageNumber,
         })
       );
     }
@@ -154,30 +159,34 @@ const PostScreen = () => {
       inputData.keyword !== ""
     ) {
       navigate(
-        `/projects/${inputData.category}/search/${inputData.keyword}/price/${inputData.price}/experience/${inputData.experiencedLevel}`
+        `/projects/${inputData.category}/page/${pageNumber}/search/${inputData.keyword}/price/${inputData.price}/experience/${inputData.experiencedLevel}`
       );
     } else if (inputData.experiencedLevel !== "" && inputData.price !== "") {
       navigate(
-        `/projects/${inputData.category}/price/${inputData.price}/experience/${inputData.experiencedLevel}`
+        `/projects/${inputData.category}/page/${pageNumber}/price/${inputData.price}/experience/${inputData.experiencedLevel}`
       );
     } else if (inputData.experiencedLevel !== "" && inputData.keyword !== "") {
       navigate(
-        `/projects/${inputData.category}/search/${inputData.keyword}/experience/${inputData.experiencedLevel}`
+        `/projects/${inputData.category}/page/${pageNumber}/search/${inputData.keyword}/experience/${inputData.experiencedLevel}`
       );
     } else if (inputData.price !== "" && inputData.keyword !== "") {
       navigate(
-        `/projects/${inputData.category}/search/${inputData.keyword}/price/${inputData.price}`
+        `/projects/${inputData.category}/page/${pageNumber}/search/${inputData.keyword}/price/${inputData.price}`
       );
     } else if (inputData.price !== "") {
-      navigate(`/projects/${inputData.category}/price/${inputData.price}`);
+      navigate(
+        `/projects/${inputData.category}/page/${pageNumber}/price/${inputData.price}`
+      );
     } else if (inputData.keyword !== "") {
-      navigate(`/projects/${inputData.category}/search/${inputData.keyword}`);
+      navigate(
+        `/projects/${inputData.category}/page/${pageNumber}/search/${inputData.keyword}`
+      );
     } else if (inputData.experiencedLevel !== "") {
       navigate(
-        `/projects/${inputData.category}/experience/${inputData.experiencedLevel}`
+        `/projects/${inputData.category}/page/${pageNumber}/experience/${inputData.experiencedLevel}`
       );
     } else if (inputData.category !== "") {
-      navigate(`/projects/${inputData.category}`);
+      navigate(`/projects/${inputData.category}/page/${pageNumber}`);
     }
   };
 
@@ -205,6 +214,7 @@ const PostScreen = () => {
         dispatch(
           getAllPostAction({
             inputData: data,
+            pageNumber: pageNumber,
           })
         );
       } else if (params.category) {
@@ -212,12 +222,15 @@ const PostScreen = () => {
         dispatch(
           getCategoryPostAction({
             category: params.category,
+            pageNumber: pageNumber,
           })
         );
       }
     }
     // }
-  }, [params, dispatch, location, callOnSubmit]);
+  }, [params, dispatch, setValue, location, callOnSubmit]);
+
+  console.log(pages);
 
   return (
     <Grow in>
@@ -402,6 +415,12 @@ const PostScreen = () => {
                 </Grid>
 
                 <Divider />
+
+                <Paginate
+                  pageNumber={pageNumber}
+                  skills={skills}
+                  project={true}
+                />
 
                 {loading ? (
                   <Grid

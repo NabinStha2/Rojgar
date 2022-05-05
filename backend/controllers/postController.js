@@ -47,9 +47,7 @@ module.exports.createPost = asyncHandler(async (req, res) => {
 });
 
 module.exports.getAllPosts = asyncHandler(async (req, res) => {
-  // console.log("Cookies: ", req.cookies);
-  // console.log("Cookies: ", req.session);
-  const perPage = 20;
+  const perPage = 1;
   var skillsArray;
   const page = req.query.pageNumber || 1;
   const keyword = req.query.keyword || "";
@@ -60,9 +58,16 @@ module.exports.getAllPosts = asyncHandler(async (req, res) => {
     skillsArray = querySkill.split(",");
   }
 
+  // console.log("pageNumber: ", page);
+
   try {
-    const count = await Post.where({
-      title: RegExp(keyword, "i"),
+    const count = await Post.find({
+      $and: [
+        keyword ? { title: RegExp(keyword, "i") } : {},
+        skillsArray ? { skillsRequirement: { $in: skillsArray } } : {},
+        price ? { price: { $lte: price } } : {},
+        experiencedLevel ? { experiencedLevel: experiencedLevel } : {},
+      ],
     }).countDocuments();
 
     // console.log(count);
@@ -95,14 +100,27 @@ module.exports.getAllPosts = asyncHandler(async (req, res) => {
 
 module.exports.categorySearchProjects = asyncHandler(async (req, res) => {
   const category = req.params.category;
-  //   console.log(`${category}`);
+  const perPage = 1;
+  const page = req.query.pageNumber || 1;
+  console.log(`${category} ${page}`);
+
   try {
-    // const post = await Post.where({ category });
-    const post = await Post.find({ category: category }).lean();
+    const count = await Post.where({
+      category: category,
+    }).countDocuments();
+
+    console.log(count);
+
+    const post = await Post.find({ category: category })
+      .limit(perPage)
+      .skip(perPage * (page - 1))
+      .lean();
 
     // console.log(post);
     res.json({
       posts: post,
+      pageNumber: page,
+      pages: Math.ceil(count / perPage),
     });
   } catch (err) {
     res.status(409).json({ errMessage: err.message });
@@ -111,6 +129,8 @@ module.exports.categorySearchProjects = asyncHandler(async (req, res) => {
 
 module.exports.advanceSearchProjects = asyncHandler(async (req, res) => {
   var skillsArray;
+  const perPage = 1;
+  const page = req.query.pageNumber || 1;
   const keyword = req.query.keyword || "";
   const category = req.params.category;
   const querySkill = req.query.skills;
@@ -120,10 +140,22 @@ module.exports.advanceSearchProjects = asyncHandler(async (req, res) => {
     skillsArray = querySkill.split(",");
   }
 
-  console.log(`${category} ${querySkill} ${price} ${experiencedLevel}`);
+  // console.log(`${category} ${querySkill} ${price} ${experiencedLevel}`);
   // console.log(skillsArray);
 
   try {
+    const count = await Post.find({
+      $and: [
+        keyword ? { title: RegExp(keyword, "i") } : {},
+        { category: category },
+        skillsArray ? { skillsRequirement: { $in: skillsArray } } : {},
+        price ? { price: { $lte: price } } : {},
+        experiencedLevel ? { experiencedLevel: experiencedLevel } : {},
+      ],
+    }).countDocuments();
+
+    // console.log(count);
+
     const post = await Post.find()
       .and([
         keyword ? { title: RegExp(keyword, "i") } : {},
@@ -132,6 +164,8 @@ module.exports.advanceSearchProjects = asyncHandler(async (req, res) => {
         price ? { price: { $lte: price } } : {},
         experiencedLevel ? { experiencedLevel: experiencedLevel } : {},
       ])
+      .limit(perPage)
+      .skip(perPage * (page - 1))
       .lean();
     //   .or([
     //     { skillsRequirement: { $in: skills } },
@@ -150,6 +184,8 @@ module.exports.advanceSearchProjects = asyncHandler(async (req, res) => {
     // console.log(post);
     res.json({
       posts: post,
+      pageNumber: page,
+      pages: Math.ceil(count / perPage),
     });
   } catch (err) {
     res.status(409).json({ errMessage: err.message });
@@ -212,7 +248,9 @@ module.exports.updatePost = asyncHandler(async (req, res) => {
         new: true,
         timestamps: true,
       }
-    ).populate("employerId");
+    )
+      .populate("employerId proposalSubmitted.talentId")
+      .lean();
 
     res.status(201).json({
       projectPost: updatedPost,

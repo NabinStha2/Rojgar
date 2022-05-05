@@ -113,7 +113,7 @@ const Header = () => {
                   <>
                     <NavDropdown.Item key={i}>
                       <Link
-                        to={`/projects/${category.value}`}
+                        to={`/projects/${category.value}/page/${1}`}
                         state={{ callOnSubmit: false }}
                         style={{
                           textDecoration: "none",
