@@ -130,6 +130,13 @@ const LoginScreen = () => {
 
     if (
       userInfo &&
+      userInfo.jobType === "admin"
+    ) {
+      console.log("login");
+      navigate(`/admin`);
+    }
+    if (
+      userInfo &&
       userInfo.jobType === "Employer" &&
       userInfo.isComplete === true
     ) {

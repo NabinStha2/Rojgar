@@ -155,6 +155,7 @@ export const getPostReducer = (state = { posts: [] }, action) => {
         ...state,
         loading: false,
         post: action.payload.projectPost,
+        acceptMessage: action.payload.acceptMessage,
       };
     case POST_ACCEPT_PROPOSAL_FAILED:
       return { loading: false, error: action.payload };

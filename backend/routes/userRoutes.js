@@ -7,6 +7,7 @@ const {
   sendOtp,
   verifyOTP,
   refreshToken,
+  logout,
 } = require("../controllers/userController");
 const verifyEmail = require("../middlewares/verifyEmail");
 
@@ -21,5 +22,7 @@ router.get("/verify-email", verifyEmailRegister);
 router.post("/sendOtp", sendOtp);
 
 router.post("/verify-OTP", verifyOTP);
+
+router.post("/logout", logout);
 
 module.exports = router;

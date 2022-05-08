@@ -49,6 +49,7 @@ const talentSchema = mongoose.Schema(
       linkedinId: { type: String },
       portfolioLink: { type: String },
     },
+    isLogin: { type: Boolean, default: false },
     bids: [
       {
         postId: {

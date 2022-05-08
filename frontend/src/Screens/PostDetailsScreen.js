@@ -59,6 +59,7 @@ const PostDetailsScreen = () => {
     },
   });
   const [open, setOpen] = useState(false);
+  const [aceptedTalent, setAcceptedTalent] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -143,7 +144,7 @@ const PostDetailsScreen = () => {
       //     id: userInfo._id,
       //   })
       // );
-    } else {
+    } else if (userInfo && userInfo.jobType === "Talent") {
       console.log("dispatching talent");
       userInfo &&
         dispatch(getTalentProfileByUserTalentIdAction({ id: userInfo._id }));
@@ -296,9 +297,11 @@ const PostDetailsScreen = () => {
                           Project ID: {post._id}
                         </p>
                       </Grid>
-                      {edit &&
-                        userInfo &&
-                        post.employerId.userEmployerId === userInfo._id && (
+                      {userInfo &&
+                        (userInfo.jobType === "admin") |
+                          (edit &&
+                            post.employerId.userEmployerId ===
+                              userInfo._id) && (
                           <Grid item>
                             <Link
                               to={"/postJob/edit"}
@@ -328,11 +331,13 @@ const PostDetailsScreen = () => {
                     </Grid>
                     {post.isPaid === false &&
                     userInfo &&
-                    post.employerId.userEmployerId === userInfo._id ? (
+                    (userInfo.jobType === "admin") |
+                      (post.employerId.userEmployerId === userInfo._id) ? (
                       <Khalti postId={post._id} />
                     ) : (
                       userInfo &&
-                      userInfo.jobType === "Employer" && (
+                      (userInfo.jobType === "admin") |
+                        (userInfo.jobType === "Employer") && (
                         <p
                           style={{
                             fontSize: "11px",
@@ -383,7 +388,7 @@ const PostDetailsScreen = () => {
                       color="text.secondary"
                       gutterBottom
                     >
-                      Client Details
+                      Employer Details
                     </Typography>
                     <Typography variant="h5" component="div">
                       {post.employerId.profile.name}
@@ -406,6 +411,48 @@ const PostDetailsScreen = () => {
                     </Link>
                   </CardActions>
                 </Card>
+                {post.proposalSubmitted.map(
+                  (talent, i) =>
+                    talent.isAccepted === true && (
+                      <Card
+                        sx={{
+                          minWidth: 275,
+                          margin: "10px 0px",
+                          padding: "10px",
+                        }}
+                        elevation={4}
+                      >
+                        <CardContent>
+                          <Typography
+                            sx={{ fontSize: 20 }}
+                            color="text.secondary"
+                            gutterBottom
+                          >
+                            Accepted Talent Details
+                          </Typography>
+                          <Typography variant="h5" component="div">
+                            {talent.talentId.profile.name}
+                          </Typography>
+                          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                            {talent.talentId.profile.email}
+                          </Typography>
+                          <Typography variant="body2">
+                            {talent.talentId.profile.description}
+                            <br />
+                            {talent.talentId.address.country}
+                          </Typography>
+                        </CardContent>
+                        <CardActions>
+                          <Link
+                            to={`/talentProfile/${talent.talentId.userTalentId}`}
+                            style={{ textDecoration: "none" }}
+                          >
+                            <Button size="small">More Info</Button>
+                          </Link>
+                        </CardActions>
+                      </Card>
+                    )
+                )}
               </Grid>
             )
           )}
@@ -516,7 +563,7 @@ const PostDetailsScreen = () => {
                       <Button
                         disabled={
                           !!talentProfile.bids.find(
-                            (bid) => bid.postId === post._id
+                            (bid) => bid.postId._id === post._id
                           )
                         }
                         variant="contained"
@@ -557,32 +604,29 @@ const PostDetailsScreen = () => {
                         </Typography>
                         <Typography variant="body2">
                           Accepted:{" "}
-                          {proposal.isAccepted.toString() === true
-                            ? "Yes"
-                            : "No"}
+                          {proposal.isAccepted === true ? "Yes" : "No"}
                         </Typography>
                         <Typography variant="body2">
                           Finished:{" "}
-                          {proposal.isFinished.toString() === true
-                            ? "Yes"
-                            : "No"}
+                          {proposal.isFinished === true ? "Yes" : "No"}
                         </Typography>
                       </CardContent>
-                      {talentProfile._id === proposal.talentId._id && (
-                        <CardActions>
-                          <Button onClick={handleOpen} size="small">
-                            Edit
-                          </Button>
-                          <Button
-                            onClick={handleDeleteBid}
-                            size="small"
-                            variant="text"
-                            color="warning"
-                          >
-                            Delete
-                          </Button>
-                        </CardActions>
-                      )}
+                      {talentProfile._id === proposal.talentId._id &&
+                        proposal.isAccepted === false && (
+                          <CardActions>
+                            <Button onClick={handleOpen} size="small">
+                              Edit
+                            </Button>
+                            <Button
+                              onClick={handleDeleteBid}
+                              size="small"
+                              variant="text"
+                              color="warning"
+                            >
+                              Delete
+                            </Button>
+                          </CardActions>
+                        )}
                     </Card>
                     <Modal
                       open={open}
@@ -691,8 +735,9 @@ const PostDetailsScreen = () => {
           </>
         ) : userInfo ? (
           post &&
-          post.employerId.userEmployerId === userInfo._id &&
-          userInfo.jobType === "Employer" ? (
+          (userInfo.jobType === "admin") |
+            (post.employerId.userEmployerId === userInfo._id &&
+              userInfo.jobType === "Employer") ? (
             post.proposalSubmitted.map((proposal) => (
               <Paper key={proposal._id} elevation={3} sx={{ padding: 3 }}>
                 <Typography variant="h5">Proposal submitted</Typography>

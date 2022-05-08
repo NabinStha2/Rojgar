@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema(
     },
     jobType: {
       type: "string",
-      enum: ["Talent", "Employer"],
+      enum: ["Talent", "Employer", "admin"],
     },
     isComplete: { type: "boolean", default: false },
     emailToken: String,

@@ -104,9 +104,10 @@ const EmployerDashboard = ({ visit = false }) => {
                     alt="talent-img"
                     height="200"
                     image={
-                      employerProfile.profile.image &&
-                      require(`../uploads/${employerProfile.profile.image}`)
-                        .default
+                      employerProfile && employerProfile.profile.image
+                        ? require(`../uploads/${employerProfile.profile.image}`)
+                            .default
+                        : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
                     }
                   />
                 </Card>
@@ -198,12 +199,21 @@ const EmployerDashboard = ({ visit = false }) => {
             </Grid>
             <Grid container>
               <Grid item xs={12} md={4} sx={{ marginTop: "20px" }}>
-                <Chip
-                  icon={<CircleIcon sx={{ fontSize: "14px" }} />}
-                  label="Online"
-                  color="success"
-                  variant="outlined"
-                />
+                {employerProfile.isLogin ? (
+                  <Chip
+                    icon={<CircleIcon sx={{ fontSize: "14px" }} />}
+                    label="Online"
+                    color="success"
+                    variant="outlined"
+                  />
+                ) : (
+                  <Chip
+                    icon={<CircleIcon sx={{ fontSize: "14px" }} />}
+                    label="Offline"
+                    color="warning"
+                    variant="outlined"
+                  />
+                )}
                 <Stack direction="row" mt={2}>
                   <LocationOnIcon
                     sx={{ fontSize: "21px", color: "red", marginRight: 1 }}

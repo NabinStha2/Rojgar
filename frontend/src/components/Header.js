@@ -33,7 +33,7 @@ const Header = () => {
   // console.log(employerProfile);
 
   const handleLogout = () => {
-    dispatch(userLogoutAction());
+    dispatch(userLogoutAction(userInfo.email));
     navigate("/login");
   };
 
@@ -74,33 +74,54 @@ const Header = () => {
                 </Link>
               </Nav.Item>
             )}
-            {userInfo && userInfo.jobType === "Employer" && (
-              <Nav.Item>
-                <Link
-                  to={
-                    userInfo.isComplete && `/employerDashboard/${userInfo._id}`
-                  }
-                  style={{
-                    color: "white",
-                    textDecoration: "none",
-                  }}
-                >
-                  Dashboard
-                </Link>
-              </Nav.Item>
-            )}
-            {userInfo && userInfo.jobType === "Talent" && (
-              <Nav.Item>
-                <Link
-                  style={{
-                    textDecoration: "none",
-                    color: "white",
-                  }}
-                  to={userInfo.isComplete && `/talentDashboard/${userInfo._id}`}
-                >
-                  Dashboard
-                </Link>
-              </Nav.Item>
+
+            {userInfo ? (
+              userInfo.jobType === "admin" ? (
+                <Nav.Item>
+                  <Link
+                    to={`/admin`}
+                    style={{
+                      color: "white",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Admin
+                  </Link>
+                </Nav.Item>
+              ) : userInfo.jobType === "Employer" ? (
+                <Nav.Item>
+                  <Link
+                    to={
+                      userInfo.isComplete &&
+                      `/employerDashboard/${userInfo._id}`
+                    }
+                    style={{
+                      color: "white",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Dashboard
+                  </Link>
+                </Nav.Item>
+              ) : userInfo.jobType === "Talent" ? (
+                <Nav.Item>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                      color: "white",
+                    }}
+                    to={
+                      userInfo.isComplete && `/talentDashboard/${userInfo._id}`
+                    }
+                  >
+                    Dashboard
+                  </Link>
+                </Nav.Item>
+              ) : (
+                <></>
+              )
+            ) : (
+              <></>
             )}
 
             <NavDropdown
