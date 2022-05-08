@@ -36,6 +36,7 @@ const PostJob = React.lazy(() => import("./Screens/PostJob"));
 const PostDetailsScreen = React.lazy(() =>
   import("./Screens/PostDetailsScreen")
 );
+const AdminTabsScreen = React.lazy(() => import("./Screens/AdminTabsScreen"));
 
 const theme = createTheme({
   breakpoints: {
@@ -93,6 +94,13 @@ export const skillsAvailable = [
   "Linux",
   "TeamCity",
   "Data Science",
+  "WordPress",
+  "Software Architecture",
+  "SpreedSheats",
+  "Finance",
+  "Finance Analysis",
+  "Financial Research",
+  "Financial Consulting",
 ];
 
 export const categoriesAvailable = [
@@ -102,6 +110,10 @@ export const categoriesAvailable = [
   { name: "Video Editing", value: "videoediting" },
   { name: "Writing Editing", value: "writing" },
   { name: "Graphic Designer", value: "graphicdesigner" },
+  { name: "Word Press", value: "wordpress" },
+  { name: "Sales & Marketing", value: "salesandmarketing" },
+  { name: "Software Development", value: "softwaredevelopment" },
+  { name: "Marketing & Finance", value: "marketingandfinance" },
 ];
 
 export const App = () => {
@@ -184,19 +196,7 @@ export const App = () => {
                 <Route path="/admin" element={<AdminScreen />} />
                 <Route
                   path="/admin/paymentList"
-                  element={<TabsScreen index={3} />}
-                />
-                <Route
-                  path="/admin/employerList"
-                  element={<TabsScreen index={2} />}
-                />
-                <Route
-                  path="/admin/talentList"
-                  element={<TabsScreen index={1} />}
-                />
-                <Route
-                  path="/admin/projectList"
-                  element={<TabsScreen index={0} />}
+                  element={<AdminTabsScreen index={0} />}
                 />
                 <Route path="/postJob/edit" element={<PostJob />} />
               </>

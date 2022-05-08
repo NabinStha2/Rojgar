@@ -98,156 +98,160 @@ function EmployerList() {
           sx={{ flexDirection: "column" }}
           spacing={2}
         >
-         <Grid item xs={12} sx={{
-                  marginLeft:'10px',
-
-         }}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              marginLeft: "10px",
+            }}
+          >
             <h2>Employer</h2>
           </Grid>
           <Grid item xs={12}>
-          <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
-            <input
-              id="search"
-              placeholder="Search by Employer Name or Email"
-              name="search"
-              style={{
-                borderRadius: "4px",
+            <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+              <input
+                id="search"
+                placeholder="Search by Employer Name or Email"
+                name="search"
+                style={{
+                  borderRadius: "4px",
                   flex: "5",
                   height: "40px",
                   padding: "20px",
                   border: "1px solid rgb(223, 223, 223)",
                   boxShadow: "0px 2px 5px 0px #ececec",
-                  marginLeft:'10px',
+                  marginLeft: "10px",
+                }}
+                {...register("keyword")}
+              />
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                className={classes.button}
+              >
+                Search
+              </Button>
+            </form>
+            <Grid
+              item
+              xs={12}
+              container
+              sx={{
+                flexDirection: "column",
+                display: "flex",
+                padding: "0px 10px",
+                flex: "1",
               }}
-              {...register("keyword")}
-            />
-            <Button
-              type="submit"
-              color="primary"
-              variant="contained"
-              className={classes.button}
             >
-              Search
-            </Button>
-          </form>
-          <Grid
-            item
-            xs={12}
-            container
-            sx={{
-              flexDirection: "column",
-              display: "flex",
-              padding: "0px 10px",
-              flex: "1",
-            }}
-          >
-            <Paper elevation={3} sx={{ marginTop: "10px" }}>
-             
-              <Paginate pageNumber={pageNumber} employer={true} />
-              {employerLoading ? (
-                <Grid
-                  item
-                  sx={{
-                    padding: "10px",
-                    display: "flex",
-                    flex: "1",
-                    justifyContent: "center",
-                  }}
-                >
-                  <CircularProgress variant="indeterminate" />
-                </Grid>
-              ) : allEmployerProfile && allEmployerProfile.length > 0 ? (
-                <Grid item xs={12} container>
-                  <List
+              <Paper elevation={3} sx={{ marginTop: "10px" }}>
+                <Paginate pageNumber={pageNumber} employer={true} />
+                {employerLoading ? (
+                  <Grid
+                    item
                     sx={{
-                      width: "100%",
+                      padding: "10px",
                       display: "flex",
-                          flex: "1",
-                          alignItems: "flex-start",
-                          border: " 0.5px solid #eaeaea",
-                          borderRadius: "4px",
-                          background: "#def2ee",
-                          boxShadow: "0px 3px 8px #eaeaea ",
-                          padding:'30px 0px',
-                          margin:'12px 10px',
+                      flex: "1",
+                      justifyContent: "center",
                     }}
                   >
-                    {allEmployerProfile.map((employer, i) => (
-                      <>
-                        <ListItem key={i}>
-                          <Link
-                            to={`/employerProfile/${employer.userEmployerId._id}`}
-                            style={{
-                              display: "flex",
-                              textDecoration: "none",
-                              flex: 1,
-                              color: "black",
-                              alignItems: "center",
-                              
-                            }}
-                          >
-                            <ListItemAvatar>
-                              <Avatar>
-                                <Card>
-                                  <CardMedia
-                                    component="img"
-                                    alt="talent-img"
-                                    height="200"
-                                    image={
-                                      employer.profile.image
-                                        ? employer.profile.image
-                                        : "https://img.search.brave.com/YZ8HvSLdgaVvUGq1io_NN6jaXZlCVL2da1G4ANNvnO0/rs:fit:711:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5p/TXNRQkd1TzA0SG1U/N0JjTjJYQjhBSGFF/OCZwaWQ9QXBp"
-                                    }
-                                  />
-                                </Card>
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                              primary={employer.profile.name}
-                              secondary={
-                                <>
-                                  <Typography variant="body1">
-                                    {employer.profile.email}
-                                  </Typography>
+                    <CircularProgress variant="indeterminate" />
+                  </Grid>
+                ) : allEmployerProfile && allEmployerProfile.length > 0 ? (
+                  <Grid item xs={12} container>
+                    <List
+                      sx={{
+                        width: "100%",
+                        display: "flex",
+                        flex: "1",
+                        alignItems: "flex-start",
+                        border: " 0.5px solid #eaeaea",
+                        borderRadius: "4px",
+                        background: "#def2ee",
+                        boxShadow: "0px 3px 8px #eaeaea ",
+                        padding: "30px 0px",
+                        margin: "12px 10px",
+                      }}
+                    >
+                      {allEmployerProfile.map((employer, i) => (
+                        <>
+                          <ListItem key={i}>
+                            <Link
+                              to={`/employerProfile/${employer.userEmployerId._id}`}
+                              style={{
+                                display: "flex",
+                                textDecoration: "none",
+                                flex: 1,
+                                color: "black",
+                                alignItems: "center",
+                              }}
+                            >
+                              <ListItemAvatar>
+                                <Avatar
+                                  sx={{
+                                    width: 60,
+                                    height: 60,
+                                    margin: "0px 10px 0px 0px",
+                                  }}
+                                  alt={employer.profile.name.split("")[0]}
+                                  src={
+                                    employer.profile.image
+                                      ? require(`../uploads/${employer.profile.image}`)
+                                          .default
+                                      : employer.profile.name.split("")[0]
+                                  }
+                                ></Avatar>
+                              </ListItemAvatar>
+                              <ListItemText
+                                primary={employer.profile.name}
+                                secondary={
+                                  <>
+                                    <Typography variant="body1">
+                                      {employer.profile.email}
+                                    </Typography>
 
-                                  <Grid
-                                    item
-                                    style={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      margin: "10px 0px",
-                                    }}
-                                  >
-                                    <Rating
-                                      name="half-rating-read"
-                                      value={
-                                        employer.profile.rating /
-                                        employer.profile.ratingper
-                                      }
-                                      precision={0.5}
-                                      readOnly
-                                    />
-                                  </Grid>
-                                </>
-                              }
-                            />
-                          </Link>
-                        </ListItem>
-                        {!(allEmployerProfile.length - 1 === i) && (
-                          <Divider light variant="inset" />
-                        )}
-                      </>
-                    ))}
-                  </List>
-                </Grid>
-              ) : (
-                <Typography variant="body1" sx={{padding:4,textAlign:'center'}}>
-                  No any Employer for this search.
-                </Typography>
-              )}
-            </Paper>
+                                    <Grid
+                                      item
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        margin: "10px 0px",
+                                      }}
+                                    >
+                                      <Rating
+                                        name="half-rating-read"
+                                        value={
+                                          employer.profile.rating /
+                                          employer.profile.ratingper
+                                        }
+                                        precision={0.5}
+                                        readOnly
+                                      />
+                                    </Grid>
+                                  </>
+                                }
+                              />
+                            </Link>
+                          </ListItem>
+                          {!(allEmployerProfile.length - 1 === i) && (
+                            <Divider light variant="inset" />
+                          )}
+                        </>
+                      ))}
+                    </List>
+                  </Grid>
+                ) : (
+                  <Typography
+                    variant="body1"
+                    sx={{ padding: 4, textAlign: "center" }}
+                  >
+                    No any Employer for this search.
+                  </Typography>
+                )}
+              </Paper>
+            </Grid>
           </Grid>
-        </Grid>
         </Grid>
       </Container>
     </Grow>

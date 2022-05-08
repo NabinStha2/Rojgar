@@ -1,8 +1,8 @@
 import React from "react";
-const TabsScreen = React.lazy(() => import("./TabsScreen"));
+const AdminTabsScreen = React.lazy(() => import("./AdminTabsScreen"));
 
 const AdminScreen = () => {
-  return <TabsScreen index={0} />;
+  return <AdminTabsScreen index={0} />;
 };
 
 export default AdminScreen;

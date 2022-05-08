@@ -167,6 +167,16 @@ export const userRegisterAction =
 
 export const userLogoutAction = (email) => async (dispatch) => {
   localStorage.removeItem("userInfo");
+  dispatch({
+    type: USER_LOGOUT,
+  });
+  dispatch({
+    type: EMPLOYER_DETAILS_RESET,
+  });
+  dispatch({
+    type: TALENT_DETAILS_RESET,
+  });
+
   await axios.post(
     "http://localhost:5000/user/logout",
     { email },
@@ -177,15 +187,6 @@ export const userLogoutAction = (email) => async (dispatch) => {
     }
   );
 
-  dispatch({
-    type: USER_LOGOUT,
-  });
-  dispatch({
-    type: EMPLOYER_DETAILS_RESET,
-  });
-  dispatch({
-    type: TALENT_DETAILS_RESET,
-  });
   console.log("logout");
   // localStorage.removeItem("userInfo");
 

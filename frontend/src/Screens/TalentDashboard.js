@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Paper,
@@ -17,45 +17,45 @@ import {
   List,
   ListItem,
   ListItemButton,
-} from "@mui/material"
-import CircleIcon from "@mui/icons-material/Circle"
-import MonetizationOnRoundedIcon from "@mui/icons-material/MonetizationOnRounded"
-import EmailIcon from "@mui/icons-material/Email"
-import FacebookIcon from "@mui/icons-material/Facebook"
-import GitHubIcon from "@mui/icons-material/GitHub"
-import TwitterIcon from "@mui/icons-material/Twitter"
-import { useDispatch, useSelector } from "react-redux"
-import { Link, useNavigate, useParams } from "react-router-dom"
+} from "@mui/material";
+import CircleIcon from "@mui/icons-material/Circle";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import EmailIcon from "@mui/icons-material/Email";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   getTalentProfileByUserTalentIdAction,
   editTalentRatingAction,
-} from "../actions/talentActions"
-import moment from "moment"
+} from "../actions/talentActions";
+import moment from "moment";
 
 const TalentDashboard = ({ visit = false }) => {
-  const { talentProfile, loading } = useSelector(state => state.talentInfo)
-  const dispatch = useDispatch()
-  const params = useParams()
-  const userLogin = useSelector(state => state.userLogin)
-  const { userInfo } = userLogin
-  const navigate = useNavigate()
+  const { talentProfile, loading } = useSelector((state) => state.talentInfo);
+  const dispatch = useDispatch();
+  const params = useParams();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (params.userTalentId) {
-      console.log(params.userTalentId)
+      console.log(params.userTalentId);
       dispatch(
         getTalentProfileByUserTalentIdAction({
           id: params.userTalentId,
         })
-      )
+      );
     }
-  }, [dispatch, params])
+  }, [dispatch, params]);
 
-  console.log(talentProfile)
+  console.log(talentProfile);
 
   return (
     <Grow in>
-      <Container maxWidth='lg'>
+      <Container maxWidth="lg">
         {loading ? (
           <Grid
             item
@@ -64,8 +64,9 @@ const TalentDashboard = ({ visit = false }) => {
               display: "flex",
               flex: "1",
               justifyContent: "center",
-            }}>
-            <CircularProgress variant='indeterminate' />
+            }}
+          >
+            <CircularProgress variant="indeterminate" />
           </Grid>
         ) : talentProfile && talentProfile !== null ? (
           <Box
@@ -76,35 +77,39 @@ const TalentDashboard = ({ visit = false }) => {
               justifyContent: "center",
               margin: 2,
               flexDirection: "column",
-            }}>
+            }}
+          >
             <Paper
               elevation={3}
-              sx={{ margin: 1, padding: "15px", width: "100%" }}>
+              sx={{ margin: 1, padding: "15px", width: "100%" }}
+            >
               <Grid container spacing={3}>
                 <Grid item xs={12} md={4}>
                   <Card>
                     <CardMedia
-                      component='img'
-                      alt='talent-img'
-                      height='200'
-                      // image={
-                      //   talentProfile.profile.image &&
-                      //   require(`../uploads/${talentProfile.profile.image}`)
-                      //     .default
-                      // }
+                      component="img"
+                      alt="talent-img"
+                      height="200"
+                      image={
+                        talentProfile.profile.image
+                          ? require(`../uploads/${talentProfile.profile.image}`)
+                              .default
+                          : talentProfile.profile.name.split("")[0]
+                      }
                     />
                   </Card>
                 </Grid>
                 <Grid item spacing={3} xs={12} md={8}>
                   <Grid item>
                     <Typography
-                      variant='h6'
+                      variant="h6"
                       gutterBottom
-                      sx={{ fontWeight: "600" }}>
+                      sx={{ fontWeight: "600" }}
+                    >
                       {talentProfile.profile.name}
                     </Typography>
                   </Grid>
-                  <Typography variant='body1' mt={1} sx={{ color: "#605e5e" }}>
+                  <Typography variant="body1" mt={1} sx={{ color: "#605e5e" }}>
                     {talentProfile.profile.title}
                   </Typography>
                   <Grid
@@ -113,9 +118,10 @@ const TalentDashboard = ({ visit = false }) => {
                       display: "flex",
                       alignItems: "center",
                       margin: "10px 0px",
-                    }}>
+                    }}
+                  >
                     <Rating
-                      name='half-rating-read'
+                      name="half-rating-read"
                       value={
                         talentProfile.profile.rating /
                         talentProfile.profile.ratingper
@@ -150,15 +156,16 @@ const TalentDashboard = ({ visit = false }) => {
                                 },
                                 navigate
                               )
-                            )
+                            );
                       }}
                     />
                   </Grid>
-                  <div className='rating-info'>
+                  <div className="rating-info">
                     <Typography
-                      variant='body2'
+                      variant="body2"
                       gutterBottom
-                      sx={{ paddingLeft: 0.5, marginTop: 1 }}>
+                      sx={{ paddingLeft: 0.5, marginTop: 1 }}
+                    >
                       (
                       {`${talentProfile.profile.ratingper} 
                     reviews`}
@@ -171,8 +178,9 @@ const TalentDashboard = ({ visit = false }) => {
                       display: "flex",
                       flexDirection: "row",
                       mt: 1,
-                    }}>
-                    <MonetizationOnRoundedIcon
+                    }}
+                  >
+                    <CurrencyRupeeIcon
                       sx={{
                         color: "green",
                         fontSize: "20px",
@@ -181,10 +189,11 @@ const TalentDashboard = ({ visit = false }) => {
                       }}
                     />
                     <Typography
-                      variant='body2'
+                      variant="body2"
                       mt={0.4}
                       gutterBottom
-                      sx={{ fontWeight: "600" }}>
+                      sx={{ fontWeight: "600" }}
+                    >
                       {talentProfile.profile.profileRate}
                     </Typography>
                   </Grid>
@@ -195,25 +204,25 @@ const TalentDashboard = ({ visit = false }) => {
                   {talentProfile.isLogin ? (
                     <Chip
                       icon={<CircleIcon sx={{ fontSize: "14px" }} />}
-                      label='Online'
-                      color='success'
-                      variant='outlined'
+                      label="Online"
+                      color="success"
+                      variant="outlined"
                     />
                   ) : (
                     <Chip
                       icon={<CircleIcon sx={{ fontSize: "14px" }} />}
-                      label='Offline'
-                      color='warning'
-                      variant='outlined'
+                      label="Offline"
+                      color="warning"
+                      variant="outlined"
                     />
                   )}
-                  <Typography variant='body2' mt={2} gutterBottom>
+                  <Typography variant="body2" mt={2} gutterBottom>
                     {
                       (talentProfile.address.city,
                       talentProfile.address.country)
                     }
                   </Typography>
-                  <Typography variant='body2' mt={2} gutterBottom>
+                  <Typography variant="body2" mt={2} gutterBottom>
                     <strong>Joined</strong>{" "}
                     {
                       moment(talentProfile.createdAt)
@@ -222,11 +231,12 @@ const TalentDashboard = ({ visit = false }) => {
                     }
                   </Typography>
                   <Typography
-                    variant='body2'
+                    variant="body2"
                     mt={2}
                     mb={3}
                     gutterBottom
-                    sx={{ fontWeight: "600" }}>
+                    sx={{ fontWeight: "600" }}
+                  >
                     {talentProfile.profile.experiencedLevel} Level
                   </Typography>
                   {userInfo &&
@@ -240,12 +250,14 @@ const TalentDashboard = ({ visit = false }) => {
                             textDecoration: "none",
                             flex: 1,
                             color: "black",
-                          }}>
+                          }}
+                        >
                           <Button
-                            id='filter-post-btn'
-                            variant='outlined'
-                            color='secondary'
-                            sx={{ padding: "8px 35px", border: "none" }}>
+                            id="filter-post-btn"
+                            variant="outlined"
+                            color="secondary"
+                            sx={{ padding: "8px 35px", border: "none" }}
+                          >
                             Edit
                           </Button>
                         </Link>
@@ -260,15 +272,17 @@ const TalentDashboard = ({ visit = false }) => {
                     background: "#e6e6e6",
                     padding: "10px",
                     borderRadius: "2px",
-                  }}>
+                  }}
+                >
                   <Typography
-                    variant='h6'
+                    variant="h6"
                     mt={1}
                     gutterBottom
-                    sx={{ fontWeight: "600", fontSize: "22px" }}>
+                    sx={{ fontWeight: "600", fontSize: "22px" }}
+                  >
                     Description
                   </Typography>
-                  <Typography variant='body2' mt={0.1} gutterBottom>
+                  <Typography variant="body2" mt={0.1} gutterBottom>
                     {talentProfile.profile.description}
                   </Typography>
                 </Grid>
@@ -276,13 +290,15 @@ const TalentDashboard = ({ visit = false }) => {
             </Paper>
             <Paper
               elevation={3}
-              sx={{ margin: 1, padding: "15px", width: "100%" }}>
+              sx={{ margin: 1, padding: "15px", width: "100%" }}
+            >
               <Grid container sx={{ display: "flex", flexDirection: "column" }}>
                 <Typography
-                  variant='h6'
+                  variant="h6"
                   mt={1}
                   gutterBottom
-                  sx={{ fontWeight: "600" }}>
+                  sx={{ fontWeight: "600" }}
+                >
                   Skills
                 </Typography>
                 <Divider />
@@ -291,8 +307,8 @@ const TalentDashboard = ({ visit = false }) => {
                     <Chip
                       key={i}
                       label={skill}
-                      color='info'
-                      variant='outlined'
+                      color="info"
+                      variant="outlined"
                       sx={{
                         mt: 2,
                         mr: 1,
@@ -307,43 +323,48 @@ const TalentDashboard = ({ visit = false }) => {
             </Paper>
             <Paper
               elevation={3}
-              sx={{ margin: 1, padding: "15px", width: "100%" }}>
+              sx={{ margin: 1, padding: "15px", width: "100%" }}
+            >
               <Grid container sx={{ display: "flex", flexDirection: "column" }}>
                 <Stack>
                   <Typography
-                    variant='h6'
+                    variant="h6"
                     sx={{ fontWeight: "600" }}
                     mt={1}
-                    gutterBottom>
+                    gutterBottom
+                  >
                     Education
                   </Typography>
                 </Stack>
                 <Divider />
                 <Stack
-                  direction='row'
-                  justifyContent='space-between'
-                  alignItems='center'>
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
                   <Grid item xs={6}>
                     <Typography
-                      variant='body1'
+                      variant="body1"
                       mt={1}
                       gutterBottom
-                      sx={{ fontWeight: "600" }}>
+                      sx={{ fontWeight: "600" }}
+                    >
                       College/University
                     </Typography>
-                    <Typography variant='overline' mt={1} gutterBottom>
+                    <Typography variant="overline" mt={1} gutterBottom>
                       {talentProfile.education.college}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography
-                      variant='body1'
+                      variant="body1"
                       mt={1}
                       gutterBottom
-                      sx={{ fontWeight: "600" }}>
+                      sx={{ fontWeight: "600" }}
+                    >
                       Degree
                     </Typography>
-                    <Typography variant='overline' mt={1} gutterBottom>
+                    <Typography variant="overline" mt={1} gutterBottom>
                       Degree in {talentProfile.education.degree}
                     </Typography>
                   </Grid>
@@ -352,43 +373,48 @@ const TalentDashboard = ({ visit = false }) => {
             </Paper>
             <Paper
               elevation={3}
-              sx={{ margin: 1, padding: "15px", width: "100%" }}>
+              sx={{ margin: 1, padding: "15px", width: "100%" }}
+            >
               <Grid container sx={{ display: "flex", flexDirection: "column" }}>
                 <Stack>
                   <Typography
-                    variant='h6'
+                    variant="h6"
                     sx={{ fontWeight: "600" }}
                     mt={1}
-                    gutterBottom>
+                    gutterBottom
+                  >
                     Bank Account
                   </Typography>
                 </Stack>
                 <Divider />
                 <Stack
-                  direction='row'
-                  justifyContent='space-between'
-                  alignItems='center'>
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
                   <Grid item xs={6}>
                     <Typography
-                      variant='body1'
+                      variant="body1"
                       mt={1}
                       gutterBottom
-                      sx={{ fontWeight: "600" }}>
+                      sx={{ fontWeight: "600" }}
+                    >
                       Khalti Name
                     </Typography>
-                    <Typography variant='overline' mt={1} gutterBottom>
+                    <Typography variant="overline" mt={1} gutterBottom>
                       {talentProfile.bankAcc.khaltiName}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography
-                      variant='body1'
+                      variant="body1"
                       mt={1}
                       gutterBottom
-                      sx={{ fontWeight: "600" }}>
+                      sx={{ fontWeight: "600" }}
+                    >
                       Khalti ID
                     </Typography>
-                    <Typography variant='overline' mt={1} gutterBottom>
+                    <Typography variant="overline" mt={1} gutterBottom>
                       {talentProfile.bankAcc.khaltiId}
                     </Typography>
                   </Grid>
@@ -397,14 +423,16 @@ const TalentDashboard = ({ visit = false }) => {
             </Paper>
             <Paper
               elevation={3}
-              sx={{ margin: 1, padding: "15px", width: "100%" }}>
+              sx={{ margin: 1, padding: "15px", width: "100%" }}
+            >
               <Grid container sx={{ display: "flex", flexDirection: "column" }}>
                 <Stack>
                   <Typography
-                    variant='h6'
+                    variant="h6"
                     mt={1}
                     gutterBottom
-                    sx={{ fontWeight: "600" }}>
+                    sx={{ fontWeight: "600" }}
+                  >
                     Social Account
                   </Typography>
                 </Stack>
@@ -420,13 +448,14 @@ const TalentDashboard = ({ visit = false }) => {
                     />
                     <Link
                       to={`mailto:${talentProfile.profile.email}?subject=Subject&body=Body%20goes%20here`}
-                      style={{ marginTop: "10px", textDecoration: "none" }}>
+                      style={{ marginTop: "10px", textDecoration: "none" }}
+                    >
                       {talentProfile.profile.email}
                     </Link>
                   </Grid>
                   <Grid item sx={{ flex: 1, mt: 2 }}>
                     <FacebookIcon
-                      color='primary'
+                      color="primary"
                       sx={{ fontSize: "20px", margin: "5px 10px" }}
                     />
                     {talentProfile.socialProfile.facebookId}
@@ -435,14 +464,14 @@ const TalentDashboard = ({ visit = false }) => {
                 <Grid item container sx={{ alignItems: "center" }}>
                   <Grid item sx={{ flex: 1, mt: 2 }}>
                     <GitHubIcon
-                      color='black'
+                      color="black"
                       sx={{ fontSize: "20px", margin: "5px 10px" }}
                     />
                     {talentProfile.socialProfile.githubId}
                   </Grid>
                   <Grid item sx={{ flex: 1, mt: 2 }}>
                     <TwitterIcon
-                      color='primary'
+                      color="primary"
                       sx={{ fontSize: "20px", margin: "5px 10px" }}
                     />
                     {talentProfile.socialProfile.twitterId}
@@ -452,9 +481,10 @@ const TalentDashboard = ({ visit = false }) => {
             </Paper>
             <Paper
               elevation={3}
-              sx={{ margin: 1, padding: "15px", width: "100%" }}>
+              sx={{ margin: 1, padding: "15px", width: "100%" }}
+            >
               <Grid container sx={{ display: "flex", flexDirection: "column" }}>
-                <Typography variant='h5' mt={1} gutterBottom>
+                <Typography variant="h5" mt={1} gutterBottom>
                   Bidding Projects
                 </Typography>
                 <Divider />
@@ -469,23 +499,26 @@ const TalentDashboard = ({ visit = false }) => {
                           },
                         }}
                         divider
-                        disablePadding>
+                        disablePadding
+                      >
                         <Link
                           to={`/project/${item.postId._id}`}
                           style={{
                             textDecoration: "none",
                             flex: 1,
                             color: "black",
-                          }}>
+                          }}
+                        >
                           <ListItemButton
                             style={{
                               alignItems: "flex-start",
-                            }}>
+                            }}
+                          >
                             <Grid item container spacing={1}>
-                              <Grid item xs={8} container direction='column'>
+                              <Grid item xs={8} container direction="column">
                                 <h4>{item.postId.title}</h4>
                                 <Typography
-                                  variant='body1'
+                                  variant="body1"
                                   sx={{
                                     whiteSpace: "nowrap",
                                     color: "GrayText",
@@ -493,7 +526,8 @@ const TalentDashboard = ({ visit = false }) => {
                                     width: "250px",
                                     textOverflow: "ellipsis",
                                     padding: "0px 0px 10px 0px",
-                                  }}>
+                                  }}
+                                >
                                   {item.postId.description}
                                 </Typography>
                                 <Grid
@@ -501,7 +535,8 @@ const TalentDashboard = ({ visit = false }) => {
                                   sx={{
                                     display: "flex",
                                     alignItems: "center",
-                                  }}>
+                                  }}
+                                >
                                   <h6>
                                     <strong>Skills Required- </strong>
                                     {item.postId.skillsRequirement.map(
@@ -531,9 +566,10 @@ const TalentDashboard = ({ visit = false }) => {
                                   style={{
                                     display: "flex",
                                     alignItems: "center",
-                                  }}>
+                                  }}
+                                >
                                   <Rating
-                                    name='half-rating-read'
+                                    name="half-rating-read"
                                     value={5}
                                     precision={0.5}
                                     readOnly
@@ -542,7 +578,8 @@ const TalentDashboard = ({ visit = false }) => {
                                     style={{
                                       paddingLeft: "5px",
                                       marginTop: "16px",
-                                    }}>
+                                    }}
+                                  >
                                     {/* {item.reviews} */}5
                                   </p>
                                 </Grid>
@@ -555,8 +592,14 @@ const TalentDashboard = ({ visit = false }) => {
                                   justifyContent: "flex-start",
                                   flexDirection: "column !important",
                                   alignItems: "flex-end",
-                                }}>
-                                <Box>Rs. {item.postId.price}</Box>
+                                }}
+                              >
+                                <Box>
+                                  <CurrencyRupeeIcon
+                                    sx={{ fontSize: "18px" }}
+                                  />
+                                  {item.postId.price}
+                                </Box>
                                 <Box>
                                   {moment(item.postId.createdAt).fromNow()}
                                 </Box>
@@ -576,6 +619,6 @@ const TalentDashboard = ({ visit = false }) => {
         )}
       </Container>
     </Grow>
-  )
-}
-export default TalentDashboard
+  );
+};
+export default TalentDashboard;

@@ -39,27 +39,17 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-const TabsScreen = (props) => {
+const AdminTabsScreen = (props) => {
   const [value, setValue] = useState(0);
   const navigate = useNavigate();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    newValue === 1
-      ? navigate("/freelancer/page/1")
-      : newValue === 2
-      ? navigate("/employerList/page/1")
-      : navigate("/projects/all/page/1");
+    navigate("/admin/paymentList");
   };
 
   useEffect(() => {
-    if (props.index === 1) {
-      setValue(1);
-    } else if (props.index === 2) {
-      setValue(2);
-    } else {
-      setValue(0);
-    }
+    setValue(0);
   }, [props.index]);
 
   return (
@@ -73,24 +63,15 @@ const TabsScreen = (props) => {
             onChange={handleChange}
             aria-label="basic tabs example"
           >
-            <Tab label="Project" />
-            <Tab label="Freelancer" />
-            <Tab label="Employer" />
+            <Tab label="Payment" />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <PostScreen />
+          <PaymentList />
         </TabPanel>
-        <TabPanel value={value} index={1}>
-          <Freelancer />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <EmployerList />
-        </TabPanel>
-        )
       </Box>
     </Grow>
   );
 };
 
-export default TabsScreen;
+export default AdminTabsScreen;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 import {
   Grow,
   Container,
@@ -16,78 +16,78 @@ import {
   CardContent,
   CardActions,
   Modal,
-} from "@mui/material"
-import { useDispatch, useSelector } from "react-redux"
-import { useParams, useLocation, Link, useNavigate } from "react-router-dom"
+} from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useLocation, Link, useNavigate } from "react-router-dom";
 import {
   getPostDetailsAction,
   postAcceptProposalAction,
   postDeleteAction,
   postFinishProposalAction,
-} from "../actions/postActions"
-import moment from "moment"
+} from "../actions/postActions";
+import moment from "moment";
 import {
   createTalentBidsAction,
   deleteTalentBidsAction,
   editTalentBidsAction,
   getTalentProfileByUserTalentIdAction,
-} from "../actions/talentActions"
-import { useForm } from "react-hook-form"
-import { getEmployerProfileByEmployerIdAction } from "../actions/employerActions"
-import Khalti from "../services/khalti"
-import AlertMessage from "../components/Alert"
+} from "../actions/talentActions";
+import { useForm } from "react-hook-form";
+import { getEmployerProfileByEmployerIdAction } from "../actions/employerActions";
+import Khalti from "../services/khalti";
+import AlertMessage from "../components/Alert";
 
 const PostDetailsScreen = () => {
-  const params = useParams()
-  const location = useLocation()
-  const dispatch = useDispatch()
-  const { post, loading } = useSelector(state => state.getPosts)
-  const { userInfo } = useSelector(state => state.userLogin)
+  const params = useParams();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const { post, loading } = useSelector((state) => state.getPosts);
+  const { userInfo } = useSelector((state) => state.userLogin);
   const { talentProfile, loading: loadingTalentProfile } = useSelector(
-    state => state.talentInfo
-  )
+    (state) => state.talentInfo
+  );
   // const { employerProfile, loading: loadingEmployerProfile } = useSelector(
   //   (state) => state.employerInfo
   // );
-  const [edit, setEdit] = useState(false)
-  const navigate = useNavigate()
+  const [edit, setEdit] = useState(false);
+  const navigate = useNavigate();
   const { register, setValue, handleSubmit } = useForm({
     defaultValues: {
       biddingAmt: "",
       proposalDescription: "",
       postId: "",
     },
-  })
-  const [open, setOpen] = useState(false)
-  const [aceptedTalent, setAcceptedTalent] = useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  });
+  const [open, setOpen] = useState(false);
+  const [aceptedTalent, setAcceptedTalent] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   //   console.log(post);
 
-  const onSubmit = inputData => {
-    inputData.postId = post._id
-    console.log(inputData)
+  const onSubmit = (inputData) => {
+    inputData.postId = post._id;
+    console.log(inputData);
 
     if (open) {
-      console.log("edit bids")
+      console.log("edit bids");
       dispatch(
         editTalentBidsAction({
           inputData: inputData,
           id: talentProfile._id,
         })
-      )
+      );
     } else {
       dispatch(
         createTalentBidsAction({
           inputData: inputData,
           id: talentProfile._id,
         })
-      )
+      );
     }
 
-    setValue("biddingAmt", 0)
-    setValue("proposalDescription", "")
-  }
+    setValue("biddingAmt", 0);
+    setValue("proposalDescription", "");
+  };
 
   const handleDeletePost = () => {
     dispatch(
@@ -97,8 +97,8 @@ const PostDetailsScreen = () => {
         },
         navigate
       )
-    )
-  }
+    );
+  };
 
   const handleDeleteBid = () => {
     dispatch(
@@ -106,10 +106,10 @@ const PostDetailsScreen = () => {
         id: talentProfile._id,
         postId: post._id,
       })
-    )
-  }
+    );
+  };
 
-  const handleAcceptProposal = talentId => {
+  const handleAcceptProposal = (talentId) => {
     // console.log(talentId);
     dispatch(
       postAcceptProposalAction(
@@ -119,10 +119,10 @@ const PostDetailsScreen = () => {
         },
         navigate
       )
-    )
-  }
+    );
+  };
 
-  const handleFinishProposal = talentId => {
+  const handleFinishProposal = (talentId) => {
     // console.log(talentId);
     dispatch(
       postFinishProposalAction(
@@ -132,8 +132,8 @@ const PostDetailsScreen = () => {
         },
         navigate
       )
-    )
-  }
+    );
+  };
 
   useEffect(() => {
     if (userInfo && userInfo.jobType === "Employer") {
@@ -144,31 +144,32 @@ const PostDetailsScreen = () => {
       //   })
       // );
     } else if (userInfo && userInfo.jobType === "Talent") {
-      console.log("dispatching talent")
+      console.log("dispatching talent");
       userInfo &&
-        dispatch(getTalentProfileByUserTalentIdAction({ id: userInfo._id }))
+        dispatch(getTalentProfileByUserTalentIdAction({ id: userInfo._id }));
     }
 
-    setEdit(location.pathname.split("/").includes("edit"))
+    setEdit(location.pathname.split("/").includes("edit"));
     if (params.postId) {
-      console.log("dispatching post")
-      dispatch(getPostDetailsAction({ id: params.postId }))
+      console.log("dispatching post");
+      dispatch(getPostDetailsAction({ id: params.postId }));
     }
     // if (talentProfile && post) {
     //   console.log(talentProfile.bids.find((bid) => bid.postId === post._id));
     // }
-  }, [location, dispatch, params, userInfo])
+  }, [location, dispatch, params, userInfo]);
 
   return (
     <Grow in>
-      <Container maxWidth='lg'>
+      <Container maxWidth="lg">
         <Grid container spacing={1}>
           <Grid
             item
             container
             xs={12}
             sm={8}
-            sx={{ flexDirection: "column", flex: "1" }}>
+            sx={{ flexDirection: "column", flex: "1" }}
+          >
             <Box>
               <Paper sx={{ margin: "10px 0px", padding: "15px" }} elevation={3}>
                 {loading ? (
@@ -179,8 +180,9 @@ const PostDetailsScreen = () => {
                       display: "flex",
                       flex: "1",
                       justifyContent: "center",
-                    }}>
-                    <CircularProgress variant='indeterminate' />
+                    }}
+                  >
+                    <CircularProgress variant="indeterminate" />
                   </Grid>
                 ) : post ? (
                   <Grid
@@ -189,16 +191,18 @@ const PostDetailsScreen = () => {
                     sx={{
                       flexDirection: "column",
                       flex: "1",
-                    }}>
+                    }}
+                  >
                     <Grid item container sx={{ marginBottom: "10px" }}>
                       <Grid item xs={12} md={8}>
                         <Typography
-                          variant='h5'
+                          variant="h5"
                           sx={{
                             fontWeight: "600",
                             mt: "12px",
                             fontSize: "32px",
-                          }}>
+                          }}
+                        >
                           Project Details
                         </Typography>
                       </Grid>
@@ -212,7 +216,8 @@ const PostDetailsScreen = () => {
                           alignItems: { md: "flex-end" },
                           paddingRight: "10px",
                           paddingTop: { xs: "8px" },
-                        }}>
+                        }}
+                      >
                         <Box sx={{ fontWeight: "bold" }}>
                           <strong>Rs.</strong> {post.price}
                         </Box>
@@ -223,25 +228,31 @@ const PostDetailsScreen = () => {
                     <Divider />
 
                     <Typography
-                      variant='h5'
+                      variant="h5"
                       sx={{
                         margin: "15px 0px 0px 0px",
-                      }}>
-                      <strong id='project-post-title'>
+                      }}
+                    >
+                      <strong id="project-post-title">
                         {post.title.toUpperCase()}
                       </strong>
                     </Typography>
-                    <Typography variant='body' sx={{ margin: "10px 0px" }}>
+                    <Typography
+                      paragraph
+                      variant="body"
+                      sx={{ margin: "10px 0px" }}
+                    >
                       <p>{post.description}</p>
                     </Typography>
                     <Typography
-                      variant='body1'
+                      variant="body1"
                       sx={{
                         margin: "10px 0px 0px 0px",
                         fontWeight: "600",
                         fontSize: "22px",
                         marginBottom: "10px",
-                      }}>
+                      }}
+                    >
                       Skills Required
                     </Typography>
                     <Grid
@@ -250,7 +261,8 @@ const PostDetailsScreen = () => {
                         display: "flex",
                         flexDirection: "row",
                         margin: "0px ",
-                      }}>
+                      }}
+                    >
                       {post.skillsRequirement.map((skill, index) => (
                         <Box
                           sx={{
@@ -270,8 +282,9 @@ const PostDetailsScreen = () => {
                             //   backgroundColor: "rgba(156, 39, 176, 0.3)",
                             //   color: "purple",
                             // },
-                          }}>
-                          <Typography variant='body2'>{skill}</Typography>
+                          }}
+                        >
+                          <Typography variant="body2">{skill}</Typography>
                         </Box>
                       ))}
                     </Grid>
@@ -282,29 +295,34 @@ const PostDetailsScreen = () => {
                         flexDirection: "row",
                         alignItems: "center",
                         margin: "8px 0px 10px 0px",
-                      }}>
+                      }}
+                    >
                       <Typography
-                        variant='h6'
-                        sx={{ marginRight: 1, fontWeight: "600" }}>
+                        variant="h6"
+                        sx={{ marginRight: 1, fontWeight: "600" }}
+                      >
                         ExperiencedLevel :
                       </Typography>
                       <Typography
-                        variant='overline'
-                        sx={{ fontWeight: "500", fontSize: "18px" }}>
+                        variant="overline"
+                        sx={{ fontWeight: "500", fontSize: "18px" }}
+                      >
                         {post.experiencedLevel}
                       </Typography>
                     </Grid>
                     <Grid
                       item
                       container
-                      sx={{ justifyContent: "space-between" }}>
+                      sx={{ justifyContent: "space-between" }}
+                    >
                       <Grid item>
                         <p
                           style={{
                             fontSize: "13px",
                             color: "grey",
                             margin: "5px 3px",
-                          }}>
+                          }}
+                        >
                           Project ID: {post._id}
                         </p>
                       </Grid>
@@ -320,18 +338,21 @@ const PostDetailsScreen = () => {
                               style={{
                                 textDecoration: "none",
                                 color: "black",
-                              }}>
+                              }}
+                            >
                               <Button
-                                variant='outlined'
-                                sx={{ marginRight: "5px" }}>
+                                variant="outlined"
+                                sx={{ marginRight: "5px" }}
+                              >
                                 Edit
                               </Button>
                             </Link>
                             <Button
-                              variant='outlined'
-                              color='warning'
+                              variant="outlined"
+                              color="warning"
                               sx={{ marginRight: "5px" }}
-                              onClick={handleDeletePost}>
+                              onClick={handleDeletePost}
+                            >
                               Delete
                             </Button>
                           </Grid>
@@ -351,7 +372,8 @@ const PostDetailsScreen = () => {
                             fontSize: "11px",
                             color: "grey",
                             margin: "10px 0px",
-                          }}>
+                          }}
+                        >
                           Job has been paid to admin.You can accept talent.
                         </p>
                       )
@@ -372,8 +394,9 @@ const PostDetailsScreen = () => {
                 display: "flex",
                 flex: "1",
                 justifyContent: "center",
-              }}>
-              <CircularProgress variant='indeterminate' />
+              }}
+            >
+              <CircularProgress variant="indeterminate" />
             </Grid>
           ) : (
             post && (
@@ -382,30 +405,35 @@ const PostDetailsScreen = () => {
                 container
                 xs={12}
                 sm={4}
-                sx={{ flexDirection: "column", flex: "1" }}>
+                sx={{ flexDirection: "column", flex: "1" }}
+              >
                 <Card
                   sx={{ minWidth: 275, margin: "10px 0px", padding: "10px" }}
-                  elevation={4}>
+                  elevation={4}
+                >
                   <CardContent>
                     <Typography
                       sx={{ fontSize: 20 }}
-                      color='text.secondary'
-                      gutterBottom>
+                      color="text.secondary"
+                      gutterBottom
+                    >
                       Employer Details
                     </Typography>
                     <Typography
-                      variant='h6'
-                      component='div'
-                      sx={{ fontWeight: "600" }}>
+                      variant="h6"
+                      component="div"
+                      sx={{ fontWeight: "600" }}
+                    >
                       {post.employerId.profile.name}
                     </Typography>
                     <Typography
                       sx={{ mb: 1.5 }}
-                      color='text.secondary'
-                      variant='body1'>
+                      color="text.secondary"
+                      variant="body1"
+                    >
                       {post.employerId.profile.email}
                     </Typography>
-                    <Typography variant='body2'>
+                    <Typography variant="body2">
                       {post.employerId.profile.description}
                       <br />
                       {post.employerId.address.country}
@@ -414,8 +442,9 @@ const PostDetailsScreen = () => {
                   <CardActions>
                     <Link
                       to={`/employerProfile/${post.employerId.userEmployerId}`}
-                      style={{ textDecoration: "none" }}>
-                      <Button size='small'>More Info</Button>
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Button size="small">More Info</Button>
                     </Link>
                   </CardActions>
                 </Card>
@@ -428,21 +457,23 @@ const PostDetailsScreen = () => {
                           margin: "10px 0px",
                           padding: "10px",
                         }}
-                        elevation={4}>
+                        elevation={4}
+                      >
                         <CardContent>
                           <Typography
                             sx={{ fontSize: 20 }}
-                            color='text.secondary'
-                            gutterBottom>
+                            color="text.secondary"
+                            gutterBottom
+                          >
                             Accepted Talent Details
                           </Typography>
-                          <Typography variant='h5' component='div'>
+                          <Typography variant="h5" component="div">
                             {talent.talentId.profile.name}
                           </Typography>
-                          <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+                          <Typography sx={{ mb: 1.5 }} color="text.secondary">
                             {talent.talentId.profile.email}
                           </Typography>
-                          <Typography variant='body2'>
+                          <Typography variant="body2">
                             {talent.talentId.profile.description}
                             <br />
                             {talent.talentId.address.country}
@@ -451,8 +482,9 @@ const PostDetailsScreen = () => {
                         <CardActions>
                           <Link
                             to={`/talentProfile/${talent.talentId.userTalentId}`}
-                            style={{ textDecoration: "none" }}>
-                            <Button size='small'>More Info</Button>
+                            style={{ textDecoration: "none" }}
+                          >
+                            <Button size="small">More Info</Button>
                           </Link>
                         </CardActions>
                       </Card>
@@ -471,8 +503,9 @@ const PostDetailsScreen = () => {
               display: "flex",
               flex: "1",
               justifyContent: "center",
-            }}>
-            <CircularProgress variant='indeterminate' />
+            }}
+          >
+            <CircularProgress variant="indeterminate" />
           </Grid>
         ) : loading ? (
           <Grid
@@ -482,8 +515,9 @@ const PostDetailsScreen = () => {
               display: "flex",
               flex: "1",
               justifyContent: "center",
-            }}>
-            <CircularProgress variant='indeterminate' />
+            }}
+          >
+            <CircularProgress variant="indeterminate" />
           </Grid>
         ) : userInfo &&
           userInfo.jobType === "Talent" &&
@@ -495,52 +529,56 @@ const PostDetailsScreen = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <Grid container spacing={2}>
                     <Typography
-                      variant='h6'
+                      variant="h6"
                       gutterBottom
                       p={2}
-                      sx={{ fontWeight: "600" }}>
+                      sx={{ fontWeight: "600" }}
+                    >
                       Place a Bid on this Project
                     </Typography>
                     <Divider />
 
                     <Typography
                       pl={3}
-                      variant='overline'
+                      variant="overline"
                       sx={{
                         fontSize: "16px",
                         display: "flex",
                         alignItems: "center",
                         // fontWeight:'600'
                       }}
-                      gutterBottom>
+                      gutterBottom
+                    >
                       You will be able to edit your bid until the project is
                       awarded to someone.
                     </Typography>
                     <Grid item xs={12}>
                       <Typography
-                        variant='body1'
+                        variant="body1"
                         sx={{
                           fontSize: "16px",
                           color: "black",
                           fontWeight: "600",
                         }}
-                        gutterBottom>
+                        gutterBottom
+                      >
                         Bid Amount
                       </Typography>
                       <Input
-                        variant='outlined'
-                        placeholder='0'
+                        variant="outlined"
+                        placeholder="0"
                         fullWidth
                         {...register("biddingAmt", { required: true })}
                         startAdornment={
                           <InputAdornment
-                            position='start'
-                            sx={{ paddingRight: 2 }}>
+                            position="start"
+                            sx={{ paddingRight: 2 }}
+                          >
                             Rs.
                           </InputAdornment>
                         }
                         endAdornment={
-                          <InputAdornment position='end'>
+                          <InputAdornment position="end">
                             Project Rate
                           </InputAdornment>
                         }
@@ -548,17 +586,18 @@ const PostDetailsScreen = () => {
                     </Grid>
                     <Grid item xs={12}>
                       <Typography
-                        variant='body1'
+                        variant="body1"
                         sx={{
                           fontSize: "18px",
                           color: "black",
                           fontWeight: "600",
                         }}
-                        gutterBottom>
+                        gutterBottom
+                      >
                         Describe your proposal.
                       </Typography>
                       <TextField
-                        label='Description'
+                        label="Description"
                         multiline
                         rows={4}
                         fullWidth
@@ -573,11 +612,12 @@ const PostDetailsScreen = () => {
                         // id='filter-post-btn'
                         disabled={
                           !!talentProfile.bids.find(
-                            bid => bid.postId === post._id
+                            (bid) => bid.postId === post._id
                           )
                         }
-                        variant='contained'
-                        type='submit'>
+                        variant="contained"
+                        type="submit"
+                      >
                         Place bid
                       </Button>
                     </Grid>
@@ -586,43 +626,46 @@ const PostDetailsScreen = () => {
               </Paper>
             </Box>
             {post.proposalSubmitted.map(
-              proposal => talentProfile._id === proposal.talentId
+              (proposal) => talentProfile._id === proposal.talentId
             ) ? (
               <Paper elevation={3} sx={{ padding: 3, mb: 3 }}>
-                <Typography variant='h5' sx={{ fontWeight: "600" }}>
+                <Typography variant="h5" sx={{ fontWeight: "600" }}>
                   Proposal submitted
                 </Typography>
                 <Divider />
-                {post.proposalSubmitted.map(proposal => (
+                {post.proposalSubmitted.map((proposal) => (
                   <>
-                    <Card variant='outlined' sx={{ marginTop: 3 }}>
+                    <Card variant="outlined" sx={{ marginTop: 3 }}>
                       <CardContent>
                         <Typography
-                          variant='overline'
+                          variant="overline"
                           sx={{ fontSize: 16 }}
-                          color='#5e5b5b'
-                          gutterBottom>
+                          color="#5e5b5b"
+                          gutterBottom
+                        >
                           {proposal.talentId.profile.name}
                         </Typography>
-                        <Typography variant='body1' component='div'>
+                        <Typography variant="body1" component="div">
                           {proposal.talentId.profile.email}
                         </Typography>
                         <Typography
                           sx={{ mt: 1, mb: 1 }}
-                          color='text.secondary'
-                          variant='body2'>
+                          color="text.secondary"
+                          variant="body2"
+                        >
                           {proposal.proposalDescription}
                         </Typography>
                         <Typography
-                          variant='overline'
-                          sx={{ fontWeight: "600" }}>
+                          variant="overline"
+                          sx={{ fontWeight: "600" }}
+                        >
                           Rs.{proposal.biddingAmt}
                         </Typography>
-                        <Typography variant='body2'>
+                        <Typography variant="body2">
                           <strong>Accepted:</strong>{" "}
                           {proposal.isAccepted === true ? "Yes" : "No"}
                         </Typography>
-                        <Typography variant='body2'>
+                        <Typography variant="body2">
                           <strong>Finished:</strong>{" "}
                           {proposal.isFinished === true ? "Yes" : "No"}
                         </Typography>
@@ -630,14 +673,15 @@ const PostDetailsScreen = () => {
                       {talentProfile._id === proposal.talentId._id &&
                         proposal.isAccepted === false && (
                           <CardActions>
-                            <Button onClick={handleOpen} size='small'>
+                            <Button onClick={handleOpen} size="small">
                               Edit
                             </Button>
                             <Button
                               onClick={handleDeleteBid}
-                              size='small'
-                              variant='text'
-                              color='warning'>
+                              size="small"
+                              variant="text"
+                              color="warning"
+                            >
                               Delete
                             </Button>
                           </CardActions>
@@ -646,8 +690,9 @@ const PostDetailsScreen = () => {
                     <Modal
                       open={open}
                       onClose={handleClose}
-                      aria-labelledby='modal-modal-title'
-                      aria-describedby='modal-modal-description'>
+                      aria-labelledby="modal-modal-title"
+                      aria-describedby="modal-modal-description"
+                    >
                       <Box
                         sx={{
                           position: "absolute",
@@ -659,50 +704,54 @@ const PostDetailsScreen = () => {
                           border: "2px solid #000",
                           boxShadow: 24,
                           p: 4,
-                        }}>
+                        }}
+                      >
                         <form onSubmit={handleSubmit(onSubmit)}>
                           <Grid container spacing={2}>
-                            <Typography variant='h6' gutterBottom p={2}>
+                            <Typography variant="h6" gutterBottom p={2}>
                               Edit a Bid on this Project
                             </Typography>
                             <Divider />
 
                             <Typography
                               pl={3}
-                              variant='body1'
+                              variant="body1"
                               sx={{
                                 fontSize: "16px",
                                 display: "flex",
                                 alignItems: "center",
                               }}
-                              gutterBottom>
+                              gutterBottom
+                            >
                               You will be able to edit your bid until the
                               project is awarded to someone.
                             </Typography>
                             <Grid item xs={12}>
                               <Typography
-                                variant='body1'
+                                variant="body1"
                                 sx={{
                                   fontSize: "16px",
                                   color: "black",
                                   fontWeight: "600",
                                 }}
-                                gutterBottom>
+                                gutterBottom
+                              >
                                 Bid Amount
                               </Typography>
                               <Input
-                                variant='outlined'
+                                variant="outlined"
                                 fullWidth
                                 {...register("biddingAmt", { required: true })}
                                 startAdornment={
                                   <InputAdornment
-                                    position='start'
-                                    sx={{ paddingRight: 2 }}>
+                                    position="start"
+                                    sx={{ paddingRight: 2 }}
+                                  >
                                     Rs.
                                   </InputAdornment>
                                 }
                                 endAdornment={
-                                  <InputAdornment position='end'>
+                                  <InputAdornment position="end">
                                     Project Rate
                                   </InputAdornment>
                                 }
@@ -710,13 +759,14 @@ const PostDetailsScreen = () => {
                             </Grid>
                             <Grid item xs={12}>
                               <Typography
-                                variant='body1'
+                                variant="body1"
                                 sx={{ fontSize: "16px", color: "black" }}
-                                gutterBottom>
+                                gutterBottom
+                              >
                                 Describe your proposal.
                               </Typography>
                               <TextField
-                                label='Description'
+                                label="Description"
                                 multiline
                                 rows={4}
                                 fullWidth
@@ -727,7 +777,7 @@ const PostDetailsScreen = () => {
                             </Grid>
                             <Divider />
                             <Grid item xs={12} mt={2}>
-                              <Button variant='contained' type='submit'>
+                              <Button variant="contained" type="submit">
                                 Place bid
                               </Button>
                             </Grid>
@@ -747,31 +797,32 @@ const PostDetailsScreen = () => {
           (userInfo.jobType === "admin") |
             (post.employerId.userEmployerId === userInfo._id &&
               userInfo.jobType === "Employer") ? (
-            post.proposalSubmitted.map(proposal => (
+            post.proposalSubmitted.map((proposal) => (
               <Paper key={proposal._id} elevation={3} sx={{ padding: 3 }}>
-                <Typography variant='h5'>Proposal submitted</Typography>
+                <Typography variant="h5">Proposal submitted</Typography>
                 <Divider />
-                <Card variant='outlined' sx={{ marginTop: 3 }}>
+                <Card variant="outlined" sx={{ marginTop: 3 }}>
                   <CardContent>
                     <Typography
                       sx={{ fontSize: 14 }}
-                      color='text.secondary'
-                      gutterBottom>
+                      color="text.secondary"
+                      gutterBottom
+                    >
                       {proposal.talentId.profile.name}
                     </Typography>
-                    <Typography variant='body' component='div'>
+                    <Typography variant="body" component="div">
                       {proposal.talentId.profile.email}
                     </Typography>
-                    <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
                       {proposal.proposalDescription}
                     </Typography>
-                    <Typography variant='body2'>
+                    <Typography variant="body2">
                       Rs.{proposal.biddingAmt}
                     </Typography>
-                    <Typography variant='body2'>
+                    <Typography variant="body2">
                       Accepted: {proposal.isAccepted === true ? "Yes" : "No"}
                     </Typography>
-                    <Typography variant='body2'>
+                    <Typography variant="body2">
                       Finished: {proposal.isFinished === true ? "Yes" : "No"}
                     </Typography>
                   </CardContent>
@@ -779,7 +830,8 @@ const PostDetailsScreen = () => {
                     <Button
                       onClick={() => handleAcceptProposal(proposal.talentId)}
                       disabled={post.isPaid === false || post.isAccept === true}
-                      size='small'>
+                      size="small"
+                    >
                       {proposal.isAccepted ? "Accepted" : "Accept"}
                     </Button>
                     {proposal.isAccepted && (
@@ -788,7 +840,8 @@ const PostDetailsScreen = () => {
                         disabled={
                           post.isPaid === false || proposal.isFinished === true
                         }
-                        size='small'>
+                        size="small"
+                      >
                         {proposal.isFinished ? "Finished" : "Finish"}
                       </Button>
                     )}
@@ -807,7 +860,7 @@ const PostDetailsScreen = () => {
         )}
       </Container>
     </Grow>
-  )
-}
+  );
+};
 
-export default PostDetailsScreen
+export default PostDetailsScreen;

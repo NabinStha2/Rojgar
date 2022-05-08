@@ -43,7 +43,7 @@ module.exports.createPost = asyncHandler(async (req, res) => {
     await Payment.create({
       postID: post._id,
       employerID: employer._id,
-      date: new Date().toLocaleString().split(",")[0],
+      date: new Date().toLocaleString().split("T")[0],
       amount: post.price,
       isPaid: false,
       paymentComplete: false,
@@ -58,7 +58,7 @@ module.exports.createPost = asyncHandler(async (req, res) => {
 });
 
 module.exports.getAllPosts = asyncHandler(async (req, res) => {
-  const perPage = 1;
+  const perPage = 5;
   var skillsArray;
   const page = req.query.pageNumber || 1;
   const keyword = req.query.keyword || "";
@@ -111,7 +111,7 @@ module.exports.getAllPosts = asyncHandler(async (req, res) => {
 
 module.exports.categorySearchProjects = asyncHandler(async (req, res) => {
   const category = req.params.category;
-  const perPage = 1;
+  const perPage = 5;
   const page = req.query.pageNumber || 1;
   console.log(`${category} ${page}`);
 
@@ -140,7 +140,7 @@ module.exports.categorySearchProjects = asyncHandler(async (req, res) => {
 
 module.exports.advanceSearchProjects = asyncHandler(async (req, res) => {
   var skillsArray;
-  const perPage = 1;
+  const perPage = 5;
   const page = req.query.pageNumber || 1;
   const keyword = req.query.keyword || "";
   const category = req.params.category;

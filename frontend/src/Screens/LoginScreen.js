@@ -9,21 +9,21 @@ import {
   IconButton,
   CircularProgress,
   Box,
-} from "@mui/material"
-import { makeStyles } from "@mui/styles"
-import { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import VisibilityIcon from "@mui/icons-material/Visibility"
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff"
-import { useDispatch, useSelector } from "react-redux"
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useDispatch, useSelector } from "react-redux";
 import {
   userLoginAction,
   userOTPVerifyAction,
   userResetPWAction,
-} from "../actions/userActions"
-import AlertMessage from "../components/Alert"
+} from "../actions/userActions";
+import AlertMessage from "../components/Alert";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     width: "100%",
     display: "flex !important",
@@ -71,67 +71,64 @@ const useStyles = makeStyles(theme => ({
     margin: "20px 0px !important",
     textDecoration: "none",
   },
-}))
+}));
 
 const LoginScreen = () => {
-  const classes = useStyles()
+  const classes = useStyles();
   const [data, setData] = useState({
     email: "",
     password: "",
     otp: "",
-  })
-  const [forgetPW, setForgetPW] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const [message, setMessage] = useState(null)
-  const [sendOTP, setSendOTP] = useState(false)
-  const [newPW, setNewPW] = useState(false)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const userLogin = useSelector(state => state.userLogin)
-  const { employerProfile } = useSelector(state => state.employerInfo)
-  const { talentProfile } = useSelector(state => state.talentInfo)
-  const { userInfo, userId, loading, error } = userLogin
+  });
+  const [forgetPW, setForgetPW] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [sendOTP, setSendOTP] = useState(false);
+  const [newPW, setNewPW] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { employerProfile } = useSelector((state) => state.employerInfo);
+  const { talentProfile } = useSelector((state) => state.talentInfo);
+  const { userInfo, userId, loading, error } = userLogin;
 
-  const handleSubmit = e => {
-    e.preventDefault()
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
     // console.log(data);
     // console.log(userId, verified);
     if (data.otp !== "" && sendOTP) {
-      dispatch(userOTPVerifyAction(data.otp, userId))
-      console.log("hahahaaaaaaaaaa")
-      setSendOTP(false)
-      setForgetPW(false)
-      setNewPW(true)
+      dispatch(userOTPVerifyAction(data.otp, userId));
+      console.log("hahahaaaaaaaaaa");
+      setSendOTP(false);
+      setForgetPW(false);
+      setNewPW(true);
     } else if (data.email !== "" && data.otp === "" && forgetPW) {
-      dispatch(userResetPWAction(data.email))
-      setSendOTP(true)
+      dispatch(userResetPWAction(data.email));
+      setSendOTP(true);
     } else if (data.email !== "" && data.password !== "") {
       if (newPW) {
-        dispatch(userLoginAction(data.email, data.password, true, navigate))
+        dispatch(userLoginAction(data.email, data.password, true, navigate));
       } else {
-        console.log("hahahah")
-        dispatch(userLoginAction(data.email, data.password, false, navigate))
+        console.log("hahahah");
+        dispatch(userLoginAction(data.email, data.password, false, navigate));
       }
     } else {
-      setMessage("All field must be filled!!!")
-      console.log(message)
+      setMessage("All field must be filled!!!");
+      console.log(message);
     }
-  }
+  };
 
   const handleShowPassword = () => {
     // console.log(showPassword);
-    setShowPassword(!showPassword)
-  }
+    setShowPassword(!showPassword);
+  };
   // console.log(message);
 
   useEffect(() => {
     // console.log("login");
 
-    if (
-      userInfo &&
-      userInfo.jobType === "admin"
-    ) {
+    if (userInfo && userInfo.jobType === "admin") {
       console.log("login");
       navigate(`/admin`);
     }
@@ -140,36 +137,36 @@ const LoginScreen = () => {
       userInfo.jobType === "Employer" &&
       userInfo.isComplete === true
     ) {
-      console.log("login")
-      navigate(`/employerDashboard/${userInfo._id}`)
+      console.log("login");
+      navigate(`/employerDashboard/${userInfo._id}`);
     }
     if (
       userInfo &&
       userInfo.jobType === "Employer" &&
       userInfo.isComplete === false
     ) {
-      navigate("/employerReg")
+      navigate("/employerReg");
     }
     if (
       userInfo &&
       userInfo.jobType === "Talent" &&
       userInfo.isComplete === true
     ) {
-      navigate(`/talentDashboard/${userInfo._id}`)
+      navigate(`/talentDashboard/${userInfo._id}`);
     }
     if (
       userInfo &&
       userInfo.jobType === "Talent" &&
       userInfo.isComplete === false
     ) {
-      navigate("/talentReg")
+      navigate("/talentReg");
     }
-  }, [navigate, employerProfile, talentProfile, userInfo])
+  }, [navigate, employerProfile, talentProfile, userInfo]);
 
   return (
     <Grow in>
-      <Container maxWidth='lg' className={classes.container}>
-        <Paper elevation={6} className={classes.main} variant='elevation'>
+      <Container maxWidth="lg" className={classes.container}>
+        <Paper elevation={6} className={classes.main} variant="elevation">
           <Grid container className={classes.root}>
             <Grid item>
               <h1 className={classes.heading}>Login</h1>
@@ -183,12 +180,12 @@ const LoginScreen = () => {
                     <TextField
                       required
                       className={classes.textField}
-                      type='email'
-                      name='email'
-                      label='E-mail'
-                      variant='standard'
+                      type="email"
+                      name="email"
+                      label="E-mail"
+                      variant="standard"
                       value={data.email}
-                      onChange={e =>
+                      onChange={(e) =>
                         setData({ ...data, email: e.target.value })
                       }
                     />
@@ -199,12 +196,14 @@ const LoginScreen = () => {
                     <TextField
                       required
                       className={classes.textField}
-                      type='text'
-                      name='otp code'
-                      label='Otp Code'
-                      variant='standard'
+                      type="text"
+                      name="otp code"
+                      label="Otp Code"
+                      variant="standard"
                       value={data.otp}
-                      onChange={e => setData({ ...data, otp: e.target.value })}
+                      onChange={(e) =>
+                        setData({ ...data, otp: e.target.value })
+                      }
                     />
                   </Grid>
                 )}
@@ -217,16 +216,17 @@ const LoginScreen = () => {
                       name={newPW ? "new password" : "password"}
                       label={newPW ? "New Password" : "Password"}
                       value={data.password}
-                      onChange={e =>
+                      onChange={(e) =>
                         setData({ ...data, password: e.target.value })
                       }
-                      variant='standard'
+                      variant="standard"
                       InputProps={{
                         endAdornment: (
-                          <InputAdornment position='end'>
+                          <InputAdornment position="end">
                             <IconButton
-                              type='button'
-                              onClick={handleShowPassword}>
+                              type="button"
+                              onClick={handleShowPassword}
+                            >
                               {showPassword ? (
                                 <VisibilityIcon />
                               ) : (
@@ -242,19 +242,21 @@ const LoginScreen = () => {
               </Grid>
               <Grid item xs={12} className={classes.button}>
                 <Button
-                  variant='contained'
+                  variant="contained"
                   fullWidth
                   sx={{
                     color: "white",
-                    backgroundColor: "goldenrod !important",
+                    backgroundColor: "#44a4d0 !important",
                   }}
-                  type='submit'>
+                  type="submit"
+                >
                   {loading ? (
                     <Box
                       sx={{
                         display: "flex",
                         justifyContent: "center",
-                      }}>
+                      }}
+                    >
                       <CircularProgress size={30} />
                     </Box>
                   ) : forgetPW ? (
@@ -267,8 +269,9 @@ const LoginScreen = () => {
             </form>
             <Grid item className={classes.signup}>
               <Link
-                to='/signup'
-                style={{ textDecoration: "none", color: "rgba(117,81,159,1)" }}>
+                to="/signup"
+                style={{ textDecoration: "none", color: "rgba(117,81,159,1)" }}
+              >
                 Create a New Account
               </Link>
             </Grid>
@@ -278,11 +281,12 @@ const LoginScreen = () => {
                 style={{ textDecoration: "none", color: "rgba(117,81,159,1)" }}
               > */}
               <Button
-                variant='text'
+                variant="text"
                 style={{ textDecoration: "none", color: "rgba(117,81,159,1)" }}
                 onClick={() => {
-                  setForgetPW(!forgetPW)
-                }}>
+                  setForgetPW(!forgetPW);
+                }}
+              >
                 Forgot a password?
               </Button>
 
@@ -292,7 +296,7 @@ const LoginScreen = () => {
         </Paper>
       </Container>
     </Grow>
-  )
-}
+  );
+};
 
-export default LoginScreen
+export default LoginScreen;

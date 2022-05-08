@@ -24,6 +24,7 @@ import { categoriesAvailable, skillsAvailable } from "../App";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { postCreateAction, postEditAction } from "../actions/postActions";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -215,9 +216,15 @@ const PostJob = () => {
                     label="Experience Level"
                     {...register("experiencedLevel", { required: true })}
                   >
-                    <MenuItem key={"B"} value="Beginner">Beginner</MenuItem>
-                    <MenuItem key={"I"} value="Intermediate">Intermediate</MenuItem>
-                    <MenuItem key={"E"} value="Expert">Expert</MenuItem>
+                    <MenuItem key={"B"} value="Beginner">
+                      Beginner
+                    </MenuItem>
+                    <MenuItem key={"I"} value="Intermediate">
+                      Intermediate
+                    </MenuItem>
+                    <MenuItem key={"E"} value="Expert">
+                      Expert
+                    </MenuItem>
                   </Select>
                 </FormControl>
                 {errors.experiencedLevel?.type === "required" && (
@@ -274,7 +281,9 @@ const PostJob = () => {
                   })}
                   fullWidth
                   startAdornment={
-                    <InputAdornment position="start">$</InputAdornment>
+                    <InputAdornment position="start">
+                      <CurrencyRupeeIcon />
+                    </InputAdornment>
                   }
                   endAdornment={
                     <InputAdornment position="end">Project Rate</InputAdornment>
