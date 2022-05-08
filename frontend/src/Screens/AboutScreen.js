@@ -1,29 +1,26 @@
-import { BsCheckCircle } from "react-icons/bs";
-import { useSpring, animated } from "react-spring";
-import { Fade, Zoom, Slide } from "react-reveal";
+import { BsCheckCircle } from "react-icons/bs"
+import { useSpring, animated } from "react-spring"
+import { Fade, Zoom, Slide } from "react-reveal"
 
 const AboutScreen = () => {
   const styles1 = useSpring({
     to: { opacity: 1, transform: "translate(0,0)" },
-    from: { opacity: 0, transform: "translate(0px,100px)" },
+    from: { opacity: 0, transform: "translate(100px,100px)" },
     delay: 200,
-  });
+  })
   const styles2 = useSpring({
     to: { opacity: 1, transform: "translate(0,0)" },
     from: { opacity: 0, transform: "translate(0px,1000px)" },
     delay: 200,
-  });
+  })
 
   return (
-    <div className="about__main">
+    <div className='about__main'>
       <div
         style={{
-          backgroundColor: "transparent",
-          // backgroundImage: "linear-gradient(90deg, #75519f 0%, #d345a2 100%)",
-          backgroundImage: "linear-gradient(90deg, #de6161 0%, #375dd3 100%)",
-        }}
-      >
-        <animated.div style={styles1} className="about__first">
+          backgroundColor: "#ececec",
+        }}>
+        <animated.div style={styles1} className='about__first'>
           <h1>We are Rojgar!</h1>
           <p>
             We are on a mission to create opportunities in Nepal and help boost
@@ -32,9 +29,9 @@ const AboutScreen = () => {
         </animated.div>
       </div>
 
-      <animated.div style={styles2} className="about__second">
+      <animated.div style={styles2} className='about__second'>
         <h1>Our Story</h1>
-        <div className="about__second_p">
+        <div className='about__second_p'>
           <p>
             With the increasing ascendancy of the internet in our lives and the
             present scenario of the pandemic, the freelance marketplace and
@@ -68,18 +65,18 @@ const AboutScreen = () => {
           <p>Hence, we bring Rojgar!</p>
         </div>
       </animated.div>
-      <div className="about__third">
+      <div className='about__third'>
         <Fade left>
-          <div className="about__third_img">
+          <div className='about__third_img'>
             <img
-              src="https://sakchha.com/wp-content/uploads/elementor/thumbs/fallon-michael-8LKQfBumjMo-unsplash-p7yycd6lh3dzpw8xyzomtyheqa1mw2vmml8jslpbw0.jpeg"
-              alt="rojgar"
+              src='https://sakchha.com/wp-content/uploads/elementor/thumbs/fallon-michael-8LKQfBumjMo-unsplash-p7yycd6lh3dzpw8xyzomtyheqa1mw2vmml8jslpbw0.jpeg'
+              alt='rojgar'
               // style={{ width: "50%", height: "auto" }}
             />
           </div>
         </Fade>
         <Fade right>
-          <div className="about__third_text">
+          <div className='about__third_text'>
             <h1>About Rojgar</h1>
             <p>
               Rojgar is a Nepali service platform that helps businesses explore,
@@ -87,7 +84,7 @@ const AboutScreen = () => {
               boundaries create a global world defines by successful remote work
               and make Nepal a back office of the world. It aims to provide:
             </p>
-            <div className="about__third_text_ul">
+            <div className='about__third_text_ul'>
               <ul>
                 <li>
                   <span style={{ color: "green" }}>
@@ -118,7 +115,7 @@ const AboutScreen = () => {
         </Fade>
       </div>
 
-      <div className="about__fourth">
+      <div className='about__fourth'>
         <div>
           <p>
             <Zoom left cascade>
@@ -151,9 +148,9 @@ const AboutScreen = () => {
           </p>
         </div>
       </div>
-      <div className="about__fifth">
-        <div className="about__fifth_slide">
-          <div className="about__fifth_one">
+      <div className='about__fifth'>
+        <div className='about__fifth_slide'>
+          <div className='about__fifth_one'>
             <Slide top>
               <h3>Our Vision</h3>
               <p style={{ color: "white" }}>
@@ -161,7 +158,7 @@ const AboutScreen = () => {
               </p>
             </Slide>
           </div>
-          <div className="about__fifth_two">
+          <div className='about__fifth_two'>
             <Slide bottom>
               <h3>Our Mission</h3>
               <p style={{ color: "white" }}>
@@ -173,7 +170,7 @@ const AboutScreen = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AboutScreen;
+export default AboutScreen

@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     padding: "50px",
     color: "white",
-    backgroundColor: "#777B95",
+    backgroundColor: "#0061a8",
     flexDirection: "row !important",
     justifyContent: "center",
     [theme.breakpoints.down("sm")]: {
@@ -77,7 +77,7 @@ const Footer = () => {
             md={3}
             className={`footer__text_link ${classes.contact}`}
           >
-            <h2 style={{ color: "goldenrod" }}>Contact Us</h2>
+            <h2 style={{ color: "white" }}>Contact Us</h2>
             <p>Rojgar</p>
             <p>+977-9867134091</p>
             <Link style={{ textDecoration: "none", color: "white" }} to="/">

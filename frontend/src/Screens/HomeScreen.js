@@ -9,7 +9,6 @@ import third from "../assets/images/third.jpg";
 import i1 from "../assets/images/img1.jpg";
 import i2 from "../assets/images/img2.jpg";
 import i3 from "../assets/images/img3.jpg";
-import i4 from "../assets/images/img4.jpg";
 import { Link } from "react-router-dom";
 
 const HomeScreen = () => {
@@ -19,10 +18,10 @@ const HomeScreen = () => {
         <Col sm={12} md={6} xs={12}>
           <div className="top">
             <h2>
-              Find the perfect <i>freelance</i> services for your business
+              Find the perfect freelance services for your business
             </h2>
             <p>
-              Millions of people use Rojgar.com to turn their ideas into
+              Millions of people use <strong>Rojgar.com</strong> to turn their ideas into
               reality. If you are an individual from Nepal or anywhere in the
               world looking for an opportunity, join our network. Get to work
               with top companies from all around the world.
@@ -129,8 +128,9 @@ const HomeScreen = () => {
       </Row>
       <div className="d-none d-lg-block fourth-part">
         <h2>Skill available with us.</h2>
-        <Row>
-          <Col>
+      
+        <Row id='row=skill'>
+        <Col>
             <ul>
               <li>Website Design</li>
               <li>Logo Design</li>
@@ -185,6 +185,8 @@ const HomeScreen = () => {
               <li>UI/UX Designer</li>
             </ul>
           </Col>
+
+         
         </Row>
       </div>
       <div className="fifth-part">
@@ -208,19 +210,20 @@ const HomeScreen = () => {
             where, and how you work. Each project includes an online workspace
             shared by you and your client.
           </p>
+          <Image src={i1} />
+
+
         </Col>
         <Col sm={12} md={4}>
           <Row>
-            <Image src={i1} />
+          <Image src={i2} />
 
-            <Image src={i4} />
+            
           </Row>
         </Col>
-        <Col>
-          <Row>
+        <Col id='last-img'>
             <Image src={i3} />
-            <Image src={i2} />
-          </Row>
+          
         </Col>
       </Row>
     </div>

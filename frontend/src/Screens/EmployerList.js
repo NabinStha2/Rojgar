@@ -98,17 +98,26 @@ function EmployerList() {
           sx={{ flexDirection: "column" }}
           spacing={2}
         >
+         <Grid item xs={12} sx={{
+                  marginLeft:'10px',
+
+         }}>
+            <h2>Employer</h2>
+          </Grid>
+          <Grid item xs={12}>
           <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
             <input
               id="search"
-              placeholder="search by Employer name or email"
+              placeholder="Search by Employer Name or Email"
               name="search"
               style={{
-                border: "1px solid black",
-                borderRadius: "10px",
-                flex: "4",
-                height: "40px",
-                width: "100%",
+                borderRadius: "4px",
+                  flex: "5",
+                  height: "40px",
+                  padding: "20px",
+                  border: "1px solid rgb(223, 223, 223)",
+                  boxShadow: "0px 2px 5px 0px #ececec",
+                  marginLeft:'10px',
               }}
               {...register("keyword")}
             />
@@ -121,7 +130,6 @@ function EmployerList() {
               Search
             </Button>
           </form>
-          <Divider />
           <Grid
             item
             xs={12}
@@ -133,18 +141,8 @@ function EmployerList() {
               flex: "1",
             }}
           >
-            <Paper elevation={8} sx={{ marginTop: "10px" }}>
-              {/* <Typography
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  color: "gray",
-                  flex: "1",
-                }}
-                variant="h6"
-              >
-                Employer
-              </Typography> */}
+            <Paper elevation={3} sx={{ marginTop: "10px" }}>
+             
               <Paginate pageNumber={pageNumber} employer={true} />
               {employerLoading ? (
                 <Grid
@@ -163,7 +161,15 @@ function EmployerList() {
                   <List
                     sx={{
                       width: "100%",
-                      bgcolor: "background.paper",
+                      display: "flex",
+                          flex: "1",
+                          alignItems: "flex-start",
+                          border: " 0.5px solid #eaeaea",
+                          borderRadius: "4px",
+                          background: "#def2ee",
+                          boxShadow: "0px 3px 8px #eaeaea ",
+                          padding:'30px 0px',
+                          margin:'12px 10px',
                     }}
                   >
                     {allEmployerProfile.map((employer, i) => (
@@ -177,6 +183,7 @@ function EmployerList() {
                               flex: 1,
                               color: "black",
                               alignItems: "center",
+                              
                             }}
                           >
                             <ListItemAvatar>
@@ -234,12 +241,13 @@ function EmployerList() {
                   </List>
                 </Grid>
               ) : (
-                <Typography variant="body1">
+                <Typography variant="body1" sx={{padding:4,textAlign:'center'}}>
                   No any Employer for this search.
                 </Typography>
               )}
             </Paper>
           </Grid>
+        </Grid>
         </Grid>
       </Container>
     </Grow>
