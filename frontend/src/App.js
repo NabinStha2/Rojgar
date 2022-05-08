@@ -14,6 +14,7 @@ import rojgarAxios from "./api/axios";
 import jwt_decode from "jwt-decode";
 import RefreshApi from "./api/refreshApi";
 import { userLogoutAction } from "./actions/userActions";
+import AdminScreen from "./Screens/AdminScreen";
 
 const Home = React.lazy(() => import("./Screens/HomeScreen"));
 const About = React.lazy(() => import("./Screens/AboutScreen"));
@@ -72,6 +73,26 @@ export const skillsAvailable = [
   "Vue.js",
   "svelte.js",
   "Ruby",
+  "Human Resources",
+  "Artical Writing",
+  "Artical Rewriting",
+  "Internet Marketing",
+  "Social Media Marketing",
+  "Full Stack Development",
+  "Data Typing",
+  "Excel",
+  "Data Entry",
+  "Research Writing",
+  "Training",
+  "Employee Training",
+  "Virtual Assistant",
+  "Data Processing",
+  "Web Search",
+  "Docker",
+  "Github",
+  "Linux",
+  "TeamCity",
+  "Data Science",
 ];
 
 export const categoriesAvailable = [
@@ -158,6 +179,29 @@ export const App = () => {
           <ToastContainer autoClose={1000} hideProgressBar={true} />
 
           <Routes>
+            {userInfo && userInfo.jobType === "admin" && (
+              <>
+                <Route path="/admin" element={<AdminScreen />} />
+                <Route
+                  path="/admin/paymentList"
+                  element={<TabsScreen index={3} />}
+                />
+                <Route
+                  path="/admin/employerList"
+                  element={<TabsScreen index={2} />}
+                />
+                <Route
+                  path="/admin/talentList"
+                  element={<TabsScreen index={1} />}
+                />
+                <Route
+                  path="/admin/projectList"
+                  element={<TabsScreen index={0} />}
+                />
+                <Route path="/postJob/edit" element={<PostJob />} />
+              </>
+            )}
+
             <Route
               path="/talentProfile/:userTalentId"
               element={<TalentDashboard visit={true} />}

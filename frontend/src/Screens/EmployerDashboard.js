@@ -190,12 +190,21 @@ const EmployerDashboard = ({ visit = false }) => {
             </Grid>
             <Grid container>
               <Grid item xs={12} md={4} sx={{ marginTop: "20px" }}>
-                <Chip
-                  icon={<CircleIcon sx={{ fontSize: "14px" }} />}
-                  label='Online'
-                  color='success'
-                  variant='outlined'
-                />
+                {employerProfile.isLogin ? (
+                  <Chip
+                    icon={<CircleIcon sx={{ fontSize: "14px" }} />}
+                    label='Online'
+                    color='success'
+                    variant='outlined'
+                  />
+                ) : (
+                  <Chip
+                    icon={<CircleIcon sx={{ fontSize: "14px" }} />}
+                    label='Offline'
+                    color='warning'
+                    variant='outlined'
+                  />
+                )}
                 <Stack direction='row' mt={2}>
                   <LocationOnIcon
                     sx={{ fontSize: "21px", color: "red", marginRight: 1 }}
@@ -280,14 +289,17 @@ const EmployerDashboard = ({ visit = false }) => {
               <Grid item sx={{ padding: "10px" }}>
                 <EmailIcon
                   color='primary'
-                  sx={{ fontSize: "20px", color: "maroon", marginRight:1 }}
+                  sx={{ fontSize: "20px", color: "maroon", marginRight: 1 }}
                 />
                 <Link to='#' underline='none' m={2} sx={{ marginTop: "10px" }}>
                   {employerProfile.profile.email}
                 </Link>
               </Grid>
               <Grid item sx={{ padding: "10px" }}>
-                <FacebookIcon color='primary' sx={{ fontSize: "21px",marginRight:1 }} />
+                <FacebookIcon
+                  color='primary'
+                  sx={{ fontSize: "21px", marginRight: 1 }}
+                />
                 <Link to='#' underline='none' m={2} sx={{ marginTop: "10px" }}>
                   {employerProfile.socialProfile.facebookId}
                 </Link>
@@ -295,14 +307,17 @@ const EmployerDashboard = ({ visit = false }) => {
               <Grid item sx={{ padding: "10px" }}>
                 <GitHubIcon
                   color='primary'
-                  sx={{ fontSize: "21px", color: "black",marginRight:1 }}
+                  sx={{ fontSize: "21px", color: "black", marginRight: 1 }}
                 />
                 <Link to='#' underline='none' m={2} sx={{ marginTop: "10px" }}>
                   {employerProfile.socialProfile.githubId}
                 </Link>
               </Grid>
               <Grid item sx={{ padding: "10px" }}>
-                <TwitterIcon color='primary' sx={{ fontSize: "21px",marginRight:1 }} />
+                <TwitterIcon
+                  color='primary'
+                  sx={{ fontSize: "21px", marginRight: 1 }}
+                />
                 <Link to='#' underline='none' m={2} sx={{ marginTop: "10px" }}>
                   {employerProfile.socialProfile.twitterId}
                 </Link>
@@ -336,7 +351,7 @@ const EmployerDashboard = ({ visit = false }) => {
                 <Typography variant='h6' mt={1} gutterBottom>
                   Khalti Id
                 </Typography>
-                <Typography variant='overline' >
+                <Typography variant='overline'>
                   {employerProfile.bankAcc.khaltiId}
                 </Typography>
               </Grid>

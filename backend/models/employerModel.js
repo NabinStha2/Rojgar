@@ -37,6 +37,7 @@ const employerSchema = mongoose.Schema(
     document: {
       citizenshipFile: { type: String },
     },
+    isLogin: { type: Boolean, default: false },
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     isComplete: { type: Boolean, default: false },
   },

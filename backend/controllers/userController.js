@@ -7,6 +7,8 @@ const generateAccessToken = require("../utils/generateAccessToken");
 const Otp = require("../models/otpModel");
 const generateRefreshToken = require("../utils/generateRefreshToken");
 const jwt = require("jsonwebtoken");
+const Employer = require("../models/employerModel");
+const Talent = require("../models/talentModel");
 
 var transporter = nodemailer.createTransport({
   service: "gmail",
@@ -84,6 +86,22 @@ module.exports.userLogin = asyncHandler(async (req, res) => {
 
       // console.log(updatedUser);
 
+      if (userExists.jobType === "Employer") {
+        await Employer.findOneAndUpdate(
+          {
+            userEmployerId: userExists._id,
+          },
+          { isLogin: true }
+        );
+      } else {
+        await Talent.findOneAndUpdate(
+          {
+            userTalentId: userExists._id,
+          },
+          { isLogin: true }
+        );
+      }
+
       res.status(200).json({
         userProfile: {
           _id: updatedUser._id,
@@ -93,6 +111,7 @@ module.exports.userLogin = asyncHandler(async (req, res) => {
           jobType: updatedUser.jobType,
           accessToken: accessToken,
           refreshToken: refreshToken,
+          isLogin: true,
         },
       });
     } else {
@@ -106,6 +125,21 @@ module.exports.userLogin = asyncHandler(async (req, res) => {
     const refreshToken = generateRefreshToken({ id: userExists._id });
     console.log("accessToken: ", accessToken);
     // console.log(userExists);
+    if (userExists.jobType === "Employer") {
+      await Employer.findOneAndUpdate(
+        {
+          userEmployerId: userExists._id,
+        },
+        { isLogin: true }
+      );
+    } else {
+      await Talent.findOneAndUpdate(
+        {
+          userTalentId: userExists._id,
+        },
+        { isLogin: true }
+      );
+    }
 
     res.status(200).json({
       userProfile: {
@@ -116,6 +150,7 @@ module.exports.userLogin = asyncHandler(async (req, res) => {
         jobType: userExists.jobType,
         accessToken: accessToken,
         refreshToken: refreshToken,
+        isLogin: true,
       },
     });
   } else {
@@ -275,6 +310,37 @@ module.exports.verifyOTP = async (req, res) => {
     res.status(400).json({
       err: err.message,
       OTPMessage: "Something went wrong.",
+    });
+  }
+};
+
+module.exports.logout = async (req, res) => {
+  const { email } = req.body;
+
+  console.log(email);
+
+  const userExists = await User.findOne({ email });
+
+  try {
+    if (userExists.jobType === "Employer") {
+      await Employer.findOneAndUpdate(
+        {
+          userEmployerId: userExists._id,
+        },
+        { isLogin: false }
+      );
+    } else {
+      await Talent.findOneAndUpdate(
+        {
+          userTalentId: userExists._id,
+        },
+        { isLogin: false }
+      );
+    }
+    res.status(200).json({ message: "Logout" });
+  } catch (err) {
+    res.status(400).json({
+      errMessage: err.message,
     });
   }
 };

@@ -84,7 +84,9 @@ module.exports.getTalentProfileByUserTalentId = async (req, res) => {
   try {
     const talentInfo = await Talent.findOne({
       userTalentId,
-    }).lean();
+    })
+      .populate("bids.postId")
+      .lean();
 
     // console.log(talentInfo);
 

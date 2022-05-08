@@ -313,6 +313,7 @@ export const postAcceptProposalAction =
         payload: data,
       });
       // dispatch(getPostDetailsAction({ id: postId }));
+      toast(data.acceptMessage);
       navigate(`/project/edit/${postId}`);
     } catch (err) {
       console.log(err.response);

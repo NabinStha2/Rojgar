@@ -19,7 +19,6 @@ import { TALENT_DETAILS_RESET } from "../constants/talentConstant";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-
 export const userLoginAction =
   (email, password, updatePW, navigate) => async (dispatch, getState) => {
     try {
@@ -166,7 +165,18 @@ export const userRegisterAction =
     }
   };
 
-export const userLogoutAction = () => async (dispatch) => {
+export const userLogoutAction = (email) => async (dispatch) => {
+  localStorage.removeItem("userInfo");
+  await axios.post(
+    "http://localhost:5000/user/logout",
+    { email },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
   dispatch({
     type: USER_LOGOUT,
   });
@@ -177,7 +187,7 @@ export const userLogoutAction = () => async (dispatch) => {
     type: TALENT_DETAILS_RESET,
   });
   console.log("logout");
-  localStorage.removeItem("userInfo");
+  // localStorage.removeItem("userInfo");
 
   // localStorage.removeItem("isEmployerProfileComplete");
   // localStorage.removeItem("isTalentProfileComplete");

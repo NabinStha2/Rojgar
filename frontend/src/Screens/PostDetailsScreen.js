@@ -53,15 +53,15 @@ const PostDetailsScreen = () => {
   const navigate = useNavigate()
   const { register, setValue, handleSubmit } = useForm({
     defaultValues: {
-      biddingAmt: '',
+      biddingAmt: "",
       proposalDescription: "",
       postId: "",
     },
   })
   const [open, setOpen] = useState(false)
+  const [aceptedTalent, setAcceptedTalent] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-
   //   console.log(post);
 
   const onSubmit = inputData => {
@@ -143,7 +143,7 @@ const PostDetailsScreen = () => {
       //     id: userInfo._id,
       //   })
       // );
-    } else {
+    } else if (userInfo && userInfo.jobType === "Talent") {
       console.log("dispatching talent")
       userInfo &&
         dispatch(getTalentProfileByUserTalentIdAction({ id: userInfo._id }))
@@ -240,7 +240,7 @@ const PostDetailsScreen = () => {
                         margin: "10px 0px 0px 0px",
                         fontWeight: "600",
                         fontSize: "22px",
-                        marginBottom:'10px'
+                        marginBottom: "10px",
                       }}>
                       Skills Required
                     </Typography>
@@ -263,8 +263,8 @@ const PostDetailsScreen = () => {
                             justifyContent: "center",
                             alignItems: "center",
                             marginRight: "5px",
-                            marginBottom:'5px',
-                            backgroundColor:'#44a4d0'
+                            marginBottom: "5px",
+                            backgroundColor: "#44a4d0",
                             // "&:hover": {
                             //   border: "2px solid purple",
                             //   backgroundColor: "rgba(156, 39, 176, 0.3)",
@@ -283,10 +283,14 @@ const PostDetailsScreen = () => {
                         alignItems: "center",
                         margin: "8px 0px 10px 0px",
                       }}>
-                      <Typography variant='h6' sx={{ marginRight: 1,fontWeight:'600' }}>
+                      <Typography
+                        variant='h6'
+                        sx={{ marginRight: 1, fontWeight: "600" }}>
                         ExperiencedLevel :
                       </Typography>
-                      <Typography variant='overline' sx={{fontWeight:'500',fontSize:'18px'}}>
+                      <Typography
+                        variant='overline'
+                        sx={{ fontWeight: "500", fontSize: "18px" }}>
                         {post.experiencedLevel}
                       </Typography>
                     </Grid>
@@ -304,9 +308,11 @@ const PostDetailsScreen = () => {
                           Project ID: {post._id}
                         </p>
                       </Grid>
-                      {edit &&
-                        userInfo &&
-                        post.employerId.userEmployerId === userInfo._id && (
+                      {userInfo &&
+                        (userInfo.jobType === "admin") |
+                          (edit &&
+                            post.employerId.userEmployerId ===
+                              userInfo._id) && (
                           <Grid item>
                             <Link
                               to={"/postJob/edit"}
@@ -333,11 +339,13 @@ const PostDetailsScreen = () => {
                     </Grid>
                     {post.isPaid === false &&
                     userInfo &&
-                    post.employerId.userEmployerId === userInfo._id ? (
+                    (userInfo.jobType === "admin") |
+                      (post.employerId.userEmployerId === userInfo._id) ? (
                       <Khalti postId={post._id} />
                     ) : (
                       userInfo &&
-                      userInfo.jobType === "Employer" && (
+                      (userInfo.jobType === "admin") |
+                        (userInfo.jobType === "Employer") && (
                         <p
                           style={{
                             fontSize: "11px",
@@ -380,15 +388,21 @@ const PostDetailsScreen = () => {
                   elevation={4}>
                   <CardContent>
                     <Typography
-                      sx={{ fontSize: 20 ,fontWeight:'600'}}
+                      sx={{ fontSize: 20 }}
                       color='text.secondary'
                       gutterBottom>
-                      Client Details
+                      Employer Details
                     </Typography>
-                    <Typography variant='h6' component='div' sx={{fontWeight:'600'}}>
+                    <Typography
+                      variant='h6'
+                      component='div'
+                      sx={{ fontWeight: "600" }}>
                       {post.employerId.profile.name}
                     </Typography>
-                    <Typography sx={{ mb: 1.5 }} color='text.secondary' variant="body1">
+                    <Typography
+                      sx={{ mb: 1.5 }}
+                      color='text.secondary'
+                      variant='body1'>
                       {post.employerId.profile.email}
                     </Typography>
                     <Typography variant='body2'>
@@ -405,6 +419,45 @@ const PostDetailsScreen = () => {
                     </Link>
                   </CardActions>
                 </Card>
+                {post.proposalSubmitted.map(
+                  (talent, i) =>
+                    talent.isAccepted === true && (
+                      <Card
+                        sx={{
+                          minWidth: 275,
+                          margin: "10px 0px",
+                          padding: "10px",
+                        }}
+                        elevation={4}>
+                        <CardContent>
+                          <Typography
+                            sx={{ fontSize: 20 }}
+                            color='text.secondary'
+                            gutterBottom>
+                            Accepted Talent Details
+                          </Typography>
+                          <Typography variant='h5' component='div'>
+                            {talent.talentId.profile.name}
+                          </Typography>
+                          <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+                            {talent.talentId.profile.email}
+                          </Typography>
+                          <Typography variant='body2'>
+                            {talent.talentId.profile.description}
+                            <br />
+                            {talent.talentId.address.country}
+                          </Typography>
+                        </CardContent>
+                        <CardActions>
+                          <Link
+                            to={`/talentProfile/${talent.talentId.userTalentId}`}
+                            style={{ textDecoration: "none" }}>
+                            <Button size='small'>More Info</Button>
+                          </Link>
+                        </CardActions>
+                      </Card>
+                    )
+                )}
               </Grid>
             )
           )}
@@ -438,10 +491,14 @@ const PostDetailsScreen = () => {
           post ? (
           <>
             <Box sx={{ width: "100%", margin: "auto" }}>
-              <Paper elevation={3} sx={{ padding: 3,mb:2 }}>
+              <Paper elevation={3} sx={{ padding: 3, mb: 2 }}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <Grid container spacing={2}>
-                    <Typography variant='h6' gutterBottom p={2} sx={{fontWeight:'600'}}>
+                    <Typography
+                      variant='h6'
+                      gutterBottom
+                      p={2}
+                      sx={{ fontWeight: "600" }}>
                       Place a Bid on this Project
                     </Typography>
                     <Divider />
@@ -472,7 +529,7 @@ const PostDetailsScreen = () => {
                       </Typography>
                       <Input
                         variant='outlined'
-                        placeholder="0"
+                        placeholder='0'
                         fullWidth
                         {...register("biddingAmt", { required: true })}
                         startAdornment={
@@ -492,7 +549,11 @@ const PostDetailsScreen = () => {
                     <Grid item xs={12}>
                       <Typography
                         variant='body1'
-                        sx={{ fontSize: "18px", color: "black",fontWeight:'600' }}
+                        sx={{
+                          fontSize: "18px",
+                          color: "black",
+                          fontWeight: "600",
+                        }}
                         gutterBottom>
                         Describe your proposal.
                       </Typography>
@@ -509,7 +570,7 @@ const PostDetailsScreen = () => {
                     <Divider />
                     <Grid item xs={12} mt={2}>
                       <Button
-                      // id='filter-post-btn'
+                        // id='filter-post-btn'
                         disabled={
                           !!talentProfile.bids.find(
                             bid => bid.postId === post._id
@@ -527,15 +588,17 @@ const PostDetailsScreen = () => {
             {post.proposalSubmitted.map(
               proposal => talentProfile._id === proposal.talentId
             ) ? (
-              <Paper elevation={3} sx={{ padding: 3,mb:3 }}>
-                <Typography variant='h5' sx={{fontWeight:'600'}}>Proposal submitted</Typography>
+              <Paper elevation={3} sx={{ padding: 3, mb: 3 }}>
+                <Typography variant='h5' sx={{ fontWeight: "600" }}>
+                  Proposal submitted
+                </Typography>
                 <Divider />
                 {post.proposalSubmitted.map(proposal => (
                   <>
                     <Card variant='outlined' sx={{ marginTop: 3 }}>
                       <CardContent>
                         <Typography
-                        variant='overline'
+                          variant='overline'
                           sx={{ fontSize: 16 }}
                           color='#5e5b5b'
                           gutterBottom>
@@ -544,39 +607,41 @@ const PostDetailsScreen = () => {
                         <Typography variant='body1' component='div'>
                           {proposal.talentId.profile.email}
                         </Typography>
-                        <Typography sx={{ mt: 1,mb:1 }} color='text.secondary' variant='body2'>
+                        <Typography
+                          sx={{ mt: 1, mb: 1 }}
+                          color='text.secondary'
+                          variant='body2'>
                           {proposal.proposalDescription}
                         </Typography>
-                        <Typography variant='overline' sx={{fontWeight:'600'}}>
+                        <Typography
+                          variant='overline'
+                          sx={{ fontWeight: "600" }}>
                           Rs.{proposal.biddingAmt}
                         </Typography>
                         <Typography variant='body2'>
                           <strong>Accepted:</strong>{" "}
-                          {proposal.isAccepted.toString() === true
-                            ? "Yes"
-                            : "No"}
+                          {proposal.isAccepted === true ? "Yes" : "No"}
                         </Typography>
                         <Typography variant='body2'>
                           <strong>Finished:</strong>{" "}
-                          {proposal.isFinished.toString() === true
-                            ? "Yes"
-                            : "No"}
+                          {proposal.isFinished === true ? "Yes" : "No"}
                         </Typography>
                       </CardContent>
-                      {talentProfile._id === proposal.talentId._id && (
-                        <CardActions>
-                          <Button onClick={handleOpen} size='small'>
-                            Edit
-                          </Button>
-                          <Button
-                            onClick={handleDeleteBid}
-                            size='small'
-                            variant='text'
-                            color='warning'>
-                            Delete
-                          </Button>
-                        </CardActions>
-                      )}
+                      {talentProfile._id === proposal.talentId._id &&
+                        proposal.isAccepted === false && (
+                          <CardActions>
+                            <Button onClick={handleOpen} size='small'>
+                              Edit
+                            </Button>
+                            <Button
+                              onClick={handleDeleteBid}
+                              size='small'
+                              variant='text'
+                              color='warning'>
+                              Delete
+                            </Button>
+                          </CardActions>
+                        )}
                     </Card>
                     <Modal
                       open={open}
@@ -679,8 +744,9 @@ const PostDetailsScreen = () => {
           </>
         ) : userInfo ? (
           post &&
-          post.employerId.userEmployerId === userInfo._id &&
-          userInfo.jobType === "Employer" ? (
+          (userInfo.jobType === "admin") |
+            (post.employerId.userEmployerId === userInfo._id &&
+              userInfo.jobType === "Employer") ? (
             post.proposalSubmitted.map(proposal => (
               <Paper key={proposal._id} elevation={3} sx={{ padding: 3 }}>
                 <Typography variant='h5'>Proposal submitted</Typography>

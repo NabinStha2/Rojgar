@@ -14,6 +14,9 @@ import {
   CircularProgress,
   Rating,
   Grow,
+  List,
+  ListItem,
+  ListItemButton,
 } from "@mui/material"
 import CircleIcon from "@mui/icons-material/Circle"
 import MonetizationOnRoundedIcon from "@mui/icons-material/MonetizationOnRounded"
@@ -47,6 +50,8 @@ const TalentDashboard = ({ visit = false }) => {
       )
     }
   }, [dispatch, params])
+
+  console.log(talentProfile)
 
   return (
     <Grow in>
@@ -187,17 +192,22 @@ const TalentDashboard = ({ visit = false }) => {
               </Grid>
               <Grid container>
                 <Grid item xs={12} md={4} sx={{ marginTop: "20px" }}>
-                  <Chip
-                    icon={<CircleIcon sx={{ fontSize: "14px" }} />}
-                    label='Online'
-                    color='success'
-                    variant='outlined'
-                  />
-                  <Typography
-                    variant='body2'
-                    mt={2}
-                    gutterBottom
-                    sx={{ fontWeight: "600" }}>
+                  {talentProfile.isLogin ? (
+                    <Chip
+                      icon={<CircleIcon sx={{ fontSize: "14px" }} />}
+                      label='Online'
+                      color='success'
+                      variant='outlined'
+                    />
+                  ) : (
+                    <Chip
+                      icon={<CircleIcon sx={{ fontSize: "14px" }} />}
+                      label='Offline'
+                      color='warning'
+                      variant='outlined'
+                    />
+                  )}
+                  <Typography variant='body2' mt={2} gutterBottom>
                     {
                       (talentProfile.address.city,
                       talentProfile.address.country)
@@ -437,6 +447,126 @@ const TalentDashboard = ({ visit = false }) => {
                     />
                     {talentProfile.socialProfile.twitterId}
                   </Grid>
+                </Grid>
+              </Grid>
+            </Paper>
+            <Paper
+              elevation={3}
+              sx={{ margin: 1, padding: "15px", width: "100%" }}>
+              <Grid container sx={{ display: "flex", flexDirection: "column" }}>
+                <Typography variant='h5' mt={1} gutterBottom>
+                  Bidding Projects
+                </Typography>
+                <Divider />
+                <Grid item xs={12} container>
+                  <List style={{ flex: 1 }}>
+                    {talentProfile.bids.map((item, i) => (
+                      <ListItem
+                        key={i}
+                        sx={{
+                          "&:hover": {
+                            backgroundColor: "#D3D3D3",
+                          },
+                        }}
+                        divider
+                        disablePadding>
+                        <Link
+                          to={`/project/${item.postId._id}`}
+                          style={{
+                            textDecoration: "none",
+                            flex: 1,
+                            color: "black",
+                          }}>
+                          <ListItemButton
+                            style={{
+                              alignItems: "flex-start",
+                            }}>
+                            <Grid item container spacing={1}>
+                              <Grid item xs={8} container direction='column'>
+                                <h4>{item.postId.title}</h4>
+                                <Typography
+                                  variant='body1'
+                                  sx={{
+                                    whiteSpace: "nowrap",
+                                    color: "GrayText",
+                                    overflow: "hidden",
+                                    width: "250px",
+                                    textOverflow: "ellipsis",
+                                    padding: "0px 0px 10px 0px",
+                                  }}>
+                                  {item.postId.description}
+                                </Typography>
+                                <Grid
+                                  item
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}>
+                                  <h6>
+                                    <strong>Skills Required- </strong>
+                                    {item.postId.skillsRequirement.map(
+                                      (skill, i) =>
+                                        item.postId.skillsRequirement.length -
+                                          1 !==
+                                        i
+                                          ? `${skill} , `
+                                          : skill
+                                    )}
+                                  </h6>
+                                </Grid>
+                                <Grid item sx={{ padding: "5px 0px 0px 0px" }}>
+                                  <Box>
+                                    <strong>Experience: </strong>
+                                    {item.postId.experiencedLevel}
+                                  </Box>
+                                </Grid>
+                                <Grid item sx={{ padding: "5px 0px" }}>
+                                  <Box>
+                                    <strong>Category:</strong>{" "}
+                                    {item.postId.category}
+                                  </Box>
+                                </Grid>
+                                <Grid
+                                  item
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}>
+                                  <Rating
+                                    name='half-rating-read'
+                                    value={5}
+                                    precision={0.5}
+                                    readOnly
+                                  />
+                                  <p
+                                    style={{
+                                      paddingLeft: "5px",
+                                      marginTop: "16px",
+                                    }}>
+                                    {/* {item.reviews} */}5
+                                  </p>
+                                </Grid>
+                              </Grid>
+                              <Grid
+                                item
+                                xs={4}
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "flex-start",
+                                  flexDirection: "column !important",
+                                  alignItems: "flex-end",
+                                }}>
+                                <Box>Rs. {item.postId.price}</Box>
+                                <Box>
+                                  {moment(item.postId.createdAt).fromNow()}
+                                </Box>
+                              </Grid>
+                            </Grid>
+                          </ListItemButton>
+                        </Link>
+                      </ListItem>
+                    ))}
+                  </List>
                 </Grid>
               </Grid>
             </Paper>

@@ -10,6 +10,7 @@ const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const talentRoutes = require("./routes/talentRoutes");
 const employerRoutes = require("./routes/employerRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 const Post = require("./models/postModel");
 const uploadRoutes = require("./routes/uploadRoutes");
 const path = require("path");
@@ -38,6 +39,7 @@ app.use("/user", userRoutes);
 app.use("/post", postRoutes);
 app.use("/talent", talentRoutes);
 app.use("/employer", employerRoutes);
+app.use("/paymentList", paymentRoutes);
 // app.use("/api/upload", uploadRoutes);
 
 // app.use(express.static("/uploads"));
