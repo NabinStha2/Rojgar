@@ -12,9 +12,6 @@ import {
   USER_VERIFY_OTP_SUCCESS,
   USER_VERIFY_OTP_FAILED,
   USER_LOGOUT,
-  GET_REFRESH_TOKEN_REQUEST,
-  GET_REFRESH_TOKEN_SUCCESS,
-  GET_REFRESH_TOKEN_FAILED,
 } from "../constants/userConstant";
 
 export const userLoginReducer = (state = {}, action) => {

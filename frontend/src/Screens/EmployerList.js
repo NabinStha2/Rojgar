@@ -16,6 +16,7 @@ import {
   CardMedia,
   Card,
   Paper,
+  ListItemButton,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useForm } from "react-hook-form";
@@ -150,7 +151,7 @@ function EmployerList() {
                   <Grid
                     item
                     sx={{
-                      padding: "10px",
+                      padding: "5px",
                       display: "flex",
                       flex: "1",
                       justifyContent: "center",
@@ -165,10 +166,12 @@ function EmployerList() {
                         width: "100%",
                         display: "flex",
                         flex: "1",
+                        flexDirection: "column",
                         alignItems: "flex-start",
-                        border: " 0.5px solid #eaeaea",
+                        justifyContent:"center",
+                        // border: " 0.5px solid #eaeaea",
                         borderRadius: "4px",
-                        background: "#def2ee",
+                        // background: "#def2ee",
                         boxShadow: "0px 3px 8px #eaeaea ",
                         padding: "30px 0px",
                         margin: "12px 10px",
@@ -187,51 +190,62 @@ function EmployerList() {
                                 alignItems: "center",
                               }}
                             >
-                              <ListItemAvatar>
-                                <Avatar
-                                  sx={{
-                                    width: 60,
-                                    height: 60,
-                                    margin: "0px 10px 0px 0px",
-                                  }}
-                                  alt={employer.profile.name.split("")[0]}
-                                  src={
-                                    employer.profile.image
-                                      ? require(`../uploads/${employer.profile.image}`)
-                                          .default
-                                      : employer.profile.name.split("")[0]
-                                  }
-                                ></Avatar>
-                              </ListItemAvatar>
-                              <ListItemText
-                                primary={employer.profile.name}
-                                secondary={
-                                  <>
-                                    <Typography variant="body1">
-                                      {employer.profile.email}
-                                    </Typography>
+                              <ListItemButton
+                                style={{
+                                  alignItems: "flex-start",
+                                  border: " 0.5px solid #eaeaea",
+                                  borderRadius: "4px",
+                                  margin: "0px 10px",
+                                  background: "#def2ee",
+                                  boxShadow: "0px 3px 8px #eaeaea ",
+                                }}
+                              >
+                                <ListItemAvatar>
+                                  <Avatar
+                                    sx={{
+                                      width: 60,
+                                      height: 60,
+                                      margin: "0px 10px 0px 0px",
+                                    }}
+                                    alt={employer.profile.name.split("")[0]}
+                                    src={
+                                      employer.profile.image
+                                        ? require(`../uploads/${employer.profile.image}`)
+                                            .default
+                                        : employer.profile.name.split("")[0]
+                                    }
+                                  ></Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                  primary={employer.profile.name}
+                                  secondary={
+                                    <>
+                                      <Typography variant="body1">
+                                        {employer.profile.email}
+                                      </Typography>
 
-                                    <Grid
-                                      item
-                                      style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        margin: "10px 0px",
-                                      }}
-                                    >
-                                      <Rating
-                                        name="half-rating-read"
-                                        value={
-                                          employer.profile.rating /
-                                          employer.profile.ratingper
-                                        }
-                                        precision={0.5}
-                                        readOnly
-                                      />
-                                    </Grid>
-                                  </>
-                                }
-                              />
+                                      <Grid
+                                        item
+                                        style={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                          margin: "10px 0px",
+                                        }}
+                                      >
+                                        <Rating
+                                          name="half-rating-read"
+                                          value={
+                                            employer.profile.rating /
+                                            employer.profile.ratingper
+                                          }
+                                          precision={0.5}
+                                          readOnly
+                                        />
+                                      </Grid>
+                                    </>
+                                  }
+                                />
+                              </ListItemButton>
                             </Link>
                           </ListItem>
                           {!(allEmployerProfile.length - 1 === i) && (

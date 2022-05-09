@@ -5,7 +5,7 @@ const Post = require("../models/postModel");
 
 // for ADMIN
 module.exports.getAllTalentProfile = async (req, res) => {
-  const perPage = 1;
+  const perPage = 5;
   var skillsArray;
   const page = req.query.pageNumber || 1;
   const keyword = req.query.keyword || "";
@@ -204,13 +204,19 @@ module.exports.deleteTalentBids = async (req, res) => {
     const t = talent.bids.filter((bid) => bid.postId.toString() !== postId);
     // console.log(t);
 
-    const talentInfo = await Talent.findByIdAndUpdate(
+    await Talent.findByIdAndUpdate(
       {
         _id: id,
       },
       { bids: t },
       { new: true, timestamps: true }
     );
+
+    const talentInfo = await Talent.findById({
+      _id: id,
+    })
+      .populate("bids.postId")
+      .lean();
 
     // console.log(talentInfo.bids);
 

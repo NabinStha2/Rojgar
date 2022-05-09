@@ -208,6 +208,7 @@ const EmployerEdit = () => {
                 <TextField
                   variant="outlined"
                   label="Name"
+                  required
                   {...register("name", { required: true, maxLength: 20 })}
                   fullWidth
                 />
@@ -243,6 +244,7 @@ const EmployerEdit = () => {
                   variant="outlined"
                   label="Phone Number"
                   type="number"
+                  required
                   {...register("phoneNumber", {
                     required: true,
                     maxLength: 10,
@@ -272,6 +274,7 @@ const EmployerEdit = () => {
                   variant="outlined"
                   disabled
                   label="Email"
+                  required
                   {...register("email")}
                   fullWidth
                 />
@@ -296,6 +299,7 @@ const EmployerEdit = () => {
                 <TextField
                   variant="outlined"
                   label="Vat Id"
+                  required
                   {...register("vatId", { required: true })}
                   fullWidth
                 />
@@ -322,6 +326,7 @@ const EmployerEdit = () => {
                   multiline
                   label="Description"
                   rows={4}
+                  required
                   {...register("description", { required: true })}
                   fullWidth
                 />
@@ -392,6 +397,7 @@ const EmployerEdit = () => {
                 <TextField
                   variant="outlined"
                   label="Country"
+                  required
                   {...register("country", { required: true })}
                   fullWidth
                 />
@@ -411,6 +417,7 @@ const EmployerEdit = () => {
                   variant="outlined"
                   label="State/Provience"
                   fullWidth
+                  required
                   {...register("provience", { required: true })}
                 />
                 {errors.provience?.type === "required" && (
@@ -429,6 +436,7 @@ const EmployerEdit = () => {
                   variant="outlined"
                   label="City"
                   fullWidth
+                  required
                   {...register("city", { required: true })}
                 />{" "}
                 {errors.city?.type === "required" && (
@@ -530,6 +538,7 @@ const EmployerEdit = () => {
                 <TextField
                   variant="outlined"
                   label="Khalti Name"
+                  required
                   {...register("khaltiName")}
                   fullWidth
                 />
@@ -539,6 +548,7 @@ const EmployerEdit = () => {
                   variant="outlined"
                   type="Number"
                   label="Khalti Id"
+                  required
                   fullWidth
                   {...register("khaltiId")}
                 />

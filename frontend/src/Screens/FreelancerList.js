@@ -23,6 +23,7 @@ import {
   OutlinedInput,
   Paper,
   Chip,
+  ListItemButton,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useForm } from "react-hook-form";
@@ -344,18 +345,19 @@ function Freelancer() {
                     <Grid
                       xs={12}
                       container
-                      sx={{ flex: "1", display: "flex", padding: "30px 0px" }}
+                      sx={{ flex: "1", display: "flex", padding: "10px 0px" }}
                     >
                       <List
                         sx={{
                           display: "flex",
+                          flexDirection: "column",
                           flex: "1",
                           width: "100%",
                           alignItems: "flex-start",
-                          border: " 0.5px solid #eaeaea",
+                          // border: " 0.5px solid #eaeaea",
                           borderRadius: "4px",
                           margin: "0px 10px",
-                          background: "#def2ee",
+                          // background: "#def2ee",
                           boxShadow: "0px 3px 8px #eaeaea ",
                         }}
                       >
@@ -372,54 +374,65 @@ function Freelancer() {
                                   alignItems: "center",
                                 }}
                               >
-                                <ListItemAvatar>
-                                  <Avatar
-                                    sx={{
-                                      width: 60,
-                                      height: 60,
-                                      margin: "0px 10px 0px 0px",
-                                    }}
-                                    alt={talent.profile.name.split("")[0]}
-                                    src={
-                                      talent.profile.image
-                                        ? require(`../uploads/${talent.profile.image}`)
-                                            .default
-                                        : talent.profile.name.split("")[0]
-                                    }
-                                  ></Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                  primary={talent.profile.name}
-                                  secondary={
-                                    <>
-                                      <Typography variant="body1">
-                                        {talent.profile.email}
-                                      </Typography>
-                                      <Typography variant="body1">
-                                        {talent.profile.title}
-                                      </Typography>
+                                <ListItemButton
+                                  style={{
+                                    alignItems: "flex-start",
+                                    border: " 0.5px solid #eaeaea",
+                                    borderRadius: "4px",
+                                    margin: "0px 10px",
+                                    background: "#def2ee",
+                                    boxShadow: "0px 3px 8px #eaeaea ",
+                                  }}
+                                >
+                                  <ListItemAvatar>
+                                    <Avatar
+                                      sx={{
+                                        width: 60,
+                                        height: 60,
+                                        margin: "0px 10px 0px 0px",
+                                      }}
+                                      alt={talent.profile.name.split("")[0]}
+                                      src={
+                                        talent.profile.image
+                                          ? require(`../uploads/${talent.profile.image}`)
+                                              .default
+                                          : talent.profile.name.split("")[0]
+                                      }
+                                    ></Avatar>
+                                  </ListItemAvatar>
+                                  <ListItemText
+                                    primary={talent.profile.name}
+                                    secondary={
+                                      <>
+                                        <Typography variant="body1">
+                                          {talent.profile.email}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                          {talent.profile.title}
+                                        </Typography>
 
-                                      <Grid
-                                        item
-                                        style={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                          margin: "10px 0px",
-                                        }}
-                                      >
-                                        <Rating
-                                          name="half-rating-read"
-                                          value={
-                                            talent.profile.rating /
-                                            talent.profile.ratingper
-                                          }
-                                          precision={0.5}
-                                          readOnly
-                                        />
-                                      </Grid>
-                                    </>
-                                  }
-                                />
+                                        <Grid
+                                          item
+                                          style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            margin: "10px 0px",
+                                          }}
+                                        >
+                                          <Rating
+                                            name="half-rating-read"
+                                            value={
+                                              talent.profile.rating /
+                                              talent.profile.ratingper
+                                            }
+                                            precision={0.5}
+                                            readOnly
+                                          />
+                                        </Grid>
+                                      </>
+                                    }
+                                  />
+                                </ListItemButton>
                               </Link>
                             </ListItem>
                             {!(allTalentProfile.length - 1 === i) && (

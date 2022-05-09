@@ -329,8 +329,8 @@ const PostDetailsScreen = () => {
                       {userInfo &&
                         (userInfo.jobType === "admin") |
                           (edit &&
-                            post.employerId.userEmployerId ===
-                              userInfo._id) && (
+                            post.employerId.userEmployerId === userInfo._id) &&
+                        !post.isFinish && (
                           <Grid item>
                             <Link
                               to={"/postJob/edit"}

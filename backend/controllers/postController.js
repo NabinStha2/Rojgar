@@ -397,6 +397,7 @@ module.exports.updatePostFinishProposal = asyncHandler(async (req, res) => {
     );
 
     const post = await Post.findById({ _id: postId }).lean();
+    post.isFinish = true;
     post.proposalSubmitted.map((proposal) => {
       if (proposal.talentId.toString() === req.body.talentId) {
         proposal.isFinished = true;
@@ -426,10 +427,10 @@ module.exports.deletePost = asyncHandler(async (req, res) => {
 
   try {
     const talents = await Talent.find().lean();
-    const talentInfo = await talents.map((talent) => {
+    const talentInfo = talents.map(async (talent) => {
       const t = talent.bids.filter((bid) => bid.postId.toString() !== id);
       // console.log(t);
-      Talent.findByIdAndUpdate(
+      await Talent.findByIdAndUpdate(
         {
           _id: talent._id,
         },
@@ -439,7 +440,7 @@ module.exports.deletePost = asyncHandler(async (req, res) => {
     });
 
     const deletedPost = await Post.findByIdAndDelete({ _id: id }).populate(
-      "employerId"
+      "employerId proposalSubmitted.talentId"
     );
 
     await Payment.findOneAndDelete({ postID: id });

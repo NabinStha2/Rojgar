@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Box, Grow, Tab, Tabs, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import { makeStyles } from "@mui/styles";
-import { useNavigate, useLocation } from "react-router-dom";
-
-const PostScreen = React.lazy(() => import("./PostScreen"));
-const Freelancer = React.lazy(() => import("./FreelancerList"));
-const EmployerList = React.lazy(() => import("./EmployerList"));
+import { useNavigate } from "react-router-dom";
 
 const PaymentList = React.lazy(() => import("../components/PaymentList"));
-const ProjectLists = React.lazy(() => import("../components/ProjectLists"));
-const TalentLists = React.lazy(() => import("../components/TalentLists"));
-const EmployerLists = React.lazy(() => import("../components/EmployerLists"));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

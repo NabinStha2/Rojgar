@@ -185,6 +185,7 @@ const EmployeeRegistrationScreen = () => {
                 variant="outlined"
                 label="Phone Number"
                 type="number"
+                required
                 {...register("phoneNumber", { required: true, maxLength: 10 })}
                 fullWidth
               />
@@ -206,6 +207,7 @@ const EmployeeRegistrationScreen = () => {
                 variant="outlined"
                 disabled
                 label="Email"
+                required
                 {...register("email", { value: userInfo.email })}
                 fullWidth
               />
@@ -225,6 +227,7 @@ const EmployeeRegistrationScreen = () => {
               <TextField
                 variant="outlined"
                 label="Vat Id"
+                required
                 {...register("vatId", { required: true })}
                 fullWidth
               />
@@ -246,6 +249,7 @@ const EmployeeRegistrationScreen = () => {
                 multiline
                 label="Description"
                 rows={4}
+                required
                 {...register("description", { required: true })}
                 fullWidth
               />
@@ -316,6 +320,7 @@ const EmployeeRegistrationScreen = () => {
               <TextField
                 variant="outlined"
                 label="Country"
+                required
                 {...register("country")}
                 fullWidth
               />
@@ -325,6 +330,7 @@ const EmployeeRegistrationScreen = () => {
                 variant="outlined"
                 label="State/Provience"
                 fullWidth
+                required
                 {...register("provience")}
               />
             </Grid>
@@ -333,6 +339,7 @@ const EmployeeRegistrationScreen = () => {
                 variant="outlined"
                 label="City"
                 fullWidth
+                required
                 {...register("city")}
               />
             </Grid>
@@ -394,6 +401,7 @@ const EmployeeRegistrationScreen = () => {
               <TextField
                 variant="outlined"
                 label="Khalti Name"
+                required
                 {...register("khaltiName")}
                 fullWidth
               />
@@ -404,6 +412,7 @@ const EmployeeRegistrationScreen = () => {
                 type="Number"
                 label="Khalti Id"
                 fullWidth
+                required
                 {...register("khaltiId")}
               />
             </Grid>

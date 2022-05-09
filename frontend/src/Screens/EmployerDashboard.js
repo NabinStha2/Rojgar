@@ -305,36 +305,28 @@ const EmployerDashboard = ({ visit = false }) => {
                   color="primary"
                   sx={{ fontSize: "20px", color: "maroon", marginRight: 1 }}
                 />
-                <Link to="#" underline="none" m={2} sx={{ marginTop: "10px" }}>
-                  {employerProfile.profile.email}
-                </Link>
+                {employerProfile.profile.email}
               </Grid>
               <Grid item sx={{ padding: "10px" }}>
                 <FacebookIcon
                   color="primary"
                   sx={{ fontSize: "21px", marginRight: 1 }}
-                />
-                <Link to="#" underline="none" m={2} sx={{ marginTop: "10px" }}>
-                  {employerProfile.socialProfile.facebookId}
-                </Link>
+                />{" "}
+                {employerProfile.socialProfile.facebookId}
               </Grid>
               <Grid item sx={{ padding: "10px" }}>
                 <GitHubIcon
                   color="primary"
                   sx={{ fontSize: "21px", color: "black", marginRight: 1 }}
                 />
-                <Link to="#" underline="none" m={2} sx={{ marginTop: "10px" }}>
-                  {employerProfile.socialProfile.githubId}
-                </Link>
+                {employerProfile.socialProfile.githubId}
               </Grid>
               <Grid item sx={{ padding: "10px" }}>
                 <TwitterIcon
                   color="primary"
                   sx={{ fontSize: "21px", marginRight: 1 }}
                 />
-                <Link to="#" underline="none" m={2} sx={{ marginTop: "10px" }}>
-                  {employerProfile.socialProfile.twitterId}
-                </Link>
+                {employerProfile.socialProfile.twitterId}
               </Grid>
             </Grid>
             <Grid

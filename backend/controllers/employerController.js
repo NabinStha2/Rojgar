@@ -70,7 +70,7 @@ module.exports.employerRegister = async (req, res) => {
 };
 
 module.exports.getAllEmployerProfile = async (req, res) => {
-  const perPage = 1;
+  const perPage = 5;
   const page = req.query.pageNumber || 1;
   const keyword = req.query.keyword || "";
   const email = req.query.email;

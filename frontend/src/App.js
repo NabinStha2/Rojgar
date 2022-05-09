@@ -251,7 +251,7 @@ export const App = () => {
             )}
 
             <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Register />} />
+            {!userInfo && <Route path="/signup" element={<Register />} />}
 
             <Route path="/" element={<Home />} />
 

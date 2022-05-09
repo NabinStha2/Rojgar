@@ -255,6 +255,7 @@ const TalentEditScreen = () => {
                   label="Profile Rate"
                   variant="outlined"
                   type="Number"
+                  required
                   fullWidth
                   {...register("profileRate", { required: true })}
                 />
@@ -274,6 +275,7 @@ const TalentEditScreen = () => {
                 <TextField
                   variant="outlined"
                   label="Phone Number"
+                  required
                   type="number"
                   {...register("phoneNumber", {
                     required: true,
@@ -300,6 +302,7 @@ const TalentEditScreen = () => {
                   <TextField
                     variant="outlined"
                     label="Name"
+                    required
                     {...register("name", { required: true, maxLength: 20 })}
                     fullWidth
                   />
@@ -331,6 +334,7 @@ const TalentEditScreen = () => {
                   <TextField
                     label="Title"
                     variant="outlined"
+                    required
                     {...register("title", { required: true })}
                     fullWidth
                   />{" "}
@@ -353,6 +357,7 @@ const TalentEditScreen = () => {
                     label="Description"
                     variant="outlined"
                     multiline
+                    required
                     rows={8}
                     {...register("description", { required: true })}
                     fullWidth
@@ -384,6 +389,7 @@ const TalentEditScreen = () => {
                   <TextField
                     variant="outlined"
                     label="Country"
+                    required
                     {...register("country", { required: true })}
                     fullWidth
                   />
@@ -403,6 +409,7 @@ const TalentEditScreen = () => {
                     variant="outlined"
                     label="State/Provience"
                     fullWidth
+                    required
                     {...register("provience", { required: true })}
                   />
                   {errors.provience?.type === "required" && (
@@ -421,6 +428,7 @@ const TalentEditScreen = () => {
                     variant="outlined"
                     label="City"
                     fullWidth
+                    required
                     {...register("city", { required: true })}
                   />{" "}
                   {errors.city?.type === "required" && (
@@ -564,6 +572,7 @@ const TalentEditScreen = () => {
                   <TextField
                     variant="outlined"
                     label="Khalti Name"
+                    required
                     {...register("khaltiName")}
                     fullWidth
                   />
@@ -574,6 +583,7 @@ const TalentEditScreen = () => {
                     type="Number"
                     label="Khalti Id"
                     fullWidth
+                    required
                     {...register("khaltiId")}
                   />
                 </Grid>
@@ -774,6 +784,7 @@ const TalentEditScreen = () => {
                     variant="outlined"
                     label="Email"
                     disabled
+                    required
                     {...register("email")}
                     sx={{ marginLeft: 2 }}
                   />

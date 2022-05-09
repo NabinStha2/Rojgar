@@ -20,6 +20,7 @@ const postSchema = mongoose.Schema(
     experiencedLevel: { type: String, required: true },
     isPaid: { type: Boolean, default: false },
     isAccept: { type: Boolean, default: false },
+    isFinish: { type: Boolean, default: false },
     proposalSubmitted: [
       {
         talentId: {
