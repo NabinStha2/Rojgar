@@ -39,7 +39,10 @@ export const employerReducer = (
       return {
         ...state,
         loading: false,
-        employerProfile: action.payload,
+        employerProfile: action.payload.employerProfile,
+        pages: action.payload.pages,
+        pageNumber: action.payload.pageNumber,
+        employerPosts: action.payload.employerPosts,
       };
     case GET_EMPLOYER_PROFILE_FAILED:
       return { loading: false, error: action.payload };

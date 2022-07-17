@@ -56,6 +56,7 @@ const PostJob = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.getPosts);
+  const { userInfo } = useSelector((state) => state.userLogin);
 
   const handleChange = (event) => {
     const {

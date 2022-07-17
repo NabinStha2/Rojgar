@@ -59,8 +59,14 @@ const PostDetailsScreen = () => {
     },
   });
   const [open, setOpen] = useState(false);
-  const [aceptedTalent, setAcceptedTalent] = useState(false);
-  const handleOpen = () => setOpen(true);
+  // const [aceptedTalent, setAcceptedTalent] = useState(false);
+  const [adminEditBidTalentData, setAdminEditBidTalentData] = useState();
+
+  const handleOpen = ({ selectedTalentId = null }) => {
+    setOpen(true);
+    console.log(selectedTalentId);
+    selectedTalentId && setAdminEditBidTalentData(selectedTalentId);
+  };
   const handleClose = () => setOpen(false);
   //   console.log(post);
 
@@ -70,10 +76,14 @@ const PostDetailsScreen = () => {
 
     if (open) {
       console.log("edit bids");
+
       dispatch(
         editTalentBidsAction({
           inputData: inputData,
-          id: talentProfile._id,
+          id:
+            userInfo.jobType === "admin"
+              ? adminEditBidTalentData
+              : talentProfile._id,
         })
       );
     } else {
@@ -100,10 +110,10 @@ const PostDetailsScreen = () => {
     );
   };
 
-  const handleDeleteBid = () => {
+  const handleDeleteBid = ({ id }) => {
     dispatch(
       deleteTalentBidsAction({
-        id: talentProfile._id,
+        id: userInfo.jobType === "admin" ? id : talentProfile._id,
         postId: post._id,
       })
     );
@@ -612,7 +622,7 @@ const PostDetailsScreen = () => {
                         // id='filter-post-btn'
                         disabled={
                           !!talentProfile.bids.find(
-                            (bid) => bid.postId === post._id
+                            (bid) => bid.postId._id === post._id
                           )
                         }
                         variant="contained"
@@ -625,6 +635,7 @@ const PostDetailsScreen = () => {
                 </form>
               </Paper>
             </Box>
+
             {post.proposalSubmitted.map(
               (proposal) => talentProfile._id === proposal.talentId
             ) ? (
@@ -845,8 +856,131 @@ const PostDetailsScreen = () => {
                         {proposal.isFinished ? "Finished" : "Finish"}
                       </Button>
                     )}
+                    {userInfo.jobType === "admin" &&
+                      proposal.isAccepted === false && (
+                        <CardActions>
+                          <Button
+                            onClick={() =>
+                              handleOpen({
+                                selectedTalentId: proposal.talentId._id,
+                              })
+                            }
+                            size="small"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            onClick={() =>
+                              handleDeleteBid({ id: proposal.talentId._id })
+                            }
+                            size="small"
+                            variant="text"
+                            color="warning"
+                          >
+                            Delete
+                          </Button>
+                        </CardActions>
+                      )}
                   </CardActions>
                 </Card>
+                <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      width: 400,
+                      bgcolor: "background.paper",
+                      border: "2px solid #000",
+                      boxShadow: 24,
+                      p: 4,
+                    }}
+                  >
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                      <Grid container spacing={2}>
+                        <Typography variant="h6" gutterBottom p={2}>
+                          Edit a Bid on this Project
+                        </Typography>
+                        <Divider />
+
+                        <Typography
+                          pl={3}
+                          variant="body1"
+                          sx={{
+                            fontSize: "16px",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                          gutterBottom
+                        >
+                          You will be able to edit your bid until the project is
+                          awarded to someone.
+                        </Typography>
+                        <Grid item xs={12}>
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              fontSize: "16px",
+                              color: "black",
+                              fontWeight: "600",
+                            }}
+                            gutterBottom
+                          >
+                            Bid Amount
+                          </Typography>
+                          <Input
+                            variant="outlined"
+                            fullWidth
+                            {...register("biddingAmt", { required: true })}
+                            startAdornment={
+                              <InputAdornment
+                                position="start"
+                                sx={{ paddingRight: 2 }}
+                              >
+                                Rs.
+                              </InputAdornment>
+                            }
+                            endAdornment={
+                              <InputAdornment position="end">
+                                Project Rate
+                              </InputAdornment>
+                            }
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography
+                            variant="body1"
+                            sx={{ fontSize: "16px", color: "black" }}
+                            gutterBottom
+                          >
+                            Describe your proposal.
+                          </Typography>
+                          <TextField
+                            label="Description"
+                            multiline
+                            rows={4}
+                            fullWidth
+                            {...register("proposalDescription", {
+                              required: true,
+                            })}
+                          />
+                        </Grid>
+                        <Divider />
+                        <Grid item xs={12} mt={2}>
+                          <Button variant="contained" type="submit">
+                            Place bid
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </form>
+                  </Box>
+                </Modal>
               </Paper>
             ))
           ) : (

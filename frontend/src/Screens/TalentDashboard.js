@@ -240,7 +240,8 @@ const TalentDashboard = ({ visit = false }) => {
                     {talentProfile.profile.experiencedLevel} Level
                   </Typography>
                   {userInfo &&
-                    talentProfile.userTalentId === userInfo._id &&
+                    (userInfo.jobType === "admin" ||
+                      talentProfile.userTalentId === userInfo._id) &&
                     !visit && (
                       <Grid item mt={2}>
                         <Link

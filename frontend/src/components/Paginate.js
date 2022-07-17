@@ -26,6 +26,8 @@ const Paginate = ({
   project = false,
   freelancer = false,
   employer = false,
+  payment = false,
+  paymentPages = 1,
 }) => {
   const params = useParams();
   const category = params.category || "";
@@ -44,7 +46,7 @@ const Paginate = ({
 
   const classes = useStyles();
   const page = Number(pageNumber);
-  console.log(page);
+  // console.log(page);
 
   useEffect(() => {
     const searchQuery = {
@@ -80,7 +82,15 @@ const Paginate = ({
       className={classes.paginate}
       color="primary"
       variant="outlined"
-      count={project ? postPages : freelancer ? freelancerPages : employerPages}
+      count={
+        project
+          ? postPages
+          : freelancer
+          ? freelancerPages
+          : employer
+          ? employerPages
+          : paymentPages
+      }
       defaultPage={1}
       page={page}
       renderItem={(item) => (
@@ -106,7 +116,9 @@ const Paginate = ({
                 : `/projects/${category}/page/${item.page}`
               : employer
               ? `/employerList/page/${item.page}`
-              : `/freelancer/page/${item.page}`
+              : freelancer
+              ? `/freelancer/page/${item.page}`
+              : `/admin/paymentList/page/${item.page}`
           }
         />
       )}

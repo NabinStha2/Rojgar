@@ -34,6 +34,21 @@ module.exports.getAllTalentProfile = async (req, res) => {
       .countDocuments();
 
     // console.log(count);
+    console.log(
+      await Talent.find()
+        .and([
+          skillsArray ? { "profile.skills": { $in: skillsArray } } : {},
+          category ? { "profile.category": category } : {},
+          experiencedLevel
+            ? { "profile.experiencedLevel": experiencedLevel }
+            : {},
+        ])
+        .or([
+          keyword ? { "profile.name": RegExp(keyword, "i") } : {},
+          keyword ? { "profile.email": RegExp(keyword, "i") } : {},
+        ])
+        .explain("executionStats")
+    );
 
     const talentInfo = await Talent.find()
       .and([
@@ -82,6 +97,11 @@ module.exports.getTalentProfile = async (req, res) => {
 module.exports.getTalentProfileByUserTalentId = async (req, res) => {
   const userTalentId = req.params.id;
   try {
+    // console.log(
+    //   await Talent.findOne({
+    //     userTalentId,
+    //   }).explain("executionStats")
+    // );
     const talentInfo = await Talent.findOne({
       userTalentId,
     })
@@ -121,7 +141,13 @@ module.exports.createTalentBids = async (req, res) => {
       },
       talent,
       { new: true, timestamps: true }
-    );
+    ).populate("bids.postId");
+
+    // const talentInfo = await Talent.findById({
+    //   _id: id,
+    // })
+    //   .populate("bids.postId")
+    //   .lean();
 
     // console.log(talentInfo.bids);
 

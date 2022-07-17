@@ -195,10 +195,25 @@ export const App = () => {
               <>
                 <Route path="/admin" element={<AdminScreen />} />
                 <Route
-                  path="/admin/paymentList"
+                  path="/admin/paymentList/page/:pageNumber"
                   element={<AdminTabsScreen index={0} />}
                 />
                 <Route path="/postJob/edit" element={<PostJob />} />
+                <Route
+                  path="/project/edit/:postId"
+                  element={<PostDetailsScreen />}
+                />
+                <Route path="/talentEdit" element={<TalentEditScreen />} />
+                <Route path="/employerEdit" element={<EmployerEdit />} />
+                <Route path="/postJob" element={<PostJob />} />
+                <Route
+                  path="/employerDashboard/:userEmployerId"
+                  element={<EmployerDashboard />}
+                />
+                <Route
+                  path="/talentDashboard/:userTalentId"
+                  element={<TalentDashboard />}
+                />
               </>
             )}
 

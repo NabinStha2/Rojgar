@@ -3,18 +3,18 @@ const mongoose = require("mongoose");
 const talentSchema = mongoose.Schema(
   {
     profile: {
-      name: { type: "string" },
+      name: { type: "String", index: true },
       title: { type: String },
       description: { type: String },
       image: { type: String },
       gender: { type: "string", enum: ["male", "female", "other", ""] },
       dateOfBirth: { type: String },
       phoneNumber: { type: Number },
-      email: { type: String },
-      experiencedLevel: { type: String },
-      category: { type: String },
+      email: { type: String, unique: true, index: true },
+      experiencedLevel: { type: String, index: true },
+      category: { type: String, index: true },
       profileRate: { type: Number },
-      skills: [{ type: String, default: [] }],
+      skills: [{ type: String, default: [], index: true }],
       rating: { type: Number, default: 0 },
       ratingper: { type: Number, default: 0 },
     },
@@ -67,8 +67,12 @@ const talentSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-talentSchema.index({ userTalentId: 1 });
+// talentSchema.index({ userTalentId: 1 });
+
+console.log(talentSchema.indexes());
 
 const Talent = mongoose.model("Talent", talentSchema);
+
+// Talent.collection.dropIndexes();
 
 module.exports = Talent;

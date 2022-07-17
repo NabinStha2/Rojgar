@@ -4,9 +4,9 @@ const employerSchema = mongoose.Schema(
   {
     profile: {
       image: { type: String },
-      name: { type: String, required: true },
+      name: { type: String, required: true, index: true },
       phoneNumber: { type: Number, required: true },
-      email: { type: String, required: true },
+      email: { type: String, required: true, unique: true, index: true },
       description: { type: String, required: true },
       vatId: { type: String, required: true },
       rating: { type: Number, default: 0 },
@@ -38,12 +38,16 @@ const employerSchema = mongoose.Schema(
       citizenshipFile: { type: String },
     },
     isLogin: { type: Boolean, default: false },
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post", index: true }],
     isComplete: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
-employerSchema.index({ userEmployerId: 1 });
+
+// employerSchema.index({ userEmployerId: 1 });
+console.log(employerSchema.indexes());
 const Employer = mongoose.model("Employer", employerSchema);
+
+// Employer.collection.dropIndexes();
 
 module.exports = Employer;

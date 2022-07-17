@@ -60,6 +60,7 @@ function EmployerList() {
   const navigate = useNavigate();
   const params = useParams();
   const pageNumber = params.pageNumber || 1;
+  const { userInfo } = useSelector((state) => state.userLogin);
 
   const {
     allEmployerProfile,
@@ -75,6 +76,8 @@ function EmployerList() {
     navigate("/employerList/page/1");
   };
 
+  console.log(pageNumber);
+
   useEffect(() => {
     let data = {
       category: "",
@@ -83,6 +86,7 @@ function EmployerList() {
       email: "",
       skills: [],
     };
+    console.log("fetching all employer");
     dispatch(getAllEmployerAction({ inputData: data, pageNumber }));
   }, [dispatch, pageNumber]);
 
@@ -168,7 +172,7 @@ function EmployerList() {
                         flex: "1",
                         flexDirection: "column",
                         alignItems: "flex-start",
-                        justifyContent:"center",
+                        justifyContent: "center",
                         // border: " 0.5px solid #eaeaea",
                         borderRadius: "4px",
                         // background: "#def2ee",
@@ -181,7 +185,11 @@ function EmployerList() {
                         <>
                           <ListItem key={i}>
                             <Link
-                              to={`/employerProfile/${employer.userEmployerId._id}`}
+                              to={
+                                userInfo.jobType === "admin"
+                                  ? `/employerDashboard/${employer.userEmployerId._id}`
+                                  : `/employerProfile/${employer.userEmployerId._id}`
+                              }
                               style={{
                                 display: "flex",
                                 textDecoration: "none",

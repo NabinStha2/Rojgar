@@ -93,20 +93,24 @@ export const getAllEmployerAction =
   };
 
 export const getEmployerProfileByEmployerIdAction =
-  ({ id }) =>
+  ({ id, pageNumber = 1 }) =>
   async (dispatch, getState) => {
     try {
       dispatch({
         type: GET_EMPLOYER_PROFILE_REQUEST,
       });
 
-      const { data } = await rojgarAxios.get(`/employer/userEmployerId/${id}`);
+      console.log(pageNumber);
+
+      const { data } = await rojgarAxios.get(`/employer/userEmployerId/${id}`, {
+        params: { pageNumber },
+      });
 
       // console.log(data);
 
       dispatch({
         type: GET_EMPLOYER_PROFILE_SUCCESS,
-        payload: data.employerProfile,
+        payload: data,
       });
     } catch (err) {
       console.log(err.message);

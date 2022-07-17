@@ -1,4 +1,5 @@
 const Employer = require("../models/employerModel");
+const Post = require("../models/postModel");
 const User = require("../models/userModel");
 
 module.exports.employerRegister = async (req, res) => {
@@ -70,7 +71,7 @@ module.exports.employerRegister = async (req, res) => {
 };
 
 module.exports.getAllEmployerProfile = async (req, res) => {
-  const perPage = 5;
+  const perPage = 1;
   const page = req.query.pageNumber || 1;
   const keyword = req.query.keyword || "";
   const email = req.query.email;
@@ -78,6 +79,15 @@ module.exports.getAllEmployerProfile = async (req, res) => {
   console.log(keyword, email);
 
   try {
+    console.log(
+      await Employer.find()
+        .or([
+          keyword ? { "profile.name": RegExp(keyword, "i") } : {},
+          keyword ? { "profile.email": RegExp(keyword, "i") } : {},
+        ])
+        .explain()
+    );
+
     const count = await Employer.find()
       .or([
         keyword ? { "profile.name": RegExp(keyword, "i") } : {},
@@ -126,16 +136,36 @@ module.exports.getEmployerProfile = async (req, res) => {
 
 module.exports.getEmployerProfileByUserEmployerId = async (req, res) => {
   const userEmployerId = req.params.id;
+  const perPage = 5;
+  const page = req.query.pageNumber || 1;
   try {
     const employerInfo = await Employer.findOne({
       userEmployerId: userEmployerId,
     })
-      .populate("posts")
+      .populate({ path: "posts", options: { sort: { createdAt: -1 } } })
       .lean();
+
+    const count = await Post.find({
+      employerId: employerInfo._id,
+    }).countDocuments();
+    const employerPosts = await Post.find({
+      employerId: employerInfo._id,
+    })
+      .sort({ createdAt: -1 })
+      .limit(perPage)
+      .skip(perPage * (page - 1))
+      .lean();
+
+    console.log(count);
 
     // console.log(employerInfo);
 
-    res.status(200).json({ employerProfile: employerInfo });
+    res.status(200).json({
+      employerProfile: employerInfo,
+      employerPosts: employerPosts,
+      pageNumber: page,
+      pages: Math.ceil(count / perPage),
+    });
   } catch (err) {
     res.status(500).json({ errMessage: err.message });
   }

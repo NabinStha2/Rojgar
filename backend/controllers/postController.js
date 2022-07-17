@@ -19,7 +19,10 @@ module.exports.createPost = asyncHandler(async (req, res) => {
 
   const employerId = req.params.id;
   try {
-    const newPost = await Post.create({
+    var newPost;
+    // for (let i = 0; i < 2000000; i++) {
+    console.log("post created");
+    newPost = await Post.create({
       title,
       description,
       skillsRequirement,
@@ -28,6 +31,16 @@ module.exports.createPost = asyncHandler(async (req, res) => {
       experiencedLevel,
       employerId,
     });
+    // }
+    // const newPost = await Post.create({
+    //   title,
+    //   description,
+    //   skillsRequirement,
+    //   price,
+    //   category: category.trim().toLowerCase(),
+    //   experiencedLevel,
+    //   employerId,
+    // });
     const post = await Post.findById({ _id: newPost._id }).populate(
       "employerId"
     );
@@ -58,7 +71,7 @@ module.exports.createPost = asyncHandler(async (req, res) => {
 });
 
 module.exports.getAllPosts = asyncHandler(async (req, res) => {
-  const perPage = 5;
+  const perPage = 10;
   var skillsArray;
   const page = req.query.pageNumber || 1;
   const keyword = req.query.keyword || "";
@@ -72,6 +85,17 @@ module.exports.getAllPosts = asyncHandler(async (req, res) => {
   // console.log("pageNumber: ", page);
 
   try {
+    // await Post.deleteMany({ title: "aaaa" });
+    console.log(
+      await Post.find({
+        $and: [
+          keyword ? { title: RegExp(keyword, "i") } : {},
+          skillsArray ? { skillsRequirement: { $in: skillsArray } } : {},
+          price ? { price: { $lte: price } } : {},
+          experiencedLevel ? { experiencedLevel: experiencedLevel } : {},
+        ],
+      }).explain()
+    );
     const count = await Post.find({
       $and: [
         keyword ? { title: RegExp(keyword, "i") } : {},
@@ -111,11 +135,16 @@ module.exports.getAllPosts = asyncHandler(async (req, res) => {
 
 module.exports.categorySearchProjects = asyncHandler(async (req, res) => {
   const category = req.params.category;
-  const perPage = 5;
+  const perPage = 10;
   const page = req.query.pageNumber || 1;
   console.log(`${category} ${page}`);
 
   try {
+    console.log(
+      await Post.where({
+        category: category,
+      }).explain()
+    );
     const count = await Post.where({
       category: category,
     }).countDocuments();
@@ -140,7 +169,7 @@ module.exports.categorySearchProjects = asyncHandler(async (req, res) => {
 
 module.exports.advanceSearchProjects = asyncHandler(async (req, res) => {
   var skillsArray;
-  const perPage = 5;
+  const perPage = 10;
   const page = req.query.pageNumber || 1;
   const keyword = req.query.keyword || "";
   const category = req.params.category;
@@ -155,6 +184,17 @@ module.exports.advanceSearchProjects = asyncHandler(async (req, res) => {
   // console.log(skillsArray);
 
   try {
+    console.log(
+      await Post.find({
+        $and: [
+          keyword ? { title: RegExp(keyword, "i") } : {},
+          { category: category },
+          skillsArray ? { skillsRequirement: { $in: skillsArray } } : {},
+          price ? { price: { $lte: price } } : {},
+          experiencedLevel ? { experiencedLevel: experiencedLevel } : {},
+        ],
+      }).explain()
+    );
     const count = await Post.find({
       $and: [
         keyword ? { title: RegExp(keyword, "i") } : {},
@@ -441,6 +481,20 @@ module.exports.deletePost = asyncHandler(async (req, res) => {
 
     const deletedPost = await Post.findByIdAndDelete({ _id: id }).populate(
       "employerId proposalSubmitted.talentId"
+    );
+
+    const employer = await Employer.findById({
+      _id: deletedPost.employerId._id,
+    });
+    const e = employer.posts.filter(
+      (post) => post.toString() !== id.toString()
+    );
+    await Employer.findByIdAndUpdate(
+      {
+        _id: deletedPost.employerId._id,
+      },
+      { posts: e },
+      { new: true, timestamps: true }
     );
 
     await Payment.findOneAndDelete({ postID: id });

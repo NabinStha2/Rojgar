@@ -37,7 +37,7 @@ const AdminTabsScreen = (props) => {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    navigate("/admin/paymentList");
+    navigate("/admin/paymentList/page/1");
   };
 
   useEffect(() => {

@@ -17,6 +17,8 @@ import {
   List,
   ListItem,
   ListItemButton,
+  Pagination,
+  PaginationItem,
 } from "@mui/material";
 import CircleIcon from "@mui/icons-material/Circle";
 import EmailIcon from "@mui/icons-material/Email";
@@ -32,18 +34,19 @@ import {
   editEmployerRatingAction,
   getEmployerProfileByEmployerIdAction,
 } from "../actions/employerActions";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 
 const EmployerDashboard = ({ visit = false }) => {
-  const { employerProfile, loading } = useSelector(
-    (state) => state.employerInfo
-  );
+  const { employerProfile, pages, employerPosts, pageNumber, loading } =
+    useSelector((state) => state.employerInfo);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
   const params = useParams();
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const {userInfo} = useSelector((state) => state.userLogin);
+  
+  console.log(location?.state);
 
   // if (employerProfile) {
   //   console.log(
@@ -59,6 +62,7 @@ const EmployerDashboard = ({ visit = false }) => {
       dispatch(
         getEmployerProfileByEmployerIdAction({
           id: params.userEmployerId,
+          pageNumber: location.state?.pageNumber && location.state.pageNumber,
         })
       );
     }
@@ -246,7 +250,8 @@ const EmployerDashboard = ({ visit = false }) => {
                   </Typography>
                 </Stack>
                 {userInfo &&
-                  employerProfile.userEmployerId === userInfo._id &&
+                  (userInfo.jobType === "admin" ||
+                    employerProfile.userEmployerId === userInfo._id) &&
                   !visit && (
                     <Grid item mt={2}>
                       {/* <Link
@@ -404,9 +409,41 @@ const EmployerDashboard = ({ visit = false }) => {
                 )}
               </Stack>
               <Divider />
-              <Grid item xs={12} container>
+              <Grid
+                item
+                xs={12}
+                container
+                sx={{ display: "flex", flexDirection: "column" }}
+              >
+                <Pagination
+                  sx={{
+                    "& .MuiPagination-ul": {
+                      padding: 5,
+                      display: "flex",
+                      justifyContent: "center",
+                      margin: "10px",
+                    },
+                  }}
+                  color="primary"
+                  variant="outlined"
+                  count={pages}
+                  defaultPage={1}
+                  page={Number(pageNumber)}
+                  renderItem={(item) => (
+                    <PaginationItem
+                      {...item}
+                      component={Link}
+                      to={
+                        !visit
+                          ? `/employerDashboard/${params.userEmployerId}`
+                          : `/employerProfile/${params.userEmployerId}`
+                      }
+                      state={{ pageNumber: item.page }}
+                    />
+                  )}
+                />
                 <List style={{ flex: 1 }}>
-                  {employerProfile.posts.map((item, i) => (
+                  {employerPosts.map((item, i) => (
                     <ListItem
                       key={i}
                       // sx={{

@@ -80,6 +80,7 @@ function Freelancer() {
   const navigate = useNavigate();
   const params = useParams();
   const pageNumber = params.pageNumber || 1;
+  const { userInfo } = useSelector((state) => state.userLogin);
 
   const handleChange = (event) => {
     const {
@@ -365,7 +366,11 @@ function Freelancer() {
                           <>
                             <ListItem key={i}>
                               <Link
-                                to={`/talentProfile/${talent.userTalentId._id}`}
+                                to={
+                                  userInfo.jobType === "admin"
+                                    ? `/talentDashboard/${talent.userTalentId._id}`
+                                    : `/talentProfile/${talent.userTalentId._id}`
+                                }
                                 style={{
                                   display: "flex",
                                   textDecoration: "none",
