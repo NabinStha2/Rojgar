@@ -1,4 +1,8 @@
 # Rojgar
+
+## A ReactJS implementation of Freelancer
+This is a freelancing project called ROJGAR that uses the Mern stack. It contains numerous functions such as payments, job advertising, acceptance, and many more.
+
 ## Getting Started
  - Clone the repo in your terminal by clicking the green clone or download button at the top right and copyin the url
 
