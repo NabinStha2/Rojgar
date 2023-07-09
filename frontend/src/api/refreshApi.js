@@ -3,7 +3,7 @@ import axios from "axios";
 const RefreshApi = async ({ refreshToken }) => {
   try {
     const res = await axios.post(
-      "http://localhost:5000/user/refreshToken",
+      "http://localhost:4000/user/refreshToken",
       {
         token: refreshToken,
       },

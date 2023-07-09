@@ -27,7 +27,7 @@ export const userLoginAction =
       });
 
       const { data } = await axios.post(
-        "http://localhost:5000/user/login",
+        "http://localhost:4000/user/login",
         { email, password, updatePW },
         {
           headers: {
@@ -64,7 +64,7 @@ export const userResetPWAction = (email) => async (dispatch, getState) => {
     });
 
     const { data } = await axios.post(
-      "http://localhost:5000/user/sendOTP",
+      "http://localhost:4000/user/sendOTP",
       { email },
       {
         headers: {
@@ -99,7 +99,7 @@ export const userOTPVerifyAction =
       });
 
       const { data } = await axios.post(
-        "http://localhost:5000/user/verify-OTP",
+        "http://localhost:4000/user/verify-OTP",
         { otp, userId },
         {
           headers: {
@@ -136,7 +136,7 @@ export const userRegisterAction =
       });
 
       const { data } = await axios.post(
-        "http://localhost:5000/user/register",
+        "http://localhost:4000/user/register",
         { name, email, password, jobType },
         {
           headers: {
@@ -178,7 +178,7 @@ export const userLogoutAction = (email) => async (dispatch) => {
   });
 
   await axios.post(
-    "http://localhost:5000/user/logout",
+    "http://localhost:4000/user/logout",
     { email },
     {
       headers: {

@@ -21,7 +21,7 @@ const config = {
 
       axios
         .get(
-          `http://localhost:5000/payment/${payload.token}/${payload.amount}/${myKhaltiKey.test_secret_key}`
+          `http://localhost:4000/payment/${payload.token}/${payload.amount}/${myKhaltiKey.test_secret_key}`
         )
         .then((result) => console.log(result.data))
         .catch((error) => console.log(`Error : ${error}`));

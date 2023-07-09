@@ -45,7 +45,7 @@ const PaymentList = () => {
   const completePaymentHandle = async ({ postID }) => {
     setLoading(true);
     const { data } = await axios.patch(
-      "http://localhost:5000/paymentList/payByAdmin",
+      "http://localhost:4000/paymentList/payByAdmin",
       {
         postID: postID,
       }
@@ -58,7 +58,7 @@ const PaymentList = () => {
   const deletePaymentHandle = async ({ postID }) => {
     setLoading(true);
     const { data } = await axios.delete(
-      `http://localhost:5000/paymentList/paymentDelete/${postID}`
+      `http://localhost:4000/paymentList/paymentDelete/${postID}`
     );
     setLoading(false);
     console.log(data);
@@ -70,7 +70,7 @@ const PaymentList = () => {
     console.log("fetch all");
     // console.log(pageNumber);
     const { data } = await axios.get(
-      `http://localhost:5000/paymentList/${pageNumber}`
+      `http://localhost:4000/paymentList/${pageNumber}`
     );
     setLoading(false);
     // console.log(data.paymentList);
@@ -79,7 +79,7 @@ const PaymentList = () => {
   }, []);
 
   const getAllPaymentList = useCallback(async (pageNumber) => {
-    const { data } = await axios.get("http://localhost:5000/paymentList");
+    const { data } = await axios.get("http://localhost:4000/paymentList");
     // console.log(data.paymentList);
     setFileData(data.paymentList);
   }, []);
