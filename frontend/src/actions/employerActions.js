@@ -43,7 +43,7 @@ export const registerEmployerAction =
         payload: data.employerProfile,
       });
 
-      navigate(`/employerDashboard/${data.employerProfile.userEmployerId}`);
+      // navigate(`/employerDashboard/${data.employerProfile.userEmployerId}`);
     } catch (err) {
       console.log(err.message);
       // console.log(err.response.data.errMessage);

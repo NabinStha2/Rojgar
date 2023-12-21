@@ -46,8 +46,24 @@ function getSteps() {
   return ["Basic information", "Document Verificatioin", "Skills", "Payment"];
 }
 const BasicForm = () => {
+  const { userInfo } = useSelector((state) => state.userLogin);
   const { control } = useFormContext();
   const [image, setImage] = useState(null);
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    defaultValues: {
+      email: userInfo.email,
+      image: "",
+      citizenshipFile: "",
+      firstName: userInfo.name.split(" ")[0],
+      lastName: userInfo.name.split(" ")[1],
+    },
+  });
+
   return (
     <Box sx={{ height: "100%", marginBottom: "25px" }}>
       <Box
@@ -101,7 +117,7 @@ const BasicForm = () => {
                 />
               )}
             />
-            {/* 
+            {/*
             <Button variant="contained" type="submit" color="primary">
               Upload Photo
             </Button> */}
@@ -118,10 +134,14 @@ const BasicForm = () => {
                 id="firstName"
                 label="First Name"
                 variant="outlined"
-                placeholder="Enter Your First Name"
                 fullWidth
                 margin="normal"
-                {...field}
+                // {...field}
+                {...register("firstName", {
+                  disabled: true,
+                  value: userInfo.name.split(" ")[0],
+                  maxLength: 20,
+                })}
               />
             )}
           />
@@ -135,10 +155,12 @@ const BasicForm = () => {
                 id="lastName"
                 label="Last Name"
                 variant="outlined"
-                placeholder="Enter Your Last Name"
+                disabled
                 fullWidth
                 margin="normal"
-                {...field}
+                {...register("lastName", {
+                  value: userInfo.name.split(" ")[1],
+                })}
               />
             )}
           />
@@ -197,7 +219,8 @@ const BasicForm = () => {
                 placeholder="Enter Your Email Address"
                 fullWidth
                 margin="normal"
-                {...field}
+                disabled
+                {...register("email", { value: userInfo.email })}
               />
             )}
           />
@@ -742,7 +765,7 @@ const LinaerStepper = () => {
       firstName: "",
       lastName: "",
       city: "",
-      email: "",
+      email: userInfo.email,
       phoneNumber: "",
       country: "",
       provience: "",

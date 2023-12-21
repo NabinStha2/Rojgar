@@ -46,14 +46,14 @@ export const registerTalentAction =
         }
       );
 
-      //   console.log(data.talentProfile);
+        console.log(data.talentProfile);
 
       dispatch({
         type: TALENT_REGISTRATION_SUCCESS,
         payload: data.talentProfile,
       });
 
-      navigate(`/talentDashboard/${data.talentProfile.userTalentId}`);
+      // navigate(`/talentDashboard/${data.talentProfile.userTalentId}`);
     } catch (err) {
       console.log(err.message);
       console.log(err.response.data.errMessage);
