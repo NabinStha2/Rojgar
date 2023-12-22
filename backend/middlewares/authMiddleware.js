@@ -14,7 +14,7 @@ module.exports.protect = asyncHandler(async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY);
 
       req.user = await User.findById(decoded.id).select("-password");
-      // console.log("middleware: ", req.user);
+      console.log("middleware: ", req.user);
       next();
     } catch (error) {
       res.status(401);

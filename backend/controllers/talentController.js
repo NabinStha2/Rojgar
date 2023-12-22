@@ -227,7 +227,7 @@ module.exports.deleteTalentBids = async (req, res) => {
     // console.log(posts.proposalSubmitted);
 
     const talent = await Talent.findById({ _id: id }).lean();
-    const t = talent.bids.filter((bid) => bid.postId.toString() !== postId);
+    const t = talent.bids.map((bid) => bid.postId.toString() !== postId);
     // console.log(t);
 
     await Talent.findByIdAndUpdate(
@@ -283,11 +283,11 @@ module.exports.createTalent = async (req, res) => {
 
   console.log(req.body);
   var skillsArray;
-  if (skills) {
-    skillsArray = skills.split(",");
-  }
 
   try {
+    if (skills) {
+      skillsArray = skills.split(",");
+    }
     const newTalent = await Talent.create({
       profile: {
         name: firstName + " " + lastName,
@@ -332,6 +332,8 @@ module.exports.createTalent = async (req, res) => {
       },
       isComplete: true,
     });
+
+    console.log(newTalent);
 
     const updatedUser = await User.findByIdAndUpdate(
       { _id: userTalentId },

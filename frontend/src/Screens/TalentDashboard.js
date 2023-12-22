@@ -167,7 +167,7 @@ const TalentDashboard = ({ visit = false }) => {
                       sx={{ paddingLeft: 0.5, marginTop: 1 }}
                     >
                       (
-                      {`${talentProfile.profile.ratingper} 
+                      {`${talentProfile.profile.ratingper}
                     reviews`}
                       )
                     </Typography>
@@ -540,13 +540,17 @@ const TalentDashboard = ({ visit = false }) => {
                                 >
                                   <h6>
                                     <strong>Skills Required- </strong>
-                                    {item.postId.skillsRequirement.map(
-                                      (skill, i) =>
-                                        item.postId.skillsRequirement.length -
-                                          1 !==
-                                        i
-                                          ? `${skill} , `
-                                          : skill
+                                    {item.postId.skillsRequirement !== null ? (
+                                      item.postId.skillsRequirement.map(
+                                        (skill, i) =>
+                                          item.postId.skillsRequirement.length -
+                                            1 !==
+                                          i
+                                            ? `${skill} , `
+                                            : skill
+                                      )
+                                    ) : (
+                                      <div></div>
                                     )}
                                   </h6>
                                 </Grid>

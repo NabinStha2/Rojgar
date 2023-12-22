@@ -39,14 +39,14 @@ import moment from "moment"
 
 const EmployerDashboard = ({ visit = false }) => {
   const { employerProfile, pages, employerPosts, pageNumber, loading } =
-    useSelector(state => state.employerInfo)
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const location = useLocation()
-  const params = useParams()
-  const { userInfo } = useSelector(state => state.userLogin)
+    useSelector((state) => state.employerInfo);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const params = useParams();
+  const { userInfo } = useSelector((state) => state.userLogin);
 
-  console.log(location?.state)
+  console.log(location?.state);
 
   // if (employerProfile) {
   //   console.log(
@@ -175,8 +175,9 @@ const EmployerDashboard = ({ visit = false }) => {
                   <Typography
                     variant='body2'
                     gutterBottom
-                    sx={{ paddingLeft: 0.5, marginTop: 1 }}>
-                    {`${employerProfile.profile.ratingper} 
+                    sx={{ paddingLeft: 0.5, marginTop: 1 }}
+                  >
+                    {`${employerProfile.profile.ratingper}
                     reviews`}
                   </Typography>
                 </div>
@@ -217,8 +218,8 @@ const EmployerDashboard = ({ visit = false }) => {
                   <LocationOnIcon
                     sx={{ fontSize: "21px", color: "red", marginRight: 1 }}
                   />
-                  <Typography variant='body2' mt={0.4} gutterBottom>
-                    {`${employerProfile.address.city} , 
+                  <Typography variant="body2" mt={0.4} gutterBottom>
+                    {`${employerProfile.address.city} ,
                       ${employerProfile.address.country}`}
                   </Typography>
                 </Stack>
@@ -425,107 +426,128 @@ const EmployerDashboard = ({ visit = false }) => {
                   )}
                 />
                 <List style={{ flex: 1 }}>
-                  {employerPosts?.map((item, i) => (
-                    <ListItem key={i} disablePadding>
-                      <Link
-                        to={
-                          !visit
-                            ? `/project/edit/${item._id}`
-                            : `/project/${item._id}`
-                        }
-                        style={{
-                          textDecoration: "none",
-                          flex: 1,
-                          color: "black",
-                          borderRadius: "10px",
-                        }}>
-                        <ListItemButton
-                          id='project-list'
+                  {employerPosts !== null ? (
+                    employerPosts.map((item, i) => (
+                      <ListItem
+                        key={i}
+                        // sx={{
+                        //   "&:hover": {
+                        // background: "#f4f4f4",
+                        //   },
+                        // }}
+                        disablePadding
+                      >
+                        <Link
+                          to={
+                            !visit
+                              ? `/project/edit/${item._id}`
+                              : `/project/${item._id}`
+                          }
                           style={{
-                            alignItems: "flex-start",
-                            background: "#f4f4f4",
-                            margin: "10px 0px",
-                            borderRadius: "5px",
-                          }}>
-                          <Grid item container spacing={1}>
-                            <Grid item xs={8} container direction='column'>
-                              <h4>{item.title}</h4>
-                              <Typography
-                                variant='body1'
-                                sx={{
-                                  whiteSpace: "nowrap",
-                                  color: "#3c3636",
-                                  overflow: "hidden",
-                                  width: "250px",
-                                  textOverflow: "ellipsis",
-                                  padding: "0px 0px 10px 0px",
-                                }}>
-                                {item.description}
-                              </Typography>
-                              <Grid
-                                item
-                                sx={{ display: "flex", alignItems: "center" }}>
-                                <h6>
-                                  <strong>Skills Required- </strong>
-                                  {item.skillsRequirement.map((skill, i) =>
-                                    item.skillsRequirement.length - 1 !== i
-                                      ? `${skill} , `
-                                      : skill
-                                  )}
-                                </h6>
-                              </Grid>
-                              <Grid item sx={{ padding: "5px 0px 0px 0px" }}>
-                                <Box>
-                                  <strong>Experience: </strong>
-                                  {item.experiencedLevel}
-                                </Box>
-                              </Grid>
-                              <Grid item sx={{ padding: "5px 0px" }}>
-                                <Box>
-                                  <strong>Category:</strong> {item.category}
-                                </Box>
-                              </Grid>
-                              <Grid
-                                item
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}>
-                                <Rating
-                                  name='half-rating-read'
-                                  value={5}
-                                  precision={0.5}
-                                  readOnly
-                                />
-                                <p
+                            textDecoration: "none",
+                            flex: 1,
+                            color: "black",
+                            borderRadius: "10px",
+                          }}
+                        >
+                          <ListItemButton
+                            id="project-list"
+                            style={{
+                              alignItems: "flex-start",
+                              background: "#f4f4f4",
+                              margin: "10px 0px",
+                              borderRadius: "5px",
+                            }}
+                          >
+                            <Grid item container spacing={1}>
+                              <Grid item xs={8} container direction="column">
+                                <h4>{item.title}</h4>
+                                <Typography
+                                  variant="body1"
+                                  sx={{
+                                    whiteSpace: "nowrap",
+                                    color: "#3c3636",
+                                    overflow: "hidden",
+                                    width: "250px",
+                                    textOverflow: "ellipsis",
+                                    padding: "0px 0px 10px 0px",
+                                  }}
+                                >
+                                  {item.description}
+                                </Typography>
+                                <Grid
+                                  item
+                                  sx={{ display: "flex", alignItems: "center" }}
+                                >
+                                  <h6>
+                                    <strong>Skills Required- </strong>
+                                    {item.skillsRequirement.map((skill, i) =>
+                                      item.skillsRequirement.length - 1 !== i
+                                        ? `${skill} , `
+                                        : skill
+                                    )}
+                                  </h6>
+                                </Grid>
+                                <Grid item sx={{ padding: "5px 0px 0px 0px" }}>
+                                  <Box>
+                                    <strong>Experience: </strong>
+                                    {item.experiencedLevel}
+                                  </Box>
+                                </Grid>
+                                <Grid item sx={{ padding: "5px 0px" }}>
+                                  <Box>
+                                    <strong>Category:</strong> {item.category}
+                                  </Box>
+                                </Grid>
+                                <Grid
+                                  item
                                   style={{
-                                    paddingLeft: "5px",
-                                    marginTop: "16px",
-                                  }}>
-                                  {/* {item.reviews} */}5
-                                </p>
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <Rating
+                                    name="half-rating-read"
+                                    value={5}
+                                    precision={0.5}
+                                    readOnly
+                                  />
+                                  <p
+                                    style={{
+                                      paddingLeft: "5px",
+                                      marginTop: "16px",
+                                    }}
+                                  >
+                                    {/* {item.reviews} */}5
+                                  </p>
+                                </Grid>
+                              </Grid>
+                              <Grid
+                                item
+                                xs={4}
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "flex-start",
+                                  flexDirection: "column !important",
+                                  alignItems: "flex-end",
+                                }}
+                              >
+                                <Box>
+                                  <CurrencyRupeeIcon
+                                    sx={{ fontSize: "18px" }}
+                                  />
+                                  {item.price}
+                                </Box>
+                                <Box>{moment(item.createdAt).fromNow()}</Box>
                               </Grid>
                             </Grid>
-                            <Grid
-                              item
-                              xs={4}
-                              sx={{
-                                display: "flex",
-                                justifyContent: "flex-start",
-                                flexDirection: "column !important",
-                                alignItems: "flex-end",
-                              }}>
-                              <Box>
-                                <CurrencyRupeeIcon sx={{ fontSize: "18px" }} />
-                                {item.price}
-                              </Box>
-                              <Box>{moment(item.createdAt).fromNow()}</Box>
-                            </Grid>
-                          </Grid>
-                        </ListItemButton>
-                      </Link>
-                    </ListItem>
-                  ))}
+                          </ListItemButton>
+                        </Link>
+                      </ListItem>
+                    ))
+                  ) : (
+                    <div></div>
+                  )}
                 </List>
               </Grid>
             </Grid>
