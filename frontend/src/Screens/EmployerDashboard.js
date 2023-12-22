@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import {
   Box,
   Paper,
@@ -19,34 +19,34 @@ import {
   ListItemButton,
   Pagination,
   PaginationItem,
-} from "@mui/material";
-import CircleIcon from "@mui/icons-material/Circle";
-import EmailIcon from "@mui/icons-material/Email";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import BeenhereIcon from "@mui/icons-material/Beenhere";
-import CallIcon from "@mui/icons-material/Call";
-import { useDispatch, useSelector } from "react-redux";
-import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+} from "@mui/material"
+import CircleIcon from "@mui/icons-material/Circle"
+import EmailIcon from "@mui/icons-material/Email"
+import FacebookIcon from "@mui/icons-material/Facebook"
+import GitHubIcon from "@mui/icons-material/GitHub"
+import TwitterIcon from "@mui/icons-material/Twitter"
+import LocationOnIcon from "@mui/icons-material/LocationOn"
+import BeenhereIcon from "@mui/icons-material/Beenhere"
+import CallIcon from "@mui/icons-material/Call"
+import { useDispatch, useSelector } from "react-redux"
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee"
 import {
   editEmployerRatingAction,
   getEmployerProfileByEmployerIdAction,
-} from "../actions/employerActions";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import moment from "moment";
+} from "../actions/employerActions"
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom"
+import moment from "moment"
 
 const EmployerDashboard = ({ visit = false }) => {
   const { employerProfile, pages, employerPosts, pageNumber, loading } =
-    useSelector((state) => state.employerInfo);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const params = useParams();
-  const {userInfo} = useSelector((state) => state.userLogin);
-  
-  console.log(location?.state);
+    useSelector(state => state.employerInfo)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const location = useLocation()
+  const params = useParams()
+  const { userInfo } = useSelector(state => state.userLogin)
+
+  console.log(location?.state)
 
   // if (employerProfile) {
   //   console.log(
@@ -58,22 +58,22 @@ const EmployerDashboard = ({ visit = false }) => {
     // console.log(params);
 
     if (params.userEmployerId) {
-      console.log(params.userEmployerId);
+      console.log(params.userEmployerId)
       dispatch(
         getEmployerProfileByEmployerIdAction({
           id: params.userEmployerId,
           pageNumber: location.state?.pageNumber && location.state.pageNumber,
         })
-      );
+      )
     }
-  }, [dispatch, params]);
+  }, [dispatch, params])
 
   // if (employerProfile !== null) {
   //   console.log(employerProfile);
   // }
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth='lg'>
       {loading ? (
         <Grid
           item
@@ -82,9 +82,8 @@ const EmployerDashboard = ({ visit = false }) => {
             display: "flex",
             flex: "1",
             justifyContent: "center",
-          }}
-        >
-          <CircularProgress variant="indeterminate" />
+          }}>
+          <CircularProgress variant='indeterminate' />
         </Grid>
       ) : employerProfile && employerProfile !== null ? (
         <Box
@@ -95,19 +94,17 @@ const EmployerDashboard = ({ visit = false }) => {
             justifyContent: "center",
             margin: 2,
             flexDirection: "column",
-          }}
-        >
+          }}>
           <Paper
             elevation={3}
-            sx={{ margin: 1, padding: "15px", width: "100%" }}
-          >
+            sx={{ margin: 1, padding: "15px", width: "100%" }}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={4}>
                 <Card>
                   <CardMedia
-                    component="img"
-                    alt="talent-img"
-                    height="230"
+                    component='img'
+                    alt='talent-img'
+                    height='230'
                     sx={{ objectFit: "contain" }}
                     image={
                       employerProfile.profile.image
@@ -120,11 +117,11 @@ const EmployerDashboard = ({ visit = false }) => {
               </Grid>
               <Grid item xs={12} md={8}>
                 <Grid item>
-                  <Typography variant="h5" gutterBottom>
+                  <Typography variant='h5' gutterBottom>
                     Company or Individual Name
                   </Typography>
                 </Grid>
-                <Typography variant="h6" mt={1}>
+                <Typography variant='h6' mt={1}>
                   {employerProfile.profile.name}
                 </Typography>
                 <Grid
@@ -133,10 +130,9 @@ const EmployerDashboard = ({ visit = false }) => {
                     display: "flex",
                     alignItems: "center",
                     margin: "10px 0px",
-                  }}
-                >
+                  }}>
                   <Rating
-                    name="half-rating-read"
+                    name='half-rating-read'
                     value={
                       employerProfile.profile.rating /
                       employerProfile.profile.ratingper
@@ -171,33 +167,30 @@ const EmployerDashboard = ({ visit = false }) => {
                               },
                               navigate
                             )
-                          );
+                          )
                     }}
                   />
                 </Grid>
-                <div className="rating-info">
+                <div className='rating-info'>
                   <Typography
-                    variant="body2"
+                    variant='body2'
                     gutterBottom
-                    sx={{ paddingLeft: 0.5, marginTop: 1 }}
-                  >
+                    sx={{ paddingLeft: 0.5, marginTop: 1 }}>
                     {`${employerProfile.profile.ratingper} 
                     reviews`}
                   </Typography>
                 </div>
                 <Grid item sx={{ display: "flex", flexDirection: "row" }}>
                   <Typography
-                    variant="h6"
+                    variant='h6'
                     gutterBottom
-                    sx={{ paddingLeft: 0.5, marginTop: 1 }}
-                  >
+                    sx={{ paddingLeft: 0.5, marginTop: 1 }}>
                     Total Projects:
                   </Typography>
                   <Typography
-                    variant="h6"
+                    variant='h6'
                     gutterBottom
-                    sx={{ paddingLeft: 0.5, marginTop: 1 }}
-                  >
+                    sx={{ paddingLeft: 0.5, marginTop: 1 }}>
                     {employerProfile.posts.length}
                   </Typography>
                 </Grid>
@@ -208,40 +201,40 @@ const EmployerDashboard = ({ visit = false }) => {
                 {employerProfile.isLogin ? (
                   <Chip
                     icon={<CircleIcon sx={{ fontSize: "14px" }} />}
-                    label="Online"
-                    color="success"
-                    variant="outlined"
+                    label='Online'
+                    color='success'
+                    variant='outlined'
                   />
                 ) : (
                   <Chip
                     icon={<CircleIcon sx={{ fontSize: "14px" }} />}
-                    label="Offline"
-                    color="warning"
-                    variant="outlined"
+                    label='Offline'
+                    color='warning'
+                    variant='outlined'
                   />
                 )}
-                <Stack direction="row" mt={2}>
+                <Stack direction='row' mt={2}>
                   <LocationOnIcon
                     sx={{ fontSize: "21px", color: "red", marginRight: 1 }}
                   />
-                  <Typography variant="body2" mt={0.4} gutterBottom>
+                  <Typography variant='body2' mt={0.4} gutterBottom>
                     {`${employerProfile.address.city} , 
                       ${employerProfile.address.country}`}
                   </Typography>
                 </Stack>
-                <Stack direction="row" mt={2}>
+                <Stack direction='row' mt={2}>
                   <CallIcon
                     sx={{ fontSize: "21px", color: "green", marginRight: 1 }}
                   />
-                  <Typography variant="body2" mt={0.4} gutterBottom>
+                  <Typography variant='body2' mt={0.4} gutterBottom>
                     {employerProfile.profile.phoneNumber}
                   </Typography>
                 </Stack>
-                <Stack direction="row" mt={2}>
+                <Stack direction='row' mt={2}>
                   <BeenhereIcon
                     sx={{ fontSize: "21px", color: "green", marginRight: 1 }}
                   />
-                  <Typography variant="body2" mt={0.4} gutterBottom>
+                  <Typography variant='body2' mt={0.4} gutterBottom>
                     {
                       moment(employerProfile.createdAt)
                         ._d.toString()
@@ -271,8 +264,7 @@ const EmployerDashboard = ({ visit = false }) => {
                             state: employerProfile,
                           })
                         }
-                        variant="outlined"
-                      >
+                        variant='outlined'>
                         Edit
                       </Button>
                       {/* </Link> */}
@@ -280,10 +272,10 @@ const EmployerDashboard = ({ visit = false }) => {
                   )}
               </Grid>
               <Grid item xs={12} md={7} ml={2}>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant='h6' gutterBottom>
                   Description About Organization
                 </Typography>
-                <Typography variant="body1" mt={0.1} gutterBottom>
+                <Typography variant='body1' mt={0.1} gutterBottom>
                   {employerProfile.profile.description}
                 </Typography>
               </Grid>
@@ -292,43 +284,41 @@ const EmployerDashboard = ({ visit = false }) => {
 
           <Paper
             elevation={3}
-            sx={{ margin: 1, display: "flex", padding: "15px", width: "100%" }}
-          >
+            sx={{ margin: 1, display: "flex", padding: "15px", width: "100%" }}>
             <Grid
               container
               // xs={6}
-              sx={{ display: "flex", flexDirection: "column" }}
-            >
+              sx={{ display: "flex", flexDirection: "column" }}>
               <Stack>
-                <Typography variant="h5" mt={1} gutterBottom>
+                <Typography variant='h5' mt={1} gutterBottom>
                   Social Account
                 </Typography>
               </Stack>
               <Divider />
               <Grid item sx={{ padding: "10px" }}>
                 <EmailIcon
-                  color="primary"
+                  color='primary'
                   sx={{ fontSize: "20px", color: "maroon", marginRight: 1 }}
                 />
                 {employerProfile.profile.email}
               </Grid>
               <Grid item sx={{ padding: "10px" }}>
                 <FacebookIcon
-                  color="primary"
+                  color='primary'
                   sx={{ fontSize: "21px", marginRight: 1 }}
                 />{" "}
                 {employerProfile.socialProfile.facebookId}
               </Grid>
               <Grid item sx={{ padding: "10px" }}>
                 <GitHubIcon
-                  color="primary"
+                  color='primary'
                   sx={{ fontSize: "21px", color: "black", marginRight: 1 }}
                 />
                 {employerProfile.socialProfile.githubId}
               </Grid>
               <Grid item sx={{ padding: "10px" }}>
                 <TwitterIcon
-                  color="primary"
+                  color='primary'
                   sx={{ fontSize: "21px", marginRight: 1 }}
                 />
                 {employerProfile.socialProfile.twitterId}
@@ -337,10 +327,9 @@ const EmployerDashboard = ({ visit = false }) => {
             <Grid
               // xs={6}
               container
-              sx={{ display: "flex", flexDirection: "column" }}
-            >
+              sx={{ display: "flex", flexDirection: "column" }}>
               <Stack>
-                <Typography variant="h5" mt={1} gutterBottom>
+                <Typography variant='h5' mt={1} gutterBottom>
                   Bank Account
                 </Typography>
               </Stack>
@@ -348,24 +337,22 @@ const EmployerDashboard = ({ visit = false }) => {
               <Grid
                 item
                 container
-                sx={{ flexDirection: "column", padding: "10px" }}
-              >
-                <Typography variant="h6" mt={1} gutterBottom>
+                sx={{ flexDirection: "column", padding: "10px" }}>
+                <Typography variant='h6' mt={1} gutterBottom>
                   Khalti Name
                 </Typography>
-                <Typography variant="overline" ml={0}>
+                <Typography variant='overline' ml={0}>
                   {employerProfile.bankAcc.khaltiName}
                 </Typography>
               </Grid>
               <Grid
                 item
                 container
-                sx={{ flexDirection: "column", padding: "10px" }}
-              >
-                <Typography variant="h6" mt={1} gutterBottom>
+                sx={{ flexDirection: "column", padding: "10px" }}>
+                <Typography variant='h6' mt={1} gutterBottom>
                   Khalti Id
                 </Typography>
-                <Typography variant="overline">
+                <Typography variant='overline'>
                   {employerProfile.bankAcc.khaltiId}
                 </Typography>
               </Grid>
@@ -374,19 +361,17 @@ const EmployerDashboard = ({ visit = false }) => {
 
           <Paper
             elevation={3}
-            sx={{ margin: 1, padding: "15px", width: "100%" }}
-          >
+            sx={{ margin: 1, padding: "15px", width: "100%" }}>
             <Grid container sx={{ display: "flex", flexDirection: "column" }}>
               <Stack
-                direction="row"
+                direction='row'
                 sx={{
                   display: "flex",
                   flexDirection: "row",
                   flex: "1",
                   justifyContent: "space-between",
-                }}
-              >
-                <Typography variant="h5" mt={1} gutterBottom>
+                }}>
+                <Typography variant='h5' mt={1} gutterBottom>
                   Projects
                 </Typography>
                 {!visit && (
@@ -396,13 +381,11 @@ const EmployerDashboard = ({ visit = false }) => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                    }}
-                  >
+                    }}>
                     <Button
                       // onClick={() => navigate("/postJob")}
-                      variant="outlined"
-                      sx={{ margin: "5px" }}
-                    >
+                      variant='outlined'
+                      sx={{ margin: "5px" }}>
                       Post a Job
                     </Button>
                   </Link>
@@ -413,8 +396,7 @@ const EmployerDashboard = ({ visit = false }) => {
                 item
                 xs={12}
                 container
-                sx={{ display: "flex", flexDirection: "column" }}
-              >
+                sx={{ display: "flex", flexDirection: "column" }}>
                 <Pagination
                   sx={{
                     "& .MuiPagination-ul": {
@@ -424,12 +406,12 @@ const EmployerDashboard = ({ visit = false }) => {
                       margin: "10px",
                     },
                   }}
-                  color="primary"
-                  variant="outlined"
+                  color='primary'
+                  variant='outlined'
                   count={pages}
                   defaultPage={1}
                   page={Number(pageNumber)}
-                  renderItem={(item) => (
+                  renderItem={item => (
                     <PaginationItem
                       {...item}
                       component={Link}
@@ -443,16 +425,8 @@ const EmployerDashboard = ({ visit = false }) => {
                   )}
                 />
                 <List style={{ flex: 1 }}>
-                  {employerPosts.map((item, i) => (
-                    <ListItem
-                      key={i}
-                      // sx={{
-                      //   "&:hover": {
-                      // background: "#f4f4f4",
-                      //   },
-                      // }}
-                      disablePadding
-                    >
+                  {employerPosts?.map((item, i) => (
+                    <ListItem key={i} disablePadding>
                       <Link
                         to={
                           !visit
@@ -464,22 +438,20 @@ const EmployerDashboard = ({ visit = false }) => {
                           flex: 1,
                           color: "black",
                           borderRadius: "10px",
-                        }}
-                      >
+                        }}>
                         <ListItemButton
-                          id="project-list"
+                          id='project-list'
                           style={{
                             alignItems: "flex-start",
                             background: "#f4f4f4",
                             margin: "10px 0px",
                             borderRadius: "5px",
-                          }}
-                        >
+                          }}>
                           <Grid item container spacing={1}>
-                            <Grid item xs={8} container direction="column">
+                            <Grid item xs={8} container direction='column'>
                               <h4>{item.title}</h4>
                               <Typography
-                                variant="body1"
+                                variant='body1'
                                 sx={{
                                   whiteSpace: "nowrap",
                                   color: "#3c3636",
@@ -487,14 +459,12 @@ const EmployerDashboard = ({ visit = false }) => {
                                   width: "250px",
                                   textOverflow: "ellipsis",
                                   padding: "0px 0px 10px 0px",
-                                }}
-                              >
+                                }}>
                                 {item.description}
                               </Typography>
                               <Grid
                                 item
-                                sx={{ display: "flex", alignItems: "center" }}
-                              >
+                                sx={{ display: "flex", alignItems: "center" }}>
                                 <h6>
                                   <strong>Skills Required- </strong>
                                   {item.skillsRequirement.map((skill, i) =>
@@ -520,10 +490,9 @@ const EmployerDashboard = ({ visit = false }) => {
                                 style={{
                                   display: "flex",
                                   alignItems: "center",
-                                }}
-                              >
+                                }}>
                                 <Rating
-                                  name="half-rating-read"
+                                  name='half-rating-read'
                                   value={5}
                                   precision={0.5}
                                   readOnly
@@ -532,8 +501,7 @@ const EmployerDashboard = ({ visit = false }) => {
                                   style={{
                                     paddingLeft: "5px",
                                     marginTop: "16px",
-                                  }}
-                                >
+                                  }}>
                                   {/* {item.reviews} */}5
                                 </p>
                               </Grid>
@@ -546,8 +514,7 @@ const EmployerDashboard = ({ visit = false }) => {
                                 justifyContent: "flex-start",
                                 flexDirection: "column !important",
                                 alignItems: "flex-end",
-                              }}
-                            >
+                              }}>
                               <Box>
                                 <CurrencyRupeeIcon sx={{ fontSize: "18px" }} />
                                 {item.price}
@@ -568,7 +535,7 @@ const EmployerDashboard = ({ visit = false }) => {
         <Typography></Typography>
       )}
     </Container>
-  );
-};
+  )
+}
 
-export default EmployerDashboard;
+export default EmployerDashboard

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import {
   Button,
   Container,
@@ -24,17 +24,18 @@ import {
   Paper,
   Chip,
   ListItemButton,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllTalentAction } from "../actions/talentActions";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { categoriesAvailable, skillsAvailable } from "../App";
-import { toast } from "react-toastify";
-import Paginate from "../components/Paginate";
+} from "@mui/material"
+import { makeStyles } from "@mui/styles"
+import { useForm } from "react-hook-form"
+import { useDispatch, useSelector } from "react-redux"
+import { getAllTalentAction } from "../actions/talentActions"
+import { Link, useNavigate, useParams } from "react-router-dom"
+import { categoriesAvailable, skillsAvailable } from "../App"
+import { toast } from "react-toastify"
+import Paginate from "../components/Paginate"
+import { BsCheckLg } from "react-icons/bs"
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -59,10 +60,10 @@ const useStyles = makeStyles((theme) => ({
     margin: "10px 0px",
     padding: "5px 0px",
   },
-}));
+}))
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
 const MenuProps = {
   PaperProps: {
     style: {
@@ -70,44 +71,44 @@ const MenuProps = {
       width: 250,
     },
   },
-};
+}
 
 function Freelancer() {
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const { handleSubmit, register } = useForm({});
-  const [skills, setSkills] = useState([]);
-  const navigate = useNavigate();
-  const params = useParams();
-  const pageNumber = params.pageNumber || 1;
-  const { userInfo } = useSelector((state) => state.userLogin);
+  const classes = useStyles()
+  const dispatch = useDispatch()
+  const { handleSubmit, register } = useForm({})
+  const [skills, setSkills] = useState([])
+  const navigate = useNavigate()
+  const params = useParams()
+  const pageNumber = params.pageNumber || 1
+  const { userInfo } = useSelector(state => state.userLogin)
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     const {
       target: { value },
-    } = event;
-    setSkills(typeof value === "string" ? value.split(",") : value);
-  };
+    } = event
+    setSkills(typeof value === "string" ? value.split(",") : value)
+  }
 
   const {
     allTalentProfile,
     loading: talentLoading,
     error: talentError,
-  } = useSelector((state) => state.talentInfo);
+  } = useSelector(state => state.talentInfo)
 
-  const onSubmit = async (inputData) => {
-    inputData.skills = skills;
-    console.log(inputData);
+  const onSubmit = async inputData => {
+    inputData.skills = skills
+    console.log(inputData)
 
     dispatch(
       getAllTalentAction({
         inputData: inputData,
         pageNumber,
       })
-    );
+    )
 
-    navigate("/freelancer/page/1");
-  };
+    navigate("/freelancer/page/1")
+  }
 
   useEffect(() => {
     // if (allTalentProfile && allTalentProfile.length <= 0) {
@@ -116,33 +117,32 @@ function Freelancer() {
       keyword: "",
       experiencedLevel: "",
       skills: [],
-    };
-    dispatch(getAllTalentAction({ inputData: data, pageNumber }));
+    }
+    dispatch(getAllTalentAction({ inputData: data, pageNumber }))
     // }
-  }, [dispatch, pageNumber]);
+  }, [dispatch, pageNumber])
 
   if (talentError !== null) {
-    toast(talentError);
+    toast(talentError)
   }
 
   return (
     <Grow in>
-      <Container maxWidth="lg">
+      <Container maxWidth='lg'>
         <Grid
           container
           className={classes.root}
           sx={{ flexDirection: "column" }}
-          spacing={2}
-        >
+          spacing={2}>
           <Grid item xs={12}>
             <h2>Freelancers</h2>
           </Grid>
           <Grid item xs={12}>
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
               <input
-                id="search"
-                placeholder="Search by Talent Name or Email"
-                name="search"
+                id='search'
+                placeholder='Search by Talent Name or Email'
+                name='search'
                 style={{
                   borderRadius: "4px",
                   flex: "5",
@@ -154,11 +154,10 @@ function Freelancer() {
                 {...register("keyword")}
               />
               <Button
-                type="submit"
-                color="primary"
-                variant="contained"
-                className={classes.button}
-              >
+                type='submit'
+                color='primary'
+                variant='contained'
+                className={classes.button}>
                 Search
               </Button>
             </form>
@@ -170,15 +169,13 @@ function Freelancer() {
                 display: "flex",
                 flex: "1",
                 width: "100%",
-              }}
-            >
+              }}>
               <Grid
                 item
                 xs={12}
                 sm={4}
                 container
-                sx={{ height: "fit-content" }}
-              >
+                sx={{ height: "fit-content" }}>
                 <Paper elevation={3} className={classes.filters}>
                   <Grid item xs={12} sx={{ padding: "3px 15px" }}>
                     <h2>Filters</h2>
@@ -190,22 +187,20 @@ function Freelancer() {
                         <Grid
                           item
                           container
-                          direction="column"
-                          id="filter-post-title"
-                        >
+                          direction='column'
+                          id='filter-post-title'>
                           <h5>Experienced Level</h5>
                           <br></br>
                           <Box sx={{ minWidth: 120 }}>
                             <FormControl fullWidth>
-                              <InputLabel id="demo-simple-select-label">
+                              <InputLabel id='demo-simple-select-label'>
                                 Experienced Level
                               </InputLabel>
                               <Select
-                                labelId="demo-simple-select-label"
-                                label="Experienced Level"
-                                id="demo-simple-select"
-                                {...register("experiencedLevel")}
-                              >
+                                labelId='demo-simple-select-label'
+                                label='Experienced Level'
+                                id='demo-simple-select'
+                                {...register("experiencedLevel")}>
                                 <MenuItem key={"B"} value={"Beginner"}>
                                   Beginner
                                 </MenuItem>
@@ -222,22 +217,20 @@ function Freelancer() {
                         <Grid
                           item
                           container
-                          direction="column"
-                          id="filter-post-title"
-                        >
+                          direction='column'
+                          id='filter-post-title'>
                           <h5>Category</h5>
                           <br></br>
                           <Box sx={{ minWidth: 120 }}>
                             <FormControl fullWidth>
-                              <InputLabel id="demo-simple-select-label">
+                              <InputLabel id='demo-simple-select-label'>
                                 Category
                               </InputLabel>
                               <Select
-                                labelId="demo-simple-select-label"
-                                label="Category"
-                                id="demo-simple-select"
-                                {...register("category")}
-                              >
+                                labelId='demo-simple-select-label'
+                                label='Category'
+                                id='demo-simple-select'
+                                {...register("category")}>
                                 <MenuItem value={"all"}>All</MenuItem>
                                 {categoriesAvailable.map((category, i) => (
                                   <MenuItem key={i} value={category.value}>
@@ -251,45 +244,42 @@ function Freelancer() {
                         <Grid
                           item
                           container
-                          direction="column"
-                          id="filter-post-title"
-                        >
+                          direction='column'
+                          id='filter-post-title'>
                           <h5>Skills</h5>
                           <br></br>
                           <Box sx={{ minWidth: 120 }}>
                             <FormControl fullWidth>
-                              <InputLabel id="demo-multiple-chip-label">
+                              <InputLabel id='demo-multiple-chip-label'>
                                 Skills
                               </InputLabel>
                               <Select
-                                label="Skills"
-                                labelId="demo-multiple-chip-label"
-                                id="demo-multiple-chip"
+                                label='Skills'
+                                labelId='demo-multiple-chip-label'
+                                id='demo-multiple-chip'
                                 multiple
                                 value={skills}
                                 onChange={handleChange}
                                 input={
                                   <OutlinedInput
-                                    id="select-multiple-chip"
-                                    label="Chip"
+                                    id='select-multiple-chip'
+                                    label='Chip'
                                   />
                                 }
-                                renderValue={(selected) => (
+                                renderValue={selected => (
                                   <Box
                                     sx={{
                                       display: "flex",
                                       flexWrap: "wrap",
                                       gap: 0.5,
-                                    }}
-                                  >
-                                    {selected.map((value) => (
+                                    }}>
+                                    {selected.map(value => (
                                       <Chip key={value} label={value} />
                                     ))}
                                   </Box>
                                 )}
-                                MenuProps={MenuProps}
-                              >
-                                {skillsAvailable.map((name) => (
+                                MenuProps={MenuProps}>
+                                {skillsAvailable.map(name => (
                                   <MenuItem
                                     key={name}
                                     value={name}
@@ -304,11 +294,10 @@ function Freelancer() {
                         </Grid>
                       </Grid>
                       <Button
-                        id="filter-post-btn"
+                        id='filter-post-btn'
                         sx={{ margin: "25px 0px", padding: "8px 35px" }}
-                        variant="outlined"
-                        type="submit"
-                      >
+                        variant='outlined'
+                        type='submit'>
                         Save
                       </Button>
                     </form>
@@ -326,8 +315,7 @@ function Freelancer() {
                   padding: "0px 10px",
                   margin: "10px 0px",
                   flex: "1",
-                }}
-              >
+                }}>
                 <Paper elevation={3}>
                   <Paginate pageNumber={pageNumber} freelancer={true} />
                   {talentLoading ? (
@@ -338,16 +326,14 @@ function Freelancer() {
                         display: "flex",
                         flex: "1",
                         justifyContent: "center",
-                      }}
-                    >
-                      <CircularProgress variant="indeterminate" />
+                      }}>
+                      <CircularProgress variant='indeterminate' />
                     </Grid>
                   ) : allTalentProfile && allTalentProfile.length > 0 ? (
                     <Grid
                       xs={12}
                       container
-                      sx={{ flex: "1", display: "flex", padding: "10px 0px" }}
-                    >
+                      sx={{ flex: "1", display: "flex", padding: "10px 0px" }}>
                       <List
                         sx={{
                           display: "flex",
@@ -360,25 +346,20 @@ function Freelancer() {
                           margin: "0px 10px",
                           // background: "#def2ee",
                           boxShadow: "0px 3px 8px #eaeaea ",
-                        }}
-                      >
+                        }}>
                         {allTalentProfile.map((talent, i) => (
                           <>
                             <ListItem key={i}>
                               <Link
                                 to={
-                                  userInfo.jobType === "admin"
-                                    ? `/talentDashboard/${talent.userTalentId._id}`
-                                    : `/talentProfile/${talent.userTalentId._id}`
-                                }
-                                style={{
+                                  (userInfo?.Freelancer.jobType === "admin" ? `/talentDashboard/${talent.userTalentId._id}`: `/talentProfile/${talent.userTalentId._id}`)
+                                } style={{
                                   display: "flex",
                                   textDecoration: "none",
                                   flex: 1,
                                   color: "black",
                                   alignItems: "center",
-                                }}
-                              >
+                                }}>
                                 <ListItemButton
                                   style={{
                                     alignItems: "flex-start",
@@ -387,8 +368,7 @@ function Freelancer() {
                                     margin: "0px 10px",
                                     background: "#def2ee",
                                     boxShadow: "0px 3px 8px #eaeaea ",
-                                  }}
-                                >
+                                  }}>
                                   <ListItemAvatar>
                                     <Avatar
                                       sx={{
@@ -396,23 +376,22 @@ function Freelancer() {
                                         height: 60,
                                         margin: "0px 10px 0px 0px",
                                       }}
-                                      alt={talent.profile.name.split("")[0]}
+                                      alt={talent?.profile.name.split("")[0]}
                                       src={
-                                        talent.profile.image
+                                        talent?.profile.image
                                           ? require(`../uploads/${talent.profile.image}`)
                                               .default
-                                          : talent.profile.name.split("")[0]
-                                      }
-                                    ></Avatar>
+                                          : talent?.profile.name.split("")[0]
+                                      }></Avatar>
                                   </ListItemAvatar>
                                   <ListItemText
                                     primary={talent.profile.name}
                                     secondary={
                                       <>
-                                        <Typography variant="body1">
+                                        <Typography variant='body1'>
                                           {talent.profile.email}
                                         </Typography>
-                                        <Typography variant="body1">
+                                        <Typography variant='body1'>
                                           {talent.profile.title}
                                         </Typography>
 
@@ -422,10 +401,9 @@ function Freelancer() {
                                             display: "flex",
                                             alignItems: "center",
                                             margin: "10px 0px",
-                                          }}
-                                        >
+                                          }}>
                                           <Rating
-                                            name="half-rating-read"
+                                            name='half-rating-read'
                                             value={
                                               talent.profile.rating /
                                               talent.profile.ratingper
@@ -441,7 +419,7 @@ function Freelancer() {
                               </Link>
                             </ListItem>
                             {!(allTalentProfile.length - 1 === i) && (
-                              <Divider light variant="inset" />
+                              <Divider light variant='inset' />
                             )}
                           </>
                         ))}
@@ -449,9 +427,8 @@ function Freelancer() {
                     </Grid>
                   ) : (
                     <Typography
-                      variant="h6"
-                      sx={{ textAlign: "center", padding: 5 }}
-                    >
+                      variant='h6'
+                      sx={{ textAlign: "center", padding: 5 }}>
                       No any Talent for this search.
                     </Typography>
                   )}
@@ -462,7 +439,7 @@ function Freelancer() {
         </Grid>
       </Container>
     </Grow>
-  );
+  )
 }
 
-export default Freelancer;
+export default Freelancer
